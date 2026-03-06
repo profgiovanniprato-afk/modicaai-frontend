@@ -214,60 +214,22 @@ async function ask(q) {
   addMessage('user', q, '', '');
   showTyping();
 
-  // 1️⃣  Domanda su Modica → backend AI con database locale
-  if (isModicaQuery(q)) {
-    try {
-      const data = await fetchAPI(q);
-      removeTyping();
-      addMessage('ai',
-        `<div class="msg-ai">${formatText(data.risposta)}</div>`,
-        'source-local', txt[lang].sourceLocal
-      );
-    } catch {
-      removeTyping();
-      addMessage('ai',
-        `<div class="msg-ai">${txt[lang].errore}</div>`,
-        'source-local', txt[lang].sourceLocal
-      );
-    }
-    return;
-  }
-
-  // 2️⃣  Domanda enciclopedica → Wikipedia
-  if (isWikiQuery(q)) {
-    const clean = q.replace(/^(cos[''`]è|cosa è|chi è|chi era|storia di|what is|who is|spiegami|dimmi di)\s+/i, '');
-    const wiki  = await fetchWikipedia(clean);
+  // Tutto va all'AI — nessun filtro, nessun redirect Google
+  try {
+    const data = await fetchAPI(q);
     removeTyping();
-    if (wiki) {
-      addMessage('ai',
-        `<div class="msg-ai">
-          <div class="wiki-card">
-            <div class="wiki-card-title">${wiki.title}</div>
-            <div class="wiki-card-extract">${wiki.extract}</div>
-            <a class="wiki-card-link" href="${wiki.url}" target="_blank">${txt[lang].wikiReadMore}</a>
-          </div>
-        </div>`,
-        'source-wiki', txt[lang].sourceWiki
-      );
-      return;
-    }
+    addMessage('ai',
+      `<div class="msg-ai">${formatText(data.risposta)}</div>`,
+      'source-local', txt[lang].sourceLocal
+    );
+  } catch {
+    removeTyping();
+    addMessage('ai',
+      `<div class="msg-ai">${txt[lang].errore}</div>`,
+      'source-local', txt[lang].sourceLocal
+    );
   }
-
-  // 3️⃣  Tutto il resto → Google
-  removeTyping();
-  const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(q)}`;
-  addMessage('ai',
-    `<div class="msg-ai">
-      ${txt[lang].googleMsg(q)}
-      <div class="google-card">
-        <div class="google-card-text">Ricerca: <strong>${q}</strong></div>
-        <a class="btn-google" href="${googleUrl}" target="_blank">🔍 ${txt[lang].googleBtn}</a>
-      </div>
-    </div>`,
-    'source-google', txt[lang].sourceGoogle
-  );
 }
-
 document.getElementById('sendBtn').onclick = () => ask(document.getElementById('searchInput').value);
 document.getElementById('searchInput').onkeydown = e => { if (e.key === 'Enter') ask(e.target.value); };
 </script>
