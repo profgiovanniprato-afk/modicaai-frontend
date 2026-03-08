@@ -4,262 +4,205 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ModicaAI</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #FAFAFA; color: #1A1A2E; min-height: 100vh; display: flex; flex-direction: column; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #FAFAFA;
-    color: #1A1A2E;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ── Header fisso ── */
+  /* ── Header ── */
   .header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(250,250,250,0.92);
-    backdrop-filter: blur(8px);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(250,250,250,0.95); backdrop-filter: blur(8px);
     border-bottom: 1px solid #EFEFEF;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; height: 52px;
   }
-
-  .header-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: #1A3A5C;
-    letter-spacing: -0.5px;
-  }
+  .header-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #1A3A5C; letter-spacing: -0.5px; cursor: pointer; }
   .header-logo span { color: #C8860A; }
-
+  .header-right { display: flex; align-items: center; gap: 12px; }
   .lang-toggle { display: flex; gap: 4px; background: #EFEFEF; border-radius: 8px; padding: 3px; }
   .lang-btn { padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: #888; transition: all 0.18s; font-family: 'DM Sans', sans-serif; }
   .lang-btn.active { background: #fff; color: #1A3A5C; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,0.10); }
 
-  /* ── Categorie ── */
-  .categories {
-    position: fixed;
-    top: 53px; left: 0; right: 0;
-    z-index: 99;
-    background: rgba(250,250,250,0.95);
-    backdrop-filter: blur(6px);
-    border-bottom: 1px solid #F0F0F0;
-    display: flex;
-    gap: 8px;
-    padding: 8px 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
+  /* ── Tab switcher Modica / Lavoro ── */
+  .section-tabs {
+    position: fixed; top: 52px; left: 0; right: 0; z-index: 199;
+    background: rgba(250,250,250,0.97); backdrop-filter: blur(6px);
+    border-bottom: 1px solid #EFEFEF;
+    display: flex; padding: 0 20px;
   }
-  .categories::-webkit-scrollbar { display: none; }
+  .section-tab {
+    padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+    border: none; background: transparent; color: #AAA;
+    border-bottom: 2px solid transparent; transition: all 0.18s;
+    font-family: 'DM Sans', sans-serif; margin-bottom: -1px;
+  }
+  .section-tab.active { color: #1A3A5C; border-bottom-color: #1A3A5C; }
 
+  /* ── Categorie Modica ── */
+  .cat-bar {
+    position: fixed; top: 100px; left: 0; right: 0; z-index: 198;
+    background: rgba(250,250,250,0.97); backdrop-filter: blur(6px);
+    border-bottom: 1px solid #F0F0F0;
+    display: flex; gap: 8px; padding: 8px 16px;
+    overflow-x: auto; scrollbar-width: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .cat-bar.hidden { opacity: 0; pointer-events: none; transform: translateY(-4px); }
+  .cat-bar::-webkit-scrollbar { display: none; }
   .cat-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1.5px solid #E0E0E0;
-    background: #fff;
-    font-size: 12px;
-    font-weight: 500;
-    color: #666;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.18s;
-    flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 14px; border-radius: 20px;
+    border: 1.5px solid #E0E0E0; background: #fff;
+    font-size: 12px; font-weight: 500; color: #666;
+    cursor: pointer; white-space: nowrap;
+    font-family: 'DM Sans', sans-serif; transition: all 0.18s; flex-shrink: 0;
   }
   .cat-btn:hover { border-color: #1A3A5C; color: #1A3A5C; }
   .cat-btn.active { background: #1A3A5C; border-color: #1A3A5C; color: #fff; }
 
-  /* ── Area chat ── */
+  /* ── Main content ── */
   .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 130px 20px 140px;
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 160px 20px 140px;
+    transition: padding-top 0.2s;
   }
+  .main.no-cats { padding-top: 122px; }
 
-  /* Hero — visibile solo all'inizio */
-  .hero {
-    text-align: center;
-    margin-bottom: 40px;
-    transition: all 0.4s ease;
-  }
+  /* Hero */
+  .hero { text-align: center; margin-bottom: 36px; }
   .hero.hidden { display: none; }
-
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 52px;
-    font-weight: 700;
-    color: #1A3A5C;
-    letter-spacing: -1px;
-  }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 700; color: #1A3A5C; letter-spacing: -1px; }
   .hero-title span { color: #C8860A; }
-  .hero-sub {
-    font-size: 15px;
-    color: #AAA;
-    font-weight: 300;
-    margin-top: 6px;
-  }
+  .hero-sub { font-size: 15px; color: #AAA; font-weight: 300; margin-top: 6px; }
 
-  .chat-area {
-    width: 100%;
-    max-width: 620px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  /* Messaggi */
+  /* Chat */
+  .chat-area { width: 100%; max-width: 640px; display: flex; flex-direction: column; gap: 18px; }
   .msg { animation: fadeUp 0.25s ease; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
   .msg-user { text-align: right; }
-  .msg-user span {
-    display: inline-block;
-    background: #1A3A5C;
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 18px 18px 4px 18px;
-    font-size: 14px;
-    max-width: 80%;
-    text-align: left;
-    line-height: 1.5;
-  }
-
-  .msg-ai { font-size: 14px; line-height: 1.75; color: #1A1A2E; max-width: 620px; }
+  .msg-user span { display: inline-block; background: #1A3A5C; color: #fff; padding: 10px 16px; border-radius: 18px 18px 4px 18px; font-size: 14px; max-width: 82%; text-align: left; line-height: 1.55; }
+  .msg-ai { font-size: 14px; line-height: 1.78; color: #222; max-width: 640px; }
   .msg-ai strong { color: #1A3A5C; }
+  .source-badge { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; background: #EAF2F8; color: #1A3A5C; }
 
-  .source-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    margin-top: 10px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-  .source-local { background: #EAF2F8; color: #1A3A5C; }
+  /* Cat divider */
+  .cat-divider { display: flex; align-items: center; gap: 10px; margin: 6px 0 2px; font-size: 11px; font-weight: 600; color: #C8860A; letter-spacing: 0.5px; text-transform: uppercase; }
+  .cat-divider::before, .cat-divider::after { content:''; flex:1; height:1px; background:#F0E8D8; }
 
   /* Typing */
-  .typing { display: flex; gap: 5px; align-items: center; height: 28px; padding: 4px 0; }
+  .typing { display: flex; gap: 5px; align-items: center; height: 28px; }
   .dot { width: 6px; height: 6px; background: #C0C8D4; border-radius: 50%; animation: pulse 1.2s infinite; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
   .dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes pulse { 0%, 60%, 100% { opacity: 0.3; transform: scale(1); } 30% { opacity: 1; transform: scale(1.3); } }
+  @keyframes pulse { 0%,60%,100%{opacity:.3;transform:scale(1);} 30%{opacity:1;transform:scale(1.3);} }
 
-  /* Separatore categoria */
-  .cat-divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 8px 0 4px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #C8860A;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  .cat-divider::before, .cat-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #F0E8D8;
-  }
+  /* ── Sezione Lavoro ── */
+  .lavoro-section { width: 100%; max-width: 640px; }
+  .lavoro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  @media (max-width: 480px) { .lavoro-grid { grid-template-columns: 1fr; } }
 
-  /* ── Input fisso in basso ── */
-  .input-bar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(250,250,250,0.95);
-    backdrop-filter: blur(8px);
-    border-top: 1px solid #EFEFEF;
-    padding: 12px 16px 16px;
-    display: flex;
-    justify-content: center;
+  .tool-card {
+    background: #fff; border: 1.5px solid #E8E8E8; border-radius: 16px;
+    padding: 18px; cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column; gap: 6px;
   }
+  .tool-card:hover { border-color: #1A3A5C; box-shadow: 0 4px 16px rgba(26,58,92,0.10); transform: translateY(-1px); }
+  .tool-card.active-tool { border-color: #1A3A5C; background: #F0F5FA; }
+  .tool-icon { font-size: 24px; }
+  .tool-name { font-size: 14px; font-weight: 600; color: #1A3A5C; }
+  .tool-desc { font-size: 12px; color: #999; line-height: 1.4; }
 
-  .input-wrap {
-    width: 100%;
-    max-width: 620px;
-    display: flex;
-    align-items: center;
-    background: #fff;
-    border: 1.5px solid #E0E0E0;
-    border-radius: 28px;
-    padding: 0 8px 0 20px;
-    height: 52px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .input-wrap:focus-within {
-    border-color: #1A3A5C;
-    box-shadow: 0 4px 20px rgba(26,58,92,0.14);
-  }
+  /* Pannello tool attivo */
+  .tool-panel { background: #fff; border: 1.5px solid #E8E8E8; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  .tool-panel.hidden { display: none; }
+  .tool-panel-title { font-size: 15px; font-weight: 600; color: #1A3A5C; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .tool-back { background: none; border: none; cursor: pointer; color: #999; font-size: 18px; line-height: 1; padding: 0 4px 0 0; }
+  .tool-back:hover { color: #1A3A5C; }
 
-  .input-wrap input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: #1A1A2E;
-    background: transparent;
+  /* Form elements */
+  .form-group { margin-bottom: 12px; }
+  .form-label { font-size: 12px; font-weight: 600; color: #666; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.3px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: #1A1A2E;
+    background: #FAFAFA; outline: none; transition: border-color 0.18s;
   }
-  .input-wrap input::placeholder { color: #C0C0C0; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #1A3A5C; background: #fff; }
+  .form-textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+  .form-select { cursor: pointer; }
 
-  .btn-send {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: #1A3A5C;
-    border: none;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.18s;
-    flex-shrink: 0;
+  .btn-genera {
+    width: 100%; padding: 12px; background: #1A3A5C; color: #fff;
+    border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.18s;
   }
-  .btn-send:hover { background: #C8860A; }
+  .btn-genera:hover { background: #C8860A; }
+  .btn-genera:disabled { background: #CCC; cursor: not-allowed; }
+
+  /* Output */
+  .output-box {
+    margin-top: 16px; background: #F8F9FB; border: 1.5px solid #E8E8E8;
+    border-radius: 12px; padding: 16px; font-size: 14px; line-height: 1.75;
+    color: #222; white-space: pre-wrap; word-break: break-word;
+  }
+  .output-box.hidden { display: none; }
+  .output-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-copy {
+    padding: 7px 16px; border-radius: 8px; border: 1.5px solid #E0E0E0;
+    background: #fff; font-family: 'DM Sans', sans-serif; font-size: 12px;
+    font-weight: 500; color: #555; cursor: pointer; transition: all 0.18s;
+  }
+  .btn-copy:hover { border-color: #1A3A5C; color: #1A3A5C; }
+  .btn-copy.copied { background: #1A3A5C; color: #fff; border-color: #1A3A5C; }
 
   /* Footer */
-  .footer-info {
-    text-align: center;
-    font-size: 11px;
-    color: #CCC;
-    margin-top: 20px;
-    padding-bottom: 4px;
-  }
+  .footer-info { text-align: center; font-size: 11px; color: #CCC; margin-top: 24px; padding-bottom: 4px; }
   .footer-info a { color: #CCC; text-decoration: none; }
+
+  /* Input bar */
+  .input-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(250,250,250,0.97); backdrop-filter: blur(8px);
+    border-top: 1px solid #EFEFEF; padding: 12px 16px 16px;
+    display: flex; justify-content: center;
+    transition: opacity 0.2s;
+  }
+  .input-bar.hidden { opacity: 0; pointer-events: none; }
+  .input-wrap {
+    width: 100%; max-width: 640px; display: flex; align-items: center;
+    background: #fff; border: 1.5px solid #E0E0E0; border-radius: 28px;
+    padding: 0 8px 0 20px; height: 52px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-wrap:focus-within { border-color: #1A3A5C; box-shadow: 0 4px 20px rgba(26,58,92,0.14); }
+  .input-wrap input { flex:1; border:none; outline:none; font-family:'DM Sans',sans-serif; font-size:15px; color:#1A1A2E; background:transparent; }
+  .input-wrap input::placeholder { color: #C0C0C0; }
+  .btn-send { width:38px; height:38px; border-radius:50%; background:#1A3A5C; border:none; color:#fff; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.18s; flex-shrink:0; }
+  .btn-send:hover { background: #C8860A; }
 </style>
 </head>
 <body>
 
-<!-- Header fisso -->
+<!-- Header -->
 <div class="header">
-  <div class="header-logo">Modica<span>AI</span></div>
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang(this,'it')">IT</button>
-    <button class="lang-btn" onclick="setLang(this,'en')">EN</button>
+  <div class="header-logo" onclick="resetView()">Modica<span>AI</span></div>
+  <div class="header-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang(this,'it')">IT</button>
+      <button class="lang-btn" onclick="setLang(this,'en')">EN</button>
+    </div>
   </div>
 </div>
 
-<!-- Categorie fisse -->
-<div class="categories" id="categories">
+<!-- Tab Modica / Lavoro -->
+<div class="section-tabs">
+  <button class="section-tab active" onclick="switchSection(this,'modica')">🏛 Modica</button>
+  <button class="section-tab" onclick="switchSection(this,'lavoro')">💼 Lavoro</button>
+</div>
+
+<!-- Categorie Modica -->
+<div class="cat-bar" id="catBar">
   <button class="cat-btn active" onclick="setCategoria(this,'tutto')">✨ Tutto</button>
   <button class="cat-btn" onclick="setCategoria(this,'meteo')">🌤 Meteo</button>
   <button class="cat-btn" onclick="setCategoria(this,'ristoranti')">🍽 Ristoranti</button>
@@ -270,21 +213,182 @@
   <button class="cat-btn" onclick="setCategoria(this,'bar')">☕ Bar</button>
 </div>
 
-<!-- Area principale -->
-<div class="main">
-  <div class="hero" id="hero">
-    <div class="hero-title">Modica<span>AI</span></div>
-    <div class="hero-sub">Il tuo assistente locale per Modica</div>
+<!-- Main -->
+<div class="main" id="main">
+
+  <!-- SEZIONE MODICA -->
+  <div id="sectionModica">
+    <div class="hero" id="hero">
+      <div class="hero-title">Modica<span>AI</span></div>
+      <div class="hero-sub" id="heroSub">Il tuo assistente locale per Modica</div>
+    </div>
+    <div class="chat-area" id="chatArea"></div>
+    <div class="footer-info">
+      <a href="https://modicaai.it">modicaai.it</a> &nbsp;·&nbsp; Modica, Sicilia &nbsp;·&nbsp;
+      © 2026 ModicaAI — <a href="mailto:info@modicaai.it">info@modicaai.it</a>
+    </div>
   </div>
-  <div class="chat-area" id="chatArea"></div>
-  <div class="footer-info">
-    <a href="https://modicaai.it">modicaai.it</a> &nbsp;·&nbsp; Modica, Sicilia &nbsp;·&nbsp;
-    © 2026 ModicaAI — <a href="mailto:info@modicaai.it">info@modicaai.it</a>
+
+  <!-- SEZIONE LAVORO -->
+  <div id="sectionLavoro" style="display:none;" class="lavoro-section">
+
+    <!-- Grid strumenti -->
+    <div class="lavoro-grid" id="toolGrid">
+      <div class="tool-card" onclick="openTool('mail')">
+        <div class="tool-icon">✉️</div>
+        <div class="tool-name">Scrivi una mail</div>
+        <div class="tool-desc">Mail formali a enti pubblici, privati o professionisti</div>
+      </div>
+      <div class="tool-card" onclick="openTool('messaggio')">
+        <div class="tool-icon">💬</div>
+        <div class="tool-name">Scrivi un messaggio</div>
+        <div class="tool-desc">SMS, WhatsApp o messaggi brevi per ogni occasione</div>
+      </div>
+      <div class="tool-card" onclick="openTool('ricerca')">
+        <div class="tool-icon">🔍</div>
+        <div class="tool-name">Fai una ricerca</div>
+        <div class="tool-desc">Cerca su Wikipedia o su qualsiasi argomento</div>
+      </div>
+      <div class="tool-card" onclick="openTool('riassunto')">
+        <div class="tool-icon">📄</div>
+        <div class="tool-name">Riassumi un testo</div>
+        <div class="tool-desc">Incolla un testo e ottieni un riassunto chiaro</div>
+      </div>
+    </div>
+
+    <!-- PANNELLO MAIL -->
+    <div class="tool-panel hidden" id="panel-mail">
+      <div class="tool-panel-title">
+        <button class="tool-back" onclick="closeTool()">←</button>
+        ✉️ Scrivi una mail formale
+      </div>
+      <div class="form-group">
+        <label class="form-label">Destinatario</label>
+        <input class="form-input" id="mail-dest" placeholder="Es. Comune di Modica, ASP Ragusa, avvocato...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Oggetto / Scopo</label>
+        <input class="form-input" id="mail-oggetto" placeholder="Es. Richiesta certificato, ricorso, preventivo...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tono</label>
+        <select class="form-select" id="mail-tono">
+          <option value="formale">Formale</option>
+          <option value="molto formale">Molto formale (enti pubblici)</option>
+          <option value="professionale">Professionale</option>
+          <option value="cordiale">Cordiale ma professionale</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Dettagli aggiuntivi (facoltativo)</label>
+        <textarea class="form-textarea" id="mail-dettagli" placeholder="Aggiungi dettagli specifici da includere nella mail..."></textarea>
+      </div>
+      <button class="btn-genera" id="btn-mail" onclick="generaTool('mail')">✉️ Genera mail</button>
+      <div class="output-box hidden" id="output-mail"></div>
+      <div class="output-actions hidden" id="actions-mail">
+        <button class="btn-copy" onclick="copia('output-mail','actions-mail')">📋 Copia testo</button>
+      </div>
+    </div>
+
+    <!-- PANNELLO MESSAGGIO -->
+    <div class="tool-panel hidden" id="panel-messaggio">
+      <div class="tool-panel-title">
+        <button class="tool-back" onclick="closeTool()">←</button>
+        💬 Scrivi un messaggio
+      </div>
+      <div class="form-group">
+        <label class="form-label">A chi è diretto?</label>
+        <input class="form-input" id="msg-dest" placeholder="Es. cliente, collega, fornitore, amico...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tipo di messaggio</label>
+        <select class="form-select" id="msg-tipo">
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="SMS">SMS</option>
+          <option value="messaggio su social">Social (LinkedIn, Instagram...)</option>
+          <option value="nota interna">Nota interna</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tono</label>
+        <select class="form-select" id="msg-tono">
+          <option value="informale ma corretto">Informale ma corretto</option>
+          <option value="formale">Formale</option>
+          <option value="amichevole">Amichevole</option>
+          <option value="diretto e breve">Diretto e breve</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cosa vuoi comunicare?</label>
+        <textarea class="form-textarea" id="msg-contenuto" placeholder="Descrivi cosa vuoi dire nel messaggio..."></textarea>
+      </div>
+      <button class="btn-genera" onclick="generaTool('messaggio')">💬 Genera messaggio</button>
+      <div class="output-box hidden" id="output-messaggio"></div>
+      <div class="output-actions hidden" id="actions-messaggio">
+        <button class="btn-copy" onclick="copia('output-messaggio','actions-messaggio')">📋 Copia testo</button>
+      </div>
+    </div>
+
+    <!-- PANNELLO RICERCA -->
+    <div class="tool-panel hidden" id="panel-ricerca">
+      <div class="tool-panel-title">
+        <button class="tool-back" onclick="closeTool()">←</button>
+        🔍 Fai una ricerca
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cosa vuoi cercare?</label>
+        <input class="form-input" id="ric-query" placeholder="Es. legge 104, storia di Modica, come funziona il catasto...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tipo di risposta</label>
+        <select class="form-select" id="ric-tipo">
+          <option value="riassunto chiaro e semplice">Riassunto semplice</option>
+          <option value="dettagliata e tecnica">Dettagliata e tecnica</option>
+          <option value="punti elenco">Punti elenco</option>
+          <option value="risposta breve">Risposta breve</option>
+        </select>
+      </div>
+      <button class="btn-genera" onclick="generaTool('ricerca')">🔍 Cerca</button>
+      <div class="output-box hidden" id="output-ricerca"></div>
+      <div class="output-actions hidden" id="actions-ricerca">
+        <button class="btn-copy" onclick="copia('output-ricerca','actions-ricerca')">📋 Copia testo</button>
+      </div>
+    </div>
+
+    <!-- PANNELLO RIASSUNTO -->
+    <div class="tool-panel hidden" id="panel-riassunto">
+      <div class="tool-panel-title">
+        <button class="tool-back" onclick="closeTool()">←</button>
+        📄 Riassumi un testo
+      </div>
+      <div class="form-group">
+        <label class="form-label">Incolla il testo da riassumere</label>
+        <textarea class="form-textarea" id="rias-testo" style="min-height:140px;" placeholder="Incolla qui il testo..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lunghezza del riassunto</label>
+        <select class="form-select" id="rias-lung">
+          <option value="breve (3-5 righe)">Breve (3-5 righe)</option>
+          <option value="medio (un paragrafo)">Medio (un paragrafo)</option>
+          <option value="dettagliato con punti chiave">Dettagliato con punti chiave</option>
+        </select>
+      </div>
+      <button class="btn-genera" onclick="generaTool('riassunto')">📄 Riassumi</button>
+      <div class="output-box hidden" id="output-riassunto"></div>
+      <div class="output-actions hidden" id="actions-riassunto">
+        <button class="btn-copy" onclick="copia('output-riassunto','actions-riassunto')">📋 Copia testo</button>
+      </div>
+    </div>
+
+    <div class="footer-info">
+      <a href="https://modicaai.it">modicaai.it</a> &nbsp;·&nbsp; © 2026 ModicaAI — <a href="mailto:info@modicaai.it">info@modicaai.it</a>
+    </div>
   </div>
+
 </div>
 
-<!-- Input fisso in basso -->
-<div class="input-bar">
+<!-- Input bar (solo sezione Modica) -->
+<div class="input-bar" id="inputBar">
   <div class="input-wrap">
     <input type="text" id="searchInput" placeholder="Chiedimi qualcosa su Modica..." autocomplete="off">
     <button class="btn-send" id="sendBtn">→</button>
@@ -294,31 +398,37 @@
 <script>
 const API_URL = "https://modicaai-api.onrender.com";
 
-const CATEGORIE = {
-  tutto:      { label: '✨ Tutto',       placeholder: 'Chiedimi qualcosa su Modica...' },
-  meteo:      { label: '🌤 Meteo',       placeholder: 'Che tempo fa a Modica?' },
-  ristoranti: { label: '🍽 Ristoranti',  placeholder: 'Consigliami un ristorante...' },
-  turismo:    { label: '🏛 Turismo',     placeholder: 'Cosa vedere a Modica?' },
-  storia:     { label: '📜 Storia',      placeholder: 'Dimmi qualcosa sulla storia di Modica...' },
-  farmacia:   { label: '💊 Farmacie',    placeholder: 'Farmacia di turno a Modica?' },
-  hotel:      { label: '🏨 Hotel',       placeholder: 'Dove dormire a Modica?' },
-  bar:        { label: '☕ Bar',          placeholder: 'Migliori bar a Modica?' },
-};
-
-const CATEGORIE_EN = {
-  tutto:      { placeholder: 'Ask me anything about Modica...' },
-  meteo:      { placeholder: 'What\'s the weather in Modica?' },
-  ristoranti: { placeholder: 'Recommend a restaurant...' },
-  turismo:    { placeholder: 'What to see in Modica?' },
-  storia:     { placeholder: 'Tell me about Modica\'s history...' },
-  farmacia:   { placeholder: 'Pharmacy open now in Modica?' },
-  hotel:      { placeholder: 'Where to stay in Modica?' },
-  bar:        { placeholder: 'Best cafés in Modica?' },
-};
-
+// ── Stato ────────────────────────────────────────────────────────────────────
 let lang = 'it';
+let sezione = 'modica';
 let categoriaAttiva = 'tutto';
+let toolAttivo = null;
 
+const CATEGORIE = {
+  tutto:      'Chiedimi qualcosa su Modica...',
+  meteo:      'Che tempo fa a Modica?',
+  ristoranti: 'Consigliami un ristorante...',
+  turismo:    'Cosa vedere a Modica?',
+  storia:     'Dimmi della storia di Modica...',
+  farmacia:   'Farmacia di turno?',
+  hotel:      'Dove dormire a Modica?',
+  bar:        'Migliori bar a Modica?',
+};
+
+// ── Sezione ───────────────────────────────────────────────────────────────────
+function switchSection(btn, s) {
+  sezione = s;
+  document.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sectionModica').style.display = s === 'modica' ? '' : 'none';
+  document.getElementById('sectionLavoro').style.display = s === 'lavoro' ? '' : 'none';
+  document.getElementById('catBar').classList.toggle('hidden', s !== 'modica');
+  document.getElementById('inputBar').classList.toggle('hidden', s !== 'modica');
+  document.getElementById('main').classList.toggle('no-cats', s !== 'modica');
+  if (s === 'lavoro') closeTool();
+}
+
+// ── Lingua ────────────────────────────────────────────────────────────────────
 function setLang(btn, l) {
   lang = l;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -326,6 +436,11 @@ function setLang(btn, l) {
   aggiornaPlaceholder();
 }
 
+function aggiornaPlaceholder() {
+  document.getElementById('searchInput').placeholder = CATEGORIE[categoriaAttiva] || 'Chiedimi qualcosa...';
+}
+
+// ── Categorie Modica ──────────────────────────────────────────────────────────
 function setCategoria(btn, cat) {
   categoriaAttiva = cat;
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -334,25 +449,103 @@ function setCategoria(btn, cat) {
   document.getElementById('searchInput').focus();
 }
 
-function aggiornaPlaceholder() {
-  const map = lang === 'en' ? CATEGORIE_EN : CATEGORIE;
-  document.getElementById('searchInput').placeholder = map[categoriaAttiva]?.placeholder || 'Chiedimi qualcosa...';
+function resetView() {
+  switchSection(document.querySelector('.section-tab'), 'modica');
 }
 
-async function fetchAPI(domanda) {
-  const res = await fetch(`${API_URL}/ask`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ domanda }),
+// ── Tool Lavoro ───────────────────────────────────────────────────────────────
+function openTool(tool) {
+  toolAttivo = tool;
+  document.getElementById('toolGrid').style.display = 'none';
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById(`panel-${tool}`).classList.remove('hidden');
+}
+
+function closeTool() {
+  toolAttivo = null;
+  document.getElementById('toolGrid').style.display = '';
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.add('hidden'));
+}
+
+// ── Genera con AI ─────────────────────────────────────────────────────────────
+async function generaTool(tool) {
+  let prompt = '';
+
+  if (tool === 'mail') {
+    const dest   = document.getElementById('mail-dest').value.trim();
+    const ogg    = document.getElementById('mail-oggetto').value.trim();
+    const tono   = document.getElementById('mail-tono').value;
+    const det    = document.getElementById('mail-dettagli').value.trim();
+    if (!dest || !ogg) { alert('Inserisci almeno destinatario e oggetto.'); return; }
+    prompt = `Scrivi una mail ${tono} al seguente destinatario: ${dest}. Oggetto: ${ogg}.${det ? ' Dettagli: ' + det : ''} Includi oggetto, corpo della mail e saluti finali. Rispondi direttamente con la mail, senza spiegazioni.`;
+  }
+  else if (tool === 'messaggio') {
+    const dest    = document.getElementById('msg-dest').value.trim();
+    const tipo    = document.getElementById('msg-tipo').value;
+    const tono    = document.getElementById('msg-tono').value;
+    const cont    = document.getElementById('msg-contenuto').value.trim();
+    if (!cont) { alert('Descrivi cosa vuoi comunicare.'); return; }
+    prompt = `Scrivi un ${tipo} con tono ${tono}${dest ? ' diretto a ' + dest : ''}. Contenuto: ${cont}. Rispondi direttamente con il messaggio, senza spiegazioni.`;
+  }
+  else if (tool === 'ricerca') {
+    const query = document.getElementById('ric-query').value.trim();
+    const tipo  = document.getElementById('ric-tipo').value;
+    if (!query) { alert('Inserisci cosa vuoi cercare.'); return; }
+    prompt = `Fai una ricerca su: "${query}". Fornisci una risposta ${tipo}. Usa le tue conoscenze e, se pertinente, cita fonti affidabili.`;
+  }
+  else if (tool === 'riassunto') {
+    const testo = document.getElementById('rias-testo').value.trim();
+    const lung  = document.getElementById('rias-lung').value;
+    if (!testo) { alert('Incolla il testo da riassumere.'); return; }
+    prompt = `Riassumi il seguente testo in modo ${lung}:\n\n${testo}`;
+  }
+
+  const outputEl  = document.getElementById(`output-${tool}`);
+  const actionsEl = document.getElementById(`actions-${tool}`);
+  const btnEl     = document.querySelector(`#panel-${tool} .btn-genera`);
+
+  outputEl.classList.add('hidden');
+  actionsEl.classList.add('hidden');
+  btnEl.disabled = true;
+  btnEl.textContent = '⏳ Elaborazione...';
+
+  try {
+    const res = await fetch(`${API_URL}/ask`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domanda: prompt }),
+    });
+    const data = await res.json();
+    outputEl.textContent = data.risposta;
+    outputEl.classList.remove('hidden');
+    actionsEl.classList.remove('hidden');
+  } catch {
+    outputEl.textContent = 'Errore di connessione. Riprova tra qualche secondo.';
+    outputEl.classList.remove('hidden');
+  }
+
+  btnEl.disabled = false;
+  btnEl.textContent = btnEl.textContent.replace('⏳ Elaborazione...', '');
+  // Ripristina testo pulsante
+  const labels = { mail:'✉️ Genera mail', messaggio:'💬 Genera messaggio', ricerca:'🔍 Cerca', riassunto:'📄 Riassumi' };
+  btnEl.textContent = labels[tool];
+}
+
+// ── Copia ─────────────────────────────────────────────────────────────────────
+function copia(outputId, actionsId) {
+  const testo = document.getElementById(outputId).textContent;
+  navigator.clipboard.writeText(testo).then(() => {
+    const btn = document.querySelector(`#${actionsId} .btn-copy`);
+    btn.textContent = '✅ Copiato!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copia testo'; btn.classList.remove('copied'); }, 2000);
   });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return await res.json();
 }
 
+// ── Chat Modica ───────────────────────────────────────────────────────────────
 function formatText(t) {
   return t
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n•/g, '<br>•')
     .replace(/\* /g, '• ')
     .replace(/\n/g, '<br>');
 }
@@ -360,31 +553,29 @@ function formatText(t) {
 function addMessage(type, html, badge) {
   const area = document.getElementById('chatArea');
   document.getElementById('hero').classList.add('hidden');
-
   const div = document.createElement('div');
   div.className = `msg msg-${type}`;
   div.innerHTML = type === 'user'
     ? `<span>${html}</span>`
-    : `<div class="msg-ai">${html}</div><div><span class="source-badge source-local">${badge}</span></div>`;
+    : `<div class="msg-ai">${html}</div><div><span class="source-badge">${badge}</span></div>`;
   area.appendChild(div);
   div.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
 function addDivider(cat) {
   if (cat === 'tutto') return;
+  const labels = { meteo:'🌤 Meteo', ristoranti:'🍽 Ristoranti', turismo:'🏛 Turismo', storia:'📜 Storia', farmacia:'💊 Farmacie', hotel:'🏨 Hotel', bar:'☕ Bar' };
   const area = document.getElementById('chatArea');
-  const label = CATEGORIE[cat]?.label || cat;
   const div = document.createElement('div');
   div.className = 'cat-divider';
-  div.textContent = label;
+  div.textContent = labels[cat] || cat;
   area.appendChild(div);
 }
 
 function showTyping() {
   const area = document.getElementById('chatArea');
   const div = document.createElement('div');
-  div.id = 'typing';
-  div.className = 'msg msg-ai typing';
+  div.id = 'typing'; div.className = 'msg msg-ai typing';
   div.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
   area.appendChild(div);
   div.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -394,8 +585,6 @@ function removeTyping() { document.getElementById('typing')?.remove(); }
 async function ask(q) {
   q = q.trim();
   if (!q) return;
-
-  // Se c'è una categoria attiva e la domanda non la menziona, aggiungila
   let domanda = q;
   if (categoriaAttiva !== 'tutto') {
     const hints = {
@@ -408,23 +597,23 @@ async function ask(q) {
       bar: ['bar','caffe','caffè'],
     };
     const hasHint = hints[categoriaAttiva]?.some(k => q.toLowerCase().includes(k));
-    if (!hasHint) {
-      domanda = `${q} — categoria: ${categoriaAttiva}`;
-    }
+    if (!hasHint) domanda = `${q} — categoria: ${categoriaAttiva}`;
   }
-
   document.getElementById('searchInput').value = '';
   addDivider(categoriaAttiva);
   addMessage('user', q, '');
   showTyping();
-
   try {
-    const data = await fetchAPI(domanda);
+    const res = await fetch(`${API_URL}/ask`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domanda }),
+    });
+    const data = await res.json();
     removeTyping();
     addMessage('ai', formatText(data.risposta), '🤖 ModicaAI');
   } catch {
     removeTyping();
-    addMessage('ai', lang === 'en' ? 'Connection error. Please try again.' : 'Errore di connessione. Riprova tra qualche secondo.', '🤖 ModicaAI');
+    addMessage('ai', 'Errore di connessione. Riprova tra qualche secondo.', '🤖 ModicaAI');
   }
 }
 
