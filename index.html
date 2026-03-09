@@ -701,40 +701,212 @@ function estraiQueryImmagini(q) {
 async function cercaImmagini(q) {
   const query = estraiQueryImmagini(q);
   addMessage('user', q, '');
-  showTyping();
-  try {
-    const res = await fetch(API_URL + '/cerca-immagini', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, num: 5 })
-    });
-    const data = await res.json();
-    removeTyping();
-    if (!data.immagini || !data.immagini.length) {
-      addMessage('ai', `Nessuna immagine trovata per "<strong>${query}</strong>".`, 'Immagini', '');
-      return;
-    }
-        const fonteMap = {google:'Google Images', pixabay:'Pixabay', wikimedia:'Wikimedia Commons', unsplash:'Unsplash'};
-    const fonte = fonteMap[data.fonte] || 'Web';
-    data.immagini.forEach(img => {
-      html += `<div class="img-search-item"><a href="${img.url}" target="_blank" rel="noopener">
-        <img src="${img.thumbnail||img.url}" alt="${(img.title||query).slice(0,40)}" loading="lazy"
-          onerror="this.parentElement.parentElement.style.display='none'"
-          style="width:100%;height:120px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .2s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
-      </a><div class="img-search-caption">${(img.title||'').slice(0,45)}</div></div>`;
-    });
-    html += '</div>';
-    const area = document.getElementById('chatArea');
-    const wrap = document.createElement('div');
-    wrap.className = 'msg msg-ai';
-    wrap.innerHTML = `<div class="msg-ai-wrap"><div class="msg-ai">${html}</div>
-      <div class="msg-footer"><span class="source-badge">${fonte}</span></div></div>`;
-    area.appendChild(wrap);
-    wrap.scrollIntoView({ behavior:'smooth', block:'end' });
-  } catch(e) {
-    removeTyping();
-    addMessage('ai', 'Errore ricerca immagini. Riprova.', 'Immagini', '');
+  showTyping('🔍 Cerco immagini di ' + query + '...');
+
+  const immagini = await cercaImmaginiDiretta(query);
+  removeTyping();
+
+  if (immagini && immagini.length > 0) {
+    mostraGrigliaImmagini(query, immagini);
+  } else {
+    addMessage('ai',
+      `Non ho trovato immagini per "<strong>${query}</strong>". ` +
+      `Prova su <a href="https://www.google.com/search?q=${encodeURIComponent(query)}&tbm=isch" target="_blank">Google Immagini</a>.`,
+      'Immagini', '');
   }
 }
+
+// Cerca immagini direttamente da Wikimedia — funziona dal browser senza backend
+async function cercaImmaginiDiretta(query) {
+
+  // API 1: Wikimedia Commons search (generator=search sul namespace File)
+  // Usa iiprop=url|thumburl separati da pipe codificato
+  try {
+    const params = new URLSearchParams({
+      action: 'query',
+      generator: 'search',
+      gsrnamespace: '6',
+      gsrsearch: 'filetype:bitmap ' + query,
+      gsrlimit: '8',
+      prop: 'imageinfo',
+      iiprop: 'url|thumburl',
+      iiurlwidth: '500',
+      format: 'json',
+      origin: '*'
+    });
+    const res = await fetch('https://commons.wikimedia.org/w/api.php?' + params);
+    if (res.ok) {
+      const data = await res.json();
+      const pages = Object.values(data?.query?.pages || {});
+      const imgs = pages
+        .map(p => {
+          const ii = p.imageinfo?.[0];
+          if (!ii) return null;
+          // thumburl potrebbe essere assente se il server non lo restituisce
+          // in quel caso costruiamo un URL thumbnail manualmente dall'url originale
+          const fullUrl = ii.url || '';
+          const thumbUrl = ii.thumburl || fullUrl;
+          if (!fullUrl) return null;
+          return {
+            url: fullUrl,
+            thumbnail: thumbUrl,
+            title: (p.title || '').replace('File:', '').replace(/\.[^.]+$/, '')
+          };
+        })
+        .filter(i => i && i.url && !i.url.match(/\.(svg|ogg|ogv|webm|pdf|djvu)$/i))
+        .slice(0, 5);
+      if (imgs.length > 0) {
+        console.log('Wikimedia Commons OK:', imgs.length, 'immagini');
+        return imgs;
+      }
+    }
+  } catch(e) { console.warn('Wikimedia error:', e.message); }
+
+  // API 2: Wikipedia — cerca l'articolo e prende le immagini della pagina
+  // (non solo thumbnail ma tutte le immagini nell'articolo)
+  try {
+    const params2 = new URLSearchParams({
+      action: 'query',
+      titles: query,
+      prop: 'images',
+      imlimit: '20',
+      format: 'json',
+      origin: '*'
+    });
+    const res2 = await fetch('https://it.wikipedia.org/w/api.php?' + params2);
+    if (res2.ok) {
+      const data2 = await res2.json();
+      const pages2 = Object.values(data2?.query?.pages || {});
+      // Raccoglie i titoli di tutte le immagini nell'articolo
+      const imgTitles = [];
+      for (const p of pages2) {
+        if (p.images) imgTitles.push(...p.images.map(i => i.title));
+      }
+      // Filtra solo foto reali (non icone SVG/PNG piccole)
+      const fotTitles = imgTitles
+        .filter(t => t && /\.(jpg|jpeg|png|gif)$/i.test(t))
+        .slice(0, 8);
+
+      if (fotTitles.length > 0) {
+        // Recupera URL delle immagini
+        const params3 = new URLSearchParams({
+          action: 'query',
+          titles: fotTitles.join('|'),
+          prop: 'imageinfo',
+          iiprop: 'url|thumburl',
+          iiurlwidth: '500',
+          format: 'json',
+          origin: '*'
+        });
+        const res3 = await fetch('https://it.wikipedia.org/w/api.php?' + params3);
+        if (res3.ok) {
+          const data3 = await res3.json();
+          const pages3 = Object.values(data3?.query?.pages || {});
+          const imgs2 = pages3
+            .map(p => {
+              const ii = p.imageinfo?.[0];
+              if (!ii?.url) return null;
+              return {
+                url: ii.url,
+                thumbnail: ii.thumburl || ii.url,
+                title: (p.title || '').replace('File:', '').replace(/\.[^.]+$/, '')
+              };
+            })
+            .filter(Boolean)
+            .slice(0, 5);
+          if (imgs2.length > 0) {
+            console.log('Wikipedia immagini articolo OK:', imgs2.length);
+            return imgs2;
+          }
+        }
+      }
+    }
+  } catch(e) { console.warn('Wikipedia error:', e.message); }
+
+  // API 3: Wikipedia search — cerca articoli correlati e prende thumbnail
+  try {
+    const params4 = new URLSearchParams({
+      action: 'query',
+      list: 'search',
+      srsearch: query,
+      srlimit: '5',
+      format: 'json',
+      origin: '*'
+    });
+    const res4 = await fetch('https://it.wikipedia.org/w/api.php?' + params4);
+    if (res4.ok) {
+      const data4 = await res4.json();
+      const results = data4?.query?.search || [];
+      const titles = results.map(r => r.title).slice(0, 3);
+      if (titles.length > 0) {
+        const params5 = new URLSearchParams({
+          action: 'query',
+          titles: titles.join('|'),
+          prop: 'pageimages',
+          piprop: 'thumbnail',
+          pithumbsize: '500',
+          pilimit: '5',
+          format: 'json',
+          origin: '*'
+        });
+        const res5 = await fetch('https://it.wikipedia.org/w/api.php?' + params5);
+        if (res5.ok) {
+          const data5 = await res5.json();
+          const pages5 = Object.values(data5?.query?.pages || {});
+          const imgs3 = pages5
+            .filter(p => p.thumbnail?.source)
+            .map(p => ({
+              url: p.thumbnail.source,
+              thumbnail: p.thumbnail.source,
+              title: p.title || query
+            }));
+          if (imgs3.length > 0) {
+            console.log('Wikipedia search thumbnails OK:', imgs3.length);
+            return imgs3;
+          }
+        }
+      }
+    }
+  } catch(e) { console.warn('Wikipedia search error:', e.message); }
+
+  return [];
+}
+
+
+function mostraGrigliaImmagini(query, immagini, fonte) {
+  const fonteLabel = {
+    google: 'Google Images', pixabay: 'Pixabay',
+    wikimedia: 'Wikimedia Commons', wikipedia: 'Wikipedia',
+    web: 'Web'
+  }[fonte] || fonte;
+
+  let html = `<div class="img-grid-label">📷 <strong>${query}</strong> &nbsp;·&nbsp; ${fonteLabel}</div><div class="img-search-grid">`;
+  immagini.forEach(img => {
+    const thumb = img.thumbnail || img.url;
+    const full  = img.url || img.thumbnail;
+    const title = (img.title || '').slice(0, 50);
+    html += `<div class="img-search-item">
+      <a href="${full}" target="_blank" rel="noopener">
+        <img src="${thumb}" alt="${title}" loading="lazy"
+          onerror="this.parentElement.parentElement.style.display='none'"
+          style="width:100%;height:120px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .2s"
+          onmouseover="this.style.transform='scale(1.04)'"
+          onmouseout="this.style.transform='scale(1)'">
+      </a>
+      <div class="img-search-caption">${title}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  const area = document.getElementById('chatArea');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg msg-ai';
+  wrap.innerHTML = `<div class="msg-ai-wrap"><div class="msg-ai">${html}</div>
+    <div class="msg-footer"><span class="source-badge">${fonteLabel}</span></div></div>`;
+  area.appendChild(wrap);
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
 
 function showTyping(label) {
   const area = document.getElementById('chatArea');
