@@ -147,6 +147,26 @@
   }
   .fuel-ticker .ticker-item:hover { color: #ffd166; }
 
+
+  /* ── Chip suggerimenti hero ── */
+  .chips-grid {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center;
+    max-width: 540px; margin: 18px auto 0;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+  .chip {
+    padding: 7px 14px; border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--white); color: var(--ink-mid);
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.18s;
+    font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--sky); color: var(--sky); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  body.dark .chip { background: var(--white); border-color: var(--border); color: var(--ink-mid); }
+  body.dark .chip:hover { border-color: var(--sky); color: var(--sky); }
   /* Toggle dark mode */
   .btn-dark { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--white); color:var(--ink-mid); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.18s; flex-shrink:0; }
   .btn-dark:hover { border-color:var(--sky); color:var(--sky); }
@@ -367,7 +387,7 @@
 
 <div class="main">
   <div class="hero" id="hero">
-    <div class="hero-eyebrow">Assistente AI · Modica, Sicilia</div>
+    <div class="hero-eyebrow">Assistente AI · Modica, Sicilia · Prezzi carburanti live · Notizie locali</div>
     <div class="hero-logo-big">
       <div class="hero-mark">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -379,6 +399,16 @@
     </div>
     <div class="hero-divider"></div>
     <div class="hero-sub">Il tuo assistente locale per Modica</div>
+  </div>
+
+  <!-- Chip suggerimenti -->
+  <div class="chips-grid" id="chipsGrid">
+    <button class="chip" onclick="askChip(this,'Dove conviene fare benzina oggi?')">⛽ Benzina più economica</button>
+    <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Ultime notizie</button>
+    <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo oggi</button>
+    <button class="chip" onclick="askChip(this,'Quali ristoranti mi consigli?')">🍽️ Ristoranti</button>
+    <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
+    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
   </div>
 
   <!-- Suggerimenti iniziali -->
@@ -474,11 +504,17 @@ function removeTyping() { const t = document.getElementById('typing'); if (t) t.
 
 // ── Rilevamento richieste immagine ────────────────────────────────
 function isRichiestaImmagine(q) {
-  const kw = ['crea immagine','genera immagine','disegna','illustra','crea una foto','genera una foto','crea un immagine','genera un immagine'];
+  const kw = ['crea immagine','genera immagine','disegna','illustra','crea una foto','genera una foto','crea un immagine','genera un immagine','fammi vedere','mostrami un','dipingi','visualizza','immagine di','foto di','create an image','generate an image','draw','paint','show me a picture','make a photo'];
   return kw.some(k => q.toLowerCase().includes(k));
 }
 
 // ── Chat principale ───────────────────────────────────────────────
+function askChip(btn, domanda) {
+  const grid = document.getElementById('chipsGrid');
+  if (grid) grid.style.display = 'none';
+  ask(domanda);
+}
+
 async function ask(q) {
   q = q.trim();
   if (!q) return;
