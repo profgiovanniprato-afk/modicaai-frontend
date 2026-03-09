@@ -2,7 +2,7 @@
   "name": "ModicaAI",
   "short_name": "ModicaAI",
   "description": "Il tuo assistente AI per Modica, Sicilia",
-  "start_url": "/modicaai-frontend/",
+  "start_url": "/",
   "scope": "/modicaai-frontend/",
   "display": "standalone",
   "background_color": "#FFFFFF",
