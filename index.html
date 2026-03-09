@@ -117,6 +117,35 @@
   body.dark .typing { background:var(--white); }
   body.dark .btn-copy-msg { background:var(--white); }
   body.dark .news-ticker { background:#0f1218; border-bottom:1px solid rgba(255,255,255,0.05); }
+  body.dark .fuel-ticker { background:#0f1218; border-bottom:1px solid rgba(255,255,255,0.05); }
+
+  /* Ticker carburanti */
+  .fuel-ticker {
+    position: fixed; top:32px; left:0; right:0; z-index:499;
+    height: 28px;
+    background: #1a1a2e;
+    display: flex; align-items: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .fuel-ticker .ticker-label {
+    background: #e63946;
+    font-size: 9px;
+    padding: 0 10px;
+  }
+  .fuel-ticker .ticker-track {
+    animation: ticker-scroll 50s linear infinite;
+  }
+  .fuel-ticker .ticker-item {
+    font-size: 11px;
+    color: rgba(255,255,255,0.85);
+    padding: 0 24px;
+  }
+  .fuel-ticker .ticker-item strong {
+    color: #ffd166;
+    font-weight: 700;
+  }
+  .fuel-ticker .ticker-item:hover { color: #ffd166; }
 
   /* Toggle dark mode */
   .btn-dark { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--white); color:var(--ink-mid); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.18s; flex-shrink:0; }
@@ -124,10 +153,10 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
 
-  .top-stripe { position:fixed; top:32px; left:0; right:0; height:3px; z-index:400; background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky)); background-size:300% 100%; animation:stripe 6s linear infinite; }
+  .top-stripe { position:fixed; top:60px; left:0; right:0; height:3px; z-index:400; background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky)); background-size:300% 100%; animation:stripe 6s linear infinite; }
   @keyframes stripe{0%{background-position:0%}100%{background-position:300%}}
 
-  .header { position:fixed; top:35px; left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
+  .header { position:fixed; top:63px; left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
 
   .logo { display:flex; align-items:center; gap:10px; cursor:pointer; }
   .logo-mark { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(26,58,92,0.30); position:relative; overflow:hidden; flex-shrink:0; }
@@ -263,6 +292,14 @@
 
 
 <!-- News Ticker -->
+<div class="fuel-ticker" id="fuelTicker">
+  <div class="ticker-label">⛽ Carburanti</div>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track" id="fuelTrack">
+      <span class="ticker-item">Caricamento prezzi...</span>
+    </div>
+  </div>
+</div>
 <div class="news-ticker" id="newsTicker">
   <div class="ticker-label">📰 News</div>
   <div class="ticker-track-wrap">
@@ -317,11 +354,6 @@
     </div>
     <div class="hero-divider"></div>
     <div class="hero-sub">Il tuo assistente locale per Modica</div>
-    <div style="margin-top:20px; animation:fadeUp 0.6s 0.4s ease both;">
-      <button onclick="mostraCarburanti()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:500;color:var(--ink-mid);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.18s;" onmouseover="this.style.borderColor='var(--sky)';this.style.color='var(--sky)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-mid)'">
-        ⛽ Prezzi carburanti vicino a Modica
-      </button>
-    </div>
   </div>
 
   <!-- Suggerimenti iniziali -->
@@ -481,6 +513,37 @@ async function generaImmagine(prompt) {
 }
 
 // ── Carburanti ───────────────────────────────────────────────────
+// ── Ticker carburanti (avvio automatico) ─────────────────────────
+async function caricaCarburantiFuel() {
+  try {
+    const res = await fetch(API_URL + '/carburanti');
+    const data = await res.json();
+    if (!data.stazioni || !data.stazioni.length) return;
+
+    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
+    const track = document.getElementById('fuelTrack');
+    if (!track) return;
+
+    let items = '';
+    data.stazioni.forEach(s => {
+      const prezziOrdinati = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean);
+      prezziOrdinati.forEach(p => {
+        items += `<span class="ticker-item"><strong>${s.nome}</strong> &nbsp;${p.carburante} ${p.tipo}: <strong>${p.prezzo.toFixed(3)} €/L</strong> <small>(${s.dist} km)</small></span>`;
+      });
+    });
+
+    if (!items) return;
+    // Duplica per scorrimento continuo senza salti
+    track.innerHTML = items + items;
+    // Adatta velocità animazione alla quantità di contenuto
+    const totalWidth = track.scrollWidth / 2;
+    const speed = Math.max(30, Math.round(totalWidth / 80));
+    track.style.animationDuration = speed + 's';
+  } catch (e) {
+    // Ticker silenzioso in caso di errore
+  }
+}
+
 async function mostraCarburanti() {
   addMessage('user', '⛽ Prezzi carburanti vicino a Modica', '');
   showTyping();
@@ -489,7 +552,7 @@ async function mostraCarburanti() {
     const data = await res.json();
     removeTyping();
     if (!data.stazioni || !data.stazioni.length) {
-      addMessage('ai', 'Nessuna stazione trovata nel raggio di 15 km. ' + (data.error || ''), 'Carburanti', '');
+      addMessage('ai', 'Nessuna stazione trovata nel raggio. ' + (data.error || ''), 'Carburanti', '');
       return;
     }
     const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
@@ -497,11 +560,9 @@ async function mostraCarburanti() {
     data.stazioni.forEach(s => {
       html += `<strong>${s.nome}</strong> — ${s.comune} (${s.dist} km)<br>`;
       const prezziOrdinati = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean);
-      if (prezziOrdinati.length) {
-        prezziOrdinati.forEach(p => {
-          html += `&nbsp;&nbsp;• ${p.carburante} <em>${p.tipo}</em>: <strong>${p.prezzo.toFixed(3)} €/L</strong><br>`;
-        });
-      }
+      prezziOrdinati.forEach(p => {
+        html += `&nbsp;&nbsp;• ${p.carburante} <em>${p.tipo}</em>: <strong>${p.prezzo.toFixed(3)} €/L</strong><br>`;
+      });
       html += '<br>';
     });
     html += `<small style="color:var(--ink-soft)">${data.aggiornamento}</small>`;
@@ -567,6 +628,7 @@ async function caricaNotizie() {
 }
 
 caricaNotizie();
+caricaCarburantiFuel();
 
 </script>
 </body>
