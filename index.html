@@ -488,7 +488,7 @@ document.getElementById('searchInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') ask(this.value);
 });
 
-// ── Genera Immagine (Hugging Face FLUX.1) ────────────────────────
+// ── Genera Immagine (Pollinations AI) ──────────────────────────────
 async function generaImmagine(prompt) {
   addMessage('user', prompt, '');
   showTyping();
@@ -501,14 +501,14 @@ async function generaImmagine(prompt) {
     const data = await res.json();
     removeTyping();
     if (data.immagine) {
-      const html = `<img src="data:image/jpeg;base64,${data.immagine}" style="max-width:100%;border-radius:12px;margin-top:4px;" alt="Immagine generata"><br><small style="color:var(--ink-soft)">Generata con FLUX.1 · Hugging Face</small>`;
-      addMessage('ai', html, 'FLUX.1', '');
+      const html = `<img src="data:image/jpeg;base64,${data.immagine}" style="max-width:100%;border-radius:12px;margin-top:4px;" alt="Immagine generata"><br><small style="color:var(--ink-soft)">Generata con Pollinations AI · FLUX</small>`;
+      addMessage('ai', html, 'Pollinations', '');
     } else {
-      addMessage('ai', data.error || 'Errore nella generazione.', 'FLUX.1', '');
+      addMessage('ai', data.error || 'Errore nella generazione.', 'Pollinations', '');
     }
   } catch (e) {
     removeTyping();
-    addMessage('ai', 'Errore di connessione durante la generazione.', 'FLUX.1', '');
+    addMessage('ai', 'Errore di connessione durante la generazione.', 'Pollinations', '');
   }
 }
 
