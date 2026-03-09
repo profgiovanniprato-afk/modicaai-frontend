@@ -3,8 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ModicaAI — Il tuo assistente locale</title>
-<meta name="description" content="ModicaAI è il tuo assistente AI per Modica, Sicilia. Meteo, ristoranti, storia, turismo e molto altro.">
+
+<!-- SEO Primary -->
+<title>ModicaAI — Assistente AI per Modica, Sicilia</title>
+<meta name="description" content="ModicaAI è l'assistente virtuale intelligente di Modica. Scopri ristoranti, meteo, farmacie di turno, storia, turismo e cosa fare a Modica in tempo reale.">
+<meta name="keywords" content="Modica, assistente virtuale Modica, chatbot Modica, cosa fare a Modica, ristoranti Modica, farmacia di turno Modica, meteo Modica, turismo Modica, Modica Sicilia, cioccolato di Modica, ModicaAI">
+<meta name="author" content="ModicaAI">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.modicaai.it/">
+
+<!-- Open Graph (Facebook, WhatsApp, Telegram) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.modicaai.it/">
+<meta property="og:title" content="ModicaAI — Assistente AI per Modica, Sicilia">
+<meta property="og:description" content="Chiedi tutto su Modica: ristoranti, meteo, farmacie di turno, storia e turismo. L'assistente AI locale di Modica, disponibile 24/7.">
+<meta property="og:image" content="https://www.modicaai.it/icon-512.png">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="ModicaAI">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ModicaAI — Assistente AI per Modica, Sicilia">
+<meta name="twitter:description" content="Chiedi tutto su Modica: ristoranti, meteo, farmacie di turno, storia e turismo.">
+<meta name="twitter:image" content="https://www.modicaai.it/icon-512.png">
+
+<!-- Geo tag (segnala a Google la posizione geografica) -->
+<meta name="geo.region" content="IT-RG">
+<meta name="geo.placename" content="Modica, Ragusa, Sicilia">
+<meta name="geo.position" content="36.8604;14.7742">
+<meta name="ICBM" content="36.8604, 14.7742">
+
+<!-- Schema.org JSON-LD (dati strutturati per Google) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ModicaAI",
+  "url": "https://www.modicaai.it",
+  "description": "Assistente virtuale AI per Modica, Sicilia. Informazioni su ristoranti, meteo, farmacie di turno, storia e turismo locale.",
+  "applicationCategory": "TravelApplication",
+  "operatingSystem": "Web, Android, iOS",
+  "inLanguage": "it",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Modica",
+    "addressRegion": "Ragusa",
+    "addressCountry": "IT"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "ModicaAI",
+    "url": "https://www.modicaai.it"
+  }
+}
+</script>
+
 <meta name="theme-color" content="#1A3A5C">
 
 <!-- PWA manifest inline -->
@@ -284,7 +342,7 @@
   <div class="chat-area" id="chatArea"></div>
   <div class="footer-info">
     <a href="https://modicaai.it">modicaai.it</a> &nbsp;·&nbsp; Modica, Sicilia &nbsp;·&nbsp;
-    © 2026 ModicaAI — <a href="mailto:infomodicaai@gmail.com">infomodicaai@gmail.com</a>
+    © 2026 ModicaAI — <a href="/cdn-cgi/l/email-protection#a4cdcac2cbc9cbc0cdc7c5c5cde4c3c9c5cdc88ac7cbc9"><span class="__cf_email__" data-cfemail="98f1f6fef7f5f7fcf1fbf9f9f1d8fff5f9f1f4b6fbf7f5">[email&#160;protected]</span></a>
   </div>
 </div>
 
@@ -299,7 +357,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const API_URL = "https://modicaai-api.onrender.com";
 let lang = 'it', categoriaAttiva = 'tutto';
 let cronologia = []; // memoria conversazione
@@ -450,19 +508,4 @@ async function caricaNotizie() {
     requestAnimationFrame(() => {
       const totalWidth = track.scrollWidth / 2;
       const speed = Math.max(30, totalWidth / 80);
-      track.style.animationDuration = `${speed}s`;
-    });
-  } catch(e) {
-    console.log('Ticker RSS non disponibile');
-  }
-}
-caricaNotizie();
-
-
-// PWA Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
-</script>
-</body>
-</html>
+      track.style.animationDuration = `${spe
