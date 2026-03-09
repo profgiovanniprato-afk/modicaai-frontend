@@ -427,30 +427,31 @@ document.getElementById('searchInput').onkeydown = e => { if (e.key === 'Enter')
 // ── News Ticker RSS ──────────────────────────────────────────────
 async function caricaNotizie() {
   try {
-    const RSS_URL = encodeURIComponent('https://www.radiortm.it/feed/');
-    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${RSS_URL}&count=15`);
+    const res = await fetch(`${API_URL}/news`);
     const data = await res.json();
-    if (data.status !== 'ok' || !data.items?.length) return;
-    
+    if (!data.items?.length) return;
+
     const track = document.getElementById('tickerTrack');
-    const items = data.items.map(item => {
+    track.innerHTML = '';
+
+    // Crea items duplicati per loop infinito
+    const allItems = [...data.items, ...data.items];
+    allItems.forEach(item => {
       const a = document.createElement('a');
       a.className = 'ticker-item';
       a.textContent = item.title;
-      a.href = item.link;
+      a.href = item.link || '#';
       a.target = '_blank';
       a.rel = 'noopener';
-      return a;
+      track.appendChild(a);
     });
-    
-    // Duplica per loop infinito
-    track.innerHTML = '';
-    [...items, ...items].forEach(el => track.appendChild(el.cloneNode(true)));
-    
-    // Aggiusta velocità in base al contenuto
-    const totalWidth = track.scrollWidth / 2;
-    const speed = totalWidth / 80; // px per secondo
-    track.style.animationDuration = `${speed}s`;
+
+    // Aggiusta velocità in base alla lunghezza
+    requestAnimationFrame(() => {
+      const totalWidth = track.scrollWidth / 2;
+      const speed = Math.max(30, totalWidth / 80);
+      track.style.animationDuration = `${speed}s`;
+    });
   } catch(e) {
     console.log('Ticker RSS non disponibile');
   }
