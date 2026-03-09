@@ -39,10 +39,10 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
 
-  .top-stripe { position:fixed; top:0; left:0; right:0; height:3px; z-index:400; background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky)); background-size:300% 100%; animation:stripe 6s linear infinite; }
+  .top-stripe { position:fixed; top:32px; left:0; right:0; height:3px; z-index:400; background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky)); background-size:300% 100%; animation:stripe 6s linear infinite; }
   @keyframes stripe{0%{background-position:0%}100%{background-position:300%}}
 
-  .header { position:fixed; top:3px; left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
+  .header { position:fixed; top:35px; left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
 
   .logo { display:flex; align-items:center; gap:10px; cursor:pointer; }
   .logo-mark { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(26,58,92,0.30); position:relative; overflow:hidden; flex-shrink:0; }
@@ -63,14 +63,14 @@
   .btn-new-chat:hover { border-color:var(--sky); color:var(--sky); }
 
   /* Categorie */
-  .cat-bar { position:fixed; top:59px; left:0; right:0; z-index:298; background:rgba(255,255,255,0.98); border-bottom:1px solid var(--border); display:flex; gap:7px; padding:8px 20px; overflow-x:auto; scrollbar-width:none; }
+  .cat-bar { position:fixed; top:91px; left:0; right:0; z-index:298; background:rgba(255,255,255,0.98); border-bottom:1px solid var(--border); display:flex; gap:7px; padding:8px 20px; overflow-x:auto; scrollbar-width:none; }
   .cat-bar::-webkit-scrollbar{display:none}
   .cat-btn { display:flex; align-items:center; gap:5px; padding:6px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); font-size:12px; font-weight:500; color:var(--ink-mid); cursor:pointer; white-space:nowrap; font-family:'Outfit',sans-serif; transition:all 0.18s; flex-shrink:0; }
   .cat-btn:hover { border-color:var(--sky); color:var(--sky); }
   .cat-btn.active { background:var(--sky); border-color:var(--sky); color:var(--white); box-shadow:0 2px 10px rgba(26,58,92,0.22); }
 
   /* Main */
-  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:148px 20px 148px; }
+  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:180px 20px 148px; }
 
   /* Hero */
   .hero { text-align:center; margin-bottom:36px; }
@@ -130,9 +130,68 @@
   .btn-send:hover { background:linear-gradient(135deg,var(--gold) 0%,var(--gold-lt) 100%); box-shadow:0 4px 16px rgba(184,134,11,0.35); transform:scale(1.04); }
   .btn-send svg { transition:transform 0.2s; }
   .btn-send:hover svg { transform:translateX(2px); }
+
+  /* ── News Ticker ── */
+  .news-ticker {
+    position: fixed; top:0; left:0; right:0; z-index:500;
+    height: 32px;
+    background: var(--sky);
+    display: flex; align-items: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .ticker-label {
+    flex-shrink: 0;
+    background: var(--gold);
+    color: #fff;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0 12px; height: 100%;
+    display: flex; align-items: center;
+    z-index: 1;
+  }
+  .ticker-track-wrap {
+    flex: 1; overflow: hidden; position: relative;
+  }
+  .ticker-track {
+    display: flex; gap: 0;
+    white-space: nowrap;
+    animation: ticker-scroll 40s linear infinite;
+    will-change: transform;
+  }
+  .ticker-track:hover { animation-play-state: paused; }
+  .ticker-item {
+    display: inline-flex; align-items: center;
+    font-size: 12px; color: rgba(255,255,255,0.90);
+    padding: 0 32px; cursor: pointer;
+    transition: color 0.18s;
+    text-decoration: none;
+  }
+  .ticker-item:hover { color: var(--gold-lt); }
+  .ticker-item::after {
+    content: '·';
+    margin-left: 32px;
+    opacity: 0.4;
+  }
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
 </style>
 </head>
 <body>
+
+
+<!-- News Ticker -->
+<div class="news-ticker" id="newsTicker">
+  <div class="ticker-label">📰 News</div>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track" id="tickerTrack">
+      <span class="ticker-item">Caricamento notizie...</span>
+    </div>
+  </div>
+</div>
 
 <div class="top-stripe"></div>
 
@@ -364,6 +423,40 @@ async function ask(q) {
 }
 
 document.getElementById('searchInput').onkeydown = e => { if (e.key === 'Enter') ask(e.target.value); };
+
+// ── News Ticker RSS ──────────────────────────────────────────────
+async function caricaNotizie() {
+  try {
+    const RSS_URL = encodeURIComponent('https://www.radiortm.it/feed/');
+    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${RSS_URL}&count=15`);
+    const data = await res.json();
+    if (data.status !== 'ok' || !data.items?.length) return;
+    
+    const track = document.getElementById('tickerTrack');
+    const items = data.items.map(item => {
+      const a = document.createElement('a');
+      a.className = 'ticker-item';
+      a.textContent = item.title;
+      a.href = item.link;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      return a;
+    });
+    
+    // Duplica per loop infinito
+    track.innerHTML = '';
+    [...items, ...items].forEach(el => track.appendChild(el.cloneNode(true)));
+    
+    // Aggiusta velocità in base al contenuto
+    const totalWidth = track.scrollWidth / 2;
+    const speed = totalWidth / 80; // px per secondo
+    track.style.animationDuration = `${speed}s`;
+  } catch(e) {
+    console.log('Ticker RSS non disponibile');
+  }
+}
+caricaNotizie();
+
 
 // PWA Service Worker
 if ('serviceWorker' in navigator) {
