@@ -366,11 +366,7 @@ function nuovaChat() {
 }
 
 function formatText(t) {
-  return t
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\* /g, '• ')
-    .replace(/
-/g, '<br>');
+  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\* /g,'• ').replace(/\n/g,'<br>');
 }
 
 const copyIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
