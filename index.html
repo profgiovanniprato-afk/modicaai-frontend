@@ -650,23 +650,51 @@ async function condividiRisposta(btn) {
 // ── Ricerca immagini ─────────────────────────────────────────────
 function isRicercaImmagini(q) {
   const d = q.toLowerCase();
-  return ['cerca foto','cerca immagini','cerca immagine','mostrami foto',
-    'mostrami immagini','foto di','immagini di','immagine di',
-    'fammi vedere foto','trova foto','trova immagini',
+  // Trigger espliciti (ricerca immagini reali da web)
+  const triggers = [
+    'cerca foto','cerca la foto','cerca le foto','cerca delle foto',
+    'cerca immagini','cerca immagine','cerca un immagine','cerca una foto',
+    'mostrami foto','mostrami immagini','mostrami una foto','mostrami le foto',
+    'foto di','fotografie di','immagini di','immagine di',
+    'fammi vedere foto','fammi vedere le foto','fammi vedere immagini',
+    'trova foto','trova immagini','trova una foto',
+    'ricerca foto','ricerca immagini',
     'search images','search photos','find photos','find images',
-    'pictures of','photos of'].some(t => d.includes(t));
+    'pictures of','photos of','show me photos','show me images'
+  ];
+  if (triggers.some(t => d.includes(t))) return true;
+  // Pattern: "cerca [la/le/una/delle] foto/immagine"
+  if (/cerca (la|le|una|delle|degli|dei|il|lo|un) (foto|immagine|immagini|fotografia)/.test(d)) return true;
+  return false;
 }
 
 function estraiQueryImmagini(q) {
   const d = q.toLowerCase();
-  const rm = ['cerca foto di','cerca foto del','cerca foto della','cerca foto dei',
-    'cerca immagini di','cerca immagini del','cerca immagine di',
-    'mostrami foto di','mostrami immagini di','fammi vedere foto di',
-    'trova foto di','trova immagini di','search images of','pictures of','photos of',
-    'cerca foto','cerca immagini','cerca immagine','mostrami foto',
-    'mostrami immagini','fammi vedere','trova foto','trova immagini',
-  ].sort((a,b)=>b.length-a.length);
-  for (const r of rm) { if (d.includes(r)) return q.slice(d.indexOf(r)+r.length).trim(); }
+  // Rimuove prima le frasi più lunghe (ordine decrescente per lunghezza)
+  const rm = [
+    'cerca la foto di','cerca la foto del','cerca la foto della','cerca la foto dei',
+    'cerca le foto di','cerca le foto del','cerca una foto di',
+    'cerca foto di','cerca foto del','cerca foto della','cerca foto dei',
+    'cerca immagini di','cerca immagini del','cerca immagini della',
+    'cerca immagine di','cerca un immagine di','cerca una foto di',
+    'mostrami foto di','mostrami immagini di','mostrami una foto di',
+    'fammi vedere foto di','fammi vedere immagini di','fammi vedere le foto di',
+    'trova foto di','trova immagini di','trova una foto di',
+    'search images of','search photos of','find photos of','pictures of','photos of',
+    'cerca la foto','cerca le foto','cerca una foto',
+    'cerca foto','cerca immagini','cerca immagine',
+    'mostrami foto','mostrami immagini','mostrami una foto',
+    'fammi vedere foto','fammi vedere immagini','fammi vedere',
+    'trova foto','trova immagini',
+    'ricerca foto','ricerca immagini',
+  ].sort((a,b) => b.length - a.length);
+  for (const r of rm) {
+    if (d.includes(r)) {
+      const after = q.slice(d.indexOf(r) + r.length).trim();
+      // Rimuove preposizioni iniziali: "di", "del", "della", "dello", "dei"
+      return after.replace(/^(di |del |della |dello |dei |degli |delle |d'|lo |la |le |gli |i |il |un |una )/i, '').trim();
+    }
+  }
   return q.trim();
 }
 
