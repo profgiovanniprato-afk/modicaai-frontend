@@ -248,10 +248,10 @@
   .hero-mark { width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 24px rgba(26,58,92,0.25); position:relative; overflow:hidden; flex-shrink:0; }
   .hero-mark::after { content:''; position:absolute; bottom:-6px; right:-6px; width:22px; height:22px; background:var(--gold); border-radius:50%; opacity:0.6; }
   .hero-mark svg { position:relative; z-index:1; }
-  .hero-title { font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; color:var(--ink); letter-spacing:-1.5px; line-height:1; }
+  .hero-title { font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; color:var(--ink); letter-spacing:-1.5px; line-height:1.15; padding:0 4px; }
   .hero-title em { font-style:italic; color:var(--gold); }
-  .hero-divider { width:40px; height:1.5px; margin:16px auto; background:linear-gradient(90deg,transparent,var(--gold),transparent); animation:fadeUp 0.6s 0.3s ease both; }
-  .hero-sub { font-size:15px; color:var(--ink-soft); font-weight:300; line-height:1.5; animation:fadeUp 0.6s 0.35s ease both; }
+  .hero-divider { width:40px; height:1.5px; margin:20px auto 18px; background:linear-gradient(90deg,transparent,var(--gold),transparent); animation:fadeUp 0.6s 0.3s ease both; }
+  .hero-sub { font-size:15px; color:var(--ink-soft); font-weight:300; line-height:1.5; margin-bottom:6px; animation:fadeUp 0.6s 0.35s ease both; }
 
   /* Suggerimenti iniziali */
   .suggestions-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; max-width:660px; margin-bottom:8px; animation:fadeUp 0.6s 0.45s ease both; }
@@ -461,7 +461,7 @@
   <div class="chat-area" id="chatArea"></div>
   <div class="footer-info">
     <a href="https://modicaai.it">modicaai.it</a> &nbsp;·&nbsp; Modica, Sicilia &nbsp;·&nbsp;
-    © 2026 ModicaAI — <a href="/cdn-cgi/l/email-protection#523b3c343d3f3d363b3133333b12353f333b3e7c313d3f"><span class="__cf_email__" data-cfemail="2a43444c4547454e43494b4b436a4d474b434604494547">[email&#160;protected]</span></a>
+    © 2026 ModicaAI — <a href="mailto:infomodicaai@gmail.com">infomodicaai@gmail.com</a>
   </div>
 </div>
 
@@ -649,22 +649,20 @@ async function condividiRisposta(btn) {
 
 // ── Ricerca immagini ─────────────────────────────────────────────
 function isRicercaImmagini(q) {
-  const d = q.toLowerCase();
-  // Trigger espliciti (ricerca immagini reali da web)
-  const triggers = [
-    'cerca foto','cerca la foto','cerca le foto','cerca delle foto',
-    'cerca immagini','cerca immagine','cerca un immagine','cerca una foto',
-    'mostrami foto','mostrami immagini','mostrami una foto','mostrami le foto',
-    'foto di','fotografie di','immagini di','immagine di',
-    'fammi vedere foto','fammi vedere le foto','fammi vedere immagini',
-    'trova foto','trova immagini','trova una foto',
-    'ricerca foto','ricerca immagini',
-    'search images','search photos','find photos','find images',
-    'pictures of','photos of','show me photos','show me images'
-  ];
-  if (triggers.some(t => d.includes(t))) return true;
-  // Pattern: "cerca [la/le/una/delle] foto/immagine"
-  if (/cerca (la|le|una|delle|degli|dei|il|lo|un) (foto|immagine|immagini|fotografia)/.test(d)) return true;
+  const d = q.toLowerCase().trim();
+
+  // Verbi di RICERCA — cerca/trova/mostra/fammi vedere + parola visiva
+  const verbiCerca = /^(cerca|trova|ricerca|mostrami|fammi vedere|search|find|show me)/;
+  const oggettiVisivi = /(foto|fotografie|immagine|immagini|fotografia|pictures|photos|images)/;
+  if (verbiCerca.test(d) && oggettiVisivi.test(d)) return true;
+
+  // Pattern "cerca [articolo] foto/immagine di X"
+  if (/cerca (la|le|una|delle|degli|dei|il|lo|un|le) (foto|immagine|immagini|fotografia)/.test(d)) return true;
+
+  // "fotografie/immagini di X" senza verbi di generazione → cerca
+  const noGenera = !d.match(/^(crea|genera|fai|disegna|dipingi|illustra)/);
+  if (noGenera && /^(fotografie|immagini|foto)\s+di\s+\w/.test(d)) return true;
+
   return false;
 }
 
@@ -923,8 +921,31 @@ function removeTyping() { const t = document.getElementById('typing'); if (t) t.
 
 // ── Rilevamento richieste immagine ────────────────────────────────
 function isRichiestaImmagine(q) {
-  const kw = ['crea immagine','genera immagine','disegna','illustra','crea una foto','genera una foto','crea un immagine','genera un immagine','fammi vedere','mostrami un','dipingi','visualizza','immagine di','foto di','create an image','generate an image','draw','paint','show me a picture','make a photo'];
-  return kw.some(k => q.toLowerCase().includes(k));
+  const d = q.toLowerCase().trim();
+
+  // Regola 0: se inizia con verbo di ricerca → non è generazione
+  if (/^(cerca|trova|mostra|mostrami|fammi vedere|ricerca|search|find|show)/.test(d)) return false;
+
+  // Regola 1: verbo creativo + oggetto visivo qualsiasi → genera
+  // (disegna castello, crea sfondo, genera tramonto, illustra paesaggio...)
+  if (/^(crea|genera|fai|disegna|disegnami|dipingi|dipingimi|illustra|illustrami|costruisci|progetta)/.test(d)) return true;
+
+  // Regola 2: "voglio un/una + oggetto visivo"
+  if (/^voglio (un|una|uno)\s+(foto|sfondo|wallpaper|immagine|disegno|illustrazione|ritratto|paesaggio)/.test(d)) return true;
+
+  // Regola 3: "fammi un/una + oggetto creativo"
+  if (/^fammi (un|una|uno)\s+(disegno|illustrazione|ritratto|paesaggio|sfondo|wallpaper)/.test(d)) return true;
+
+  // Regola 4: "foto/sfondo/wallpaper di X" come prima parola → generazione
+  // (NON "immagine di" da sola — troppo ambiguo)
+  if (/^(foto|sfondo|sfondi|wallpaper)\s+(di|del|della|dello|dei|degli|delle)\s+\w/.test(d)) return true;
+
+  // Regola 5: keyword esplicite inglesi
+  const kwEn = ['create an image','generate an image','create a photo','generate a photo',
+    'create background','generate background','create wallpaper','draw me','paint me','make me a'];
+  if (kwEn.some(k => d.includes(k))) return true;
+
+  return false;
 }
 
 // ── Chat principale ───────────────────────────────────────────────
