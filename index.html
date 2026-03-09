@@ -447,12 +447,12 @@ async function ask(q) {
     });
     const data = await res.json();
     removeTyping();
-    addMessage('ai', formatText(data.risposta), '🤖 ModicaAI', data.risposta);
+    addMessage('ai', formatText(data.risposta), 'ModicaAI', data.risposta);
     cronologia.push({ role: 'assistant', content: data.risposta });
     if (cronologia.length > 20) cronologia = cronologia.slice(-20);
   } catch (e) {
     removeTyping();
-    addMessage('ai', 'Errore di connessione. Riprova.', '🤖 ModicaAI', '');
+    addMessage('ai', 'Errore di connessione. Riprova.', 'ModicaAI', '');
   }
 }
 
@@ -474,13 +474,13 @@ async function generaImmagine(prompt) {
     removeTyping();
     if (data.immagine) {
       const html = `<img src="data:image/jpeg;base64,${data.immagine}" style="max-width:100%;border-radius:12px;margin-top:4px;" alt="Immagine generata"><br><small style="color:var(--ink-soft)">Generata con FLUX.1 · Hugging Face</small>`;
-      addMessage('ai', html, '🎨 FLUX.1', '');
+      addMessage('ai', html, 'FLUX.1', '');
     } else {
-      addMessage('ai', data.error || 'Errore nella generazione.', '🎨 FLUX.1', '');
+      addMessage('ai', data.error || 'Errore nella generazione.', 'FLUX.1', '');
     }
   } catch (e) {
     removeTyping();
-    addMessage('ai', 'Errore di connessione durante la generazione.', '🎨 FLUX.1', '');
+    addMessage('ai', 'Errore di connessione durante la generazione.', 'FLUX.1', '');
   }
 }
 
@@ -493,7 +493,7 @@ async function mostraCarburanti() {
     const data = await res.json();
     removeTyping();
     if (!data.stazioni || !data.stazioni.length) {
-      addMessage('ai', 'Nessuna stazione trovata nel raggio di 15 km. ' + (data.error || ''), '⛽ Carburanti', '');
+      addMessage('ai', 'Nessuna stazione trovata nel raggio di 15 km. ' + (data.error || ''), 'Carburanti', '');
       return;
     }
     const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
@@ -509,10 +509,10 @@ async function mostraCarburanti() {
       html += '<br>';
     });
     html += `<small style="color:var(--ink-soft)">${data.aggiornamento}</small>`;
-    addMessage('ai', html, '⛽ MiMIT', '');
+    addMessage('ai', html, 'MiMIT', '');
   } catch (e) {
     removeTyping();
-    addMessage('ai', 'Errore nel recupero prezzi carburanti.', '⛽ Carburanti', '');
+    addMessage('ai', 'Errore nel recupero prezzi carburanti.', 'Carburanti', '');
   }
 }
 
