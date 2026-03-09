@@ -524,8 +524,19 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
-    // Aggiusta velocità in base alla lunghezza
     requestAnimationFrame(() => {
       const totalWidth = track.scrollWidth / 2;
-      const speed = Math.max(30, totalWidth / 80);
-      track.style.animationDuration = `${spe
+      const speed = Math.max(30, Math.round(totalWidth / 80));
+      track.style.animationDuration = speed + 's';
+    });
+
+  } catch(e) {
+    console.warn('Ticker news error:', e);
+  }
+}
+
+caricaNotizie();
+
+</script>
+</body>
+</html>
