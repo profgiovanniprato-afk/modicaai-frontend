@@ -348,33 +348,35 @@
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const API_URL = "https://modicaai-api.onrender.com";
 let lang = 'it';
-let cronologia = []; // memoria conversazione
+let cronologia = [];
 
-
+// ── Utilità ──────────────────────────────────────────────────────
 function setLang(btn, l) {
   lang = l;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 
-
 function nuovaChat() {
   cronologia = [];
   document.getElementById('chatArea').innerHTML = '';
   document.getElementById('hero').classList.remove('hidden');
-  document.getElementById('suggestionsGrid').style.display = '';
   document.getElementById('searchInput').value = '';
+  document.getElementById('searchInput').placeholder = 'Chiedimi qualcosa...';
 }
 
 function formatText(t) {
-  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\* /g,'• ').replace(/\n/g,'<br>');
+  return t
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\* /g, '• ')
+    .replace(/
+/g, '<br>');
 }
 
 const copyIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
 
 function addMessage(type, html, badge, raw) {
   document.getElementById('hero').classList.add('hidden');
-  document.getElementById('suggestionsGrid').style.display = 'none';
   const area = document.getElementById('chatArea');
   const div = document.createElement('div');
   div.className = `msg msg-${type}`;
@@ -390,19 +392,19 @@ function addMessage(type, html, badge, raw) {
           <button class="btn-copy-msg" id="${cid}" onclick="copiaMsg(this)">${copyIcon} Copia</button>
         </div>
       </div>`;
-    div.querySelector(`#${cid}`).dataset.t = raw || '';
+    div.querySelector('#' + cid).dataset.t = raw || '';
   }
   area.appendChild(div);
-  div.scrollIntoView({ behavior:'smooth', block:'end' });
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
 function copiaMsg(btn) {
   navigator.clipboard.writeText(btn.dataset.t).then(() => {
-    btn.textContent = '✅ Copiato!'; btn.classList.add('copied');
+    btn.textContent = '✅ Copiato!';
+    btn.classList.add('copied');
     setTimeout(() => { btn.innerHTML = copyIcon + ' Copia'; btn.classList.remove('copied'); }, 2000);
   });
 }
-
 
 function showTyping() {
   const area = document.getElementById('chatArea');
@@ -410,119 +412,62 @@ function showTyping() {
   div.id = 'typing'; div.className = 'msg';
   div.innerHTML = '<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
   area.appendChild(div);
-  div.scrollIntoView({ behavior:'smooth', block:'end' });
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
-function removeTyping() { document.getElementById('typing')?.remove(); }
+function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
+// ── Rilevamento richieste immagine ────────────────────────────────
+function isRichiestaImmagine(q) {
+  const kw = ['crea immagine','genera immagine','disegna','illustra','crea una foto','genera una foto','crea un immagine','genera un immagine'];
+  return kw.some(k => q.toLowerCase().includes(k));
+}
+
+// ── Chat principale ───────────────────────────────────────────────
 async function ask(q) {
-  q = q.trim(); if (!q) return;
+  q = q.trim();
+  if (!q) return;
   document.getElementById('searchInput').value = '';
 
-  // Intercetta richieste immagine
-  if (isRichiestaImmagine(q)) { generaImmagine(q); return; }
+  if (isRichiestaImmagine(q)) {
+    generaImmagine(q);
+    return;
+  }
 
-  let domanda = q;
-
-  // Traccia Analytics
   if (typeof gtag !== 'undefined') gtag('event', 'domanda', { event_category: 'chat' });
 
   addMessage('user', q, '');
   showTyping();
-
-  // Aggiunge alla cronologia
   cronologia.push({ role: 'user', content: q });
 
   try {
-    const res = await fetch(`${API_URL}/ask`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ domanda, cronologia: cronologia.slice(0,-1) })
+    const res = await fetch(API_URL + '/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domanda: q, cronologia: cronologia.slice(0, -1) })
     });
     const data = await res.json();
     removeTyping();
     addMessage('ai', formatText(data.risposta), '🤖 ModicaAI', data.risposta);
-    // Salva risposta in cronologia
     cronologia.push({ role: 'assistant', content: data.risposta });
-    // Mantieni max 20 messaggi in memoria
     if (cronologia.length > 20) cronologia = cronologia.slice(-20);
-  } catch {
+  } catch (e) {
     removeTyping();
     addMessage('ai', 'Errore di connessione. Riprova.', '🤖 ModicaAI', '');
   }
 }
 
-document.getElementById('searchInput').onkeydown = e => { if (e.key === 'Enter') ask(e.target.value); };
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') ask(this.value);
+});
 
-// ── Dark Mode ────────────────────────────────────────────────────
-const sunIcon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
-const moonIcon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>`;
-
-function toggleDark() {
-  const isDark = document.body.classList.toggle('dark');
-  document.getElementById('btnDark').innerHTML = isDark ? sunIcon : moonIcon;
-  localStorage.setItem('modicaai-dark', isDark ? '1' : '0');
-  document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#151820' : '#1A3A5C');
-}
-
-// Ripristina preferenza al caricamento
-(function() {
-  if (localStorage.getItem('modicaai-dark') === '1') {
-    document.body.classList.add('dark');
-    document.getElementById('btnDark').innerHTML = sunIcon;
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#151820');
-  }
-})();
-
-
-// ── Carburanti ───────────────────────────────────────────────────
-async function mostraCarburanti() {
-  addMessage('user', '⛽ Prezzi carburanti vicino a Modica', '');
-  showTyping();
-  try {
-    const res = await fetch(`${API_URL}/carburanti`);
-    const data = await res.json();
-    if (!data.stazioni?.length) {
-      removeTyping();
-      addMessage('ai', 'Nessuna stazione trovata nel raggio di 15 km.', '⛽ Carburanti', '');
-      return;
-    }
-    // Tipi carburante preferiti nell'ordine
-    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
-    let html = '<strong>⛽ Stazioni carburante vicine a Modica</strong><br><br>';
-    data.stazioni.forEach(s => {
-      html += `<strong>${s.nome}</strong> — ${s.comune} (${s.dist} km)<br>`;
-      const prezziOrdinati = tipiOrdine
-        .map(k => s.prezzi[k])
-        .filter(Boolean);
-      if (prezziOrdinati.length) {
-        prezziOrdinati.forEach(p => {
-          html += `&nbsp;&nbsp;• ${p.carburante} <em>${p.tipo}</em>: <strong>${p.prezzo.toFixed(3)} €/L</strong><br>`;
-        });
-      }
-      html += '<br>';
-    });
-    html += `<small style="color:var(--ink-soft)">${data.aggiornamento}</small>`;
-    removeTyping();
-    addMessage('ai', html, '⛽ MiMIT', '');
-  } catch(e) {
-    removeTyping();
-    addMessage('ai', 'Errore nel recupero prezzi carburanti.', '⛽ Carburanti', '');
-  }
-}
-
-
-// ── Genera Immagine ──────────────────────────────────────────────
-function isRichiestaImmagine(q) {
-  const kw = ['crea immagine','genera immagine','disegna','illustra','crea una foto','genera una foto','crea un immagine','genera un immagine','crea un'immagine','genera un'immagine','crea foto','genera foto'];
-  return kw.some(k => q.toLowerCase().includes(k));
-}
-
+// ── Genera Immagine (Hugging Face FLUX.1) ────────────────────────
 async function generaImmagine(prompt) {
   addMessage('user', prompt, '');
   showTyping();
   try {
-    const res = await fetch(`${API_URL}/genera-immagine`, {
+    const res = await fetch(API_URL + '/genera-immagine', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt })
     });
     const data = await res.json();
@@ -533,23 +478,77 @@ async function generaImmagine(prompt) {
     } else {
       addMessage('ai', data.error || 'Errore nella generazione.', '🎨 FLUX.1', '');
     }
-  } catch(e) {
+  } catch (e) {
     removeTyping();
     addMessage('ai', 'Errore di connessione durante la generazione.', '🎨 FLUX.1', '');
   }
 }
 
+// ── Carburanti ───────────────────────────────────────────────────
+async function mostraCarburanti() {
+  addMessage('user', '⛽ Prezzi carburanti vicino a Modica', '');
+  showTyping();
+  try {
+    const res = await fetch(API_URL + '/carburanti');
+    const data = await res.json();
+    removeTyping();
+    if (!data.stazioni || !data.stazioni.length) {
+      addMessage('ai', 'Nessuna stazione trovata nel raggio di 15 km. ' + (data.error || ''), '⛽ Carburanti', '');
+      return;
+    }
+    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
+    let html = '<strong>⛽ Stazioni carburante vicine a Modica</strong><br><br>';
+    data.stazioni.forEach(s => {
+      html += `<strong>${s.nome}</strong> — ${s.comune} (${s.dist} km)<br>`;
+      const prezziOrdinati = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean);
+      if (prezziOrdinati.length) {
+        prezziOrdinati.forEach(p => {
+          html += `&nbsp;&nbsp;• ${p.carburante} <em>${p.tipo}</em>: <strong>${p.prezzo.toFixed(3)} €/L</strong><br>`;
+        });
+      }
+      html += '<br>';
+    });
+    html += `<small style="color:var(--ink-soft)">${data.aggiornamento}</small>`;
+    addMessage('ai', html, '⛽ MiMIT', '');
+  } catch (e) {
+    removeTyping();
+    addMessage('ai', 'Errore nel recupero prezzi carburanti.', '⛽ Carburanti', '');
+  }
+}
+
+// ── Dark Mode ────────────────────────────────────────────────────
+const sunIcon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moonIcon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>`;
+
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark');
+  document.getElementById('btnDark').innerHTML = isDark ? sunIcon : moonIcon;
+  try { localStorage.setItem('modicaai-dark', isDark ? '1' : '0'); } catch(e) {}
+  const tm = document.querySelector('meta[name="theme-color"]');
+  if (tm) tm.setAttribute('content', isDark ? '#151820' : '#1A3A5C');
+}
+
+(function() {
+  try {
+    if (localStorage.getItem('modicaai-dark') === '1') {
+      document.body.classList.add('dark');
+      const btn = document.getElementById('btnDark');
+      if (btn) btn.innerHTML = sunIcon;
+      const tm = document.querySelector('meta[name="theme-color"]');
+      if (tm) tm.setAttribute('content', '#151820');
+    }
+  } catch(e) {}
+})();
+
 // ── News Ticker RSS ──────────────────────────────────────────────
 async function caricaNotizie() {
   try {
-    const res = await fetch(`${API_URL}/news`);
+    const res = await fetch(API_URL + '/news');
     const data = await res.json();
-    if (!data.items?.length) return;
+    if (!data.items || !data.items.length) return;
 
     const track = document.getElementById('tickerTrack');
     track.innerHTML = '';
-
-    // Crea items duplicati per loop infinito
     const allItems = [...data.items, ...data.items];
     allItems.forEach(item => {
       const a = document.createElement('a');
@@ -566,7 +565,6 @@ async function caricaNotizie() {
       const speed = Math.max(30, Math.round(totalWidth / 80));
       track.style.animationDuration = speed + 's';
     });
-
   } catch(e) {
     console.warn('Ticker news error:', e);
   }
