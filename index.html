@@ -108,7 +108,6 @@
     --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
   }
   body.dark .header { background:rgba(21,24,32,0.97); }
-  body.dark .cat-bar { background:rgba(21,24,32,0.98); }
   body.dark .input-bar { background:rgba(21,24,32,0.97); }
   body.dark .input-wrap { background:var(--white); }
   body.dark .lang-toggle { background:var(--bg); }
@@ -148,15 +147,9 @@
   .btn-new-chat { display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--white); font-size:12px; font-weight:500; color:var(--ink-mid); cursor:pointer; font-family:'Outfit',sans-serif; transition:all 0.18s; }
   .btn-new-chat:hover { border-color:var(--sky); color:var(--sky); }
 
-  /* Categorie */
-  .cat-bar { position:fixed; top:91px; left:0; right:0; z-index:298; background:rgba(255,255,255,0.98); border-bottom:1px solid var(--border); display:flex; gap:7px; padding:8px 20px; overflow-x:auto; scrollbar-width:none; }
-  .cat-bar::-webkit-scrollbar{display:none}
-  .cat-btn { display:flex; align-items:center; gap:5px; padding:6px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); font-size:12px; font-weight:500; color:var(--ink-mid); cursor:pointer; white-space:nowrap; font-family:'Outfit',sans-serif; transition:all 0.18s; flex-shrink:0; }
-  .cat-btn:hover { border-color:var(--sky); color:var(--sky); }
-  .cat-btn.active { background:var(--sky); border-color:var(--sky); color:var(--white); box-shadow:0 2px 10px rgba(26,58,92,0.22); }
 
   /* Main */
-  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:180px 20px 148px; }
+  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:120px 20px 148px; }
 
   /* Hero */
   .hero { text-align:center; margin-bottom:36px; }
@@ -309,16 +302,6 @@
   </div>
 </div>
 
-<div class="cat-bar">
-  <button class="cat-btn active" onclick="setCategoria(this,'tutto')">✨ Tutto</button>
-  <button class="cat-btn" onclick="setCategoria(this,'meteo')">🌤 Meteo</button>
-  <button class="cat-btn" onclick="setCategoria(this,'ristoranti')">🍽 Ristoranti</button>
-  <button class="cat-btn" onclick="setCategoria(this,'turismo')">🏛 Turismo</button>
-  <button class="cat-btn" onclick="setCategoria(this,'storia')">📜 Storia</button>
-  <button class="cat-btn" onclick="setCategoria(this,'farmacia')">💊 Farmacie</button>
-  <button class="cat-btn" onclick="setCategoria(this,'hotel')">🏨 Hotel</button>
-  <button class="cat-btn" onclick="setCategoria(this,'bar')">☕ Bar</button>
-</div>
 
 <div class="main">
   <div class="hero" id="hero">
@@ -334,6 +317,11 @@
     </div>
     <div class="hero-divider"></div>
     <div class="hero-sub">Il tuo assistente locale per Modica</div>
+    <div style="margin-top:20px; animation:fadeUp 0.6s 0.4s ease both;">
+      <button onclick="mostraCarburanti()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:500;color:var(--ink-mid);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.18s;" onmouseover="this.style.borderColor='var(--sky)';this.style.color='var(--sky)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-mid)'">
+        ⛽ Prezzi carburanti vicino a Modica
+      </button>
+    </div>
   </div>
 
   <!-- Suggerimenti iniziali -->
@@ -359,10 +347,9 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const API_URL = "https://modicaai-api.onrender.com";
-let lang = 'it', categoriaAttiva = 'tutto';
+let lang = 'it';
 let cronologia = []; // memoria conversazione
 
-const PLACEHOLDER = { tutto:'Chiedimi qualcosa...', meteo:'Che tempo fa a Modica?', ristoranti:'Consigliami un ristorante...', turismo:'Cosa vedere a Modica?', storia:'Storia di Modica...', farmacia:'Farmacia di turno?', hotel:'Dove dormire a Modica?', bar:'Migliori bar a Modica?' };
 
 function setLang(btn, l) {
   lang = l;
@@ -370,13 +357,6 @@ function setLang(btn, l) {
   btn.classList.add('active');
 }
 
-function setCategoria(btn, cat) {
-  categoriaAttiva = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('searchInput').placeholder = PLACEHOLDER[cat] || 'Chiedimi qualcosa...';
-  document.getElementById('searchInput').focus();
-}
 
 function nuovaChat() {
   cronologia = [];
@@ -423,12 +403,6 @@ function copiaMsg(btn) {
   });
 }
 
-function addDivider(label) {
-  if (!label) return;
-  const div = document.createElement('div');
-  div.className = 'cat-divider'; div.textContent = label;
-  document.getElementById('chatArea').appendChild(div);
-}
 
 function showTyping() {
   const area = document.getElementById('chatArea');
@@ -444,17 +418,10 @@ async function ask(q) {
   q = q.trim(); if (!q) return;
   document.getElementById('searchInput').value = '';
 
-  const hints = { meteo:['meteo','tempo','pioggia','sole','caldo','freddo'], ristoranti:['ristorante','mangiare','cena','pranzo','pizzeria'], turismo:['vedere','visita','monumento','museo'], storia:['storia','origini'], farmacia:['farmacia'], hotel:['hotel','albergo'], bar:['bar','caffe','caffè'] };
-  const labels = { meteo:'🌤 Meteo', ristoranti:'🍽 Ristoranti', turismo:'🏛 Turismo', storia:'📜 Storia', farmacia:'💊 Farmacie', hotel:'🏨 Hotel', bar:'☕ Bar' };
-
   let domanda = q;
-  if (categoriaAttiva !== 'tutto' && !hints[categoriaAttiva]?.some(k => q.toLowerCase().includes(k))) {
-    domanda = `${q} — categoria: ${categoriaAttiva}`;
-    addDivider(labels[categoriaAttiva]);
-  }
 
   // Traccia Analytics
-  if (typeof gtag !== 'undefined') gtag('event', 'domanda', { event_category: 'chat', event_label: categoriaAttiva });
+  if (typeof gtag !== 'undefined') gtag('event', 'domanda', { event_category: 'chat' });
 
   addMessage('user', q, '');
   showTyping();
@@ -501,6 +468,43 @@ function toggleDark() {
     document.querySelector('meta[name="theme-color"]').setAttribute('content', '#151820');
   }
 })();
+
+
+// ── Carburanti ───────────────────────────────────────────────────
+async function mostraCarburanti() {
+  addMessage('user', '⛽ Prezzi carburanti vicino a Modica', '');
+  showTyping();
+  try {
+    const res = await fetch(`${API_URL}/carburanti`);
+    const data = await res.json();
+    if (!data.stazioni?.length) {
+      removeTyping();
+      addMessage('ai', 'Nessuna stazione trovata nel raggio di 15 km.', '⛽ Carburanti', '');
+      return;
+    }
+    // Tipi carburante preferiti nell'ordine
+    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
+    let html = '<strong>⛽ Stazioni carburante vicine a Modica</strong><br><br>';
+    data.stazioni.forEach(s => {
+      html += `<strong>${s.nome}</strong> — ${s.comune} (${s.dist} km)<br>`;
+      const prezziOrdinati = tipiOrdine
+        .map(k => s.prezzi[k])
+        .filter(Boolean);
+      if (prezziOrdinati.length) {
+        prezziOrdinati.forEach(p => {
+          html += `&nbsp;&nbsp;• ${p.carburante} <em>${p.tipo}</em>: <strong>${p.prezzo.toFixed(3)} €/L</strong><br>`;
+        });
+      }
+      html += '<br>';
+    });
+    html += `<small style="color:var(--ink-soft)">${data.aggiornamento}</small>`;
+    removeTyping();
+    addMessage('ai', html, '⛽ MiMIT', '');
+  } catch(e) {
+    removeTyping();
+    addMessage('ai', 'Errore nel recupero prezzi carburanti.', '⛽ Carburanti', '');
+  }
+}
 
 // ── News Ticker RSS ──────────────────────────────────────────────
 async function caricaNotizie() {
