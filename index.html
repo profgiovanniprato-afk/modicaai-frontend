@@ -713,8 +713,8 @@ async function cercaImmagini(q) {
       addMessage('ai', `Nessuna immagine trovata per "<strong>${query}</strong>".`, 'Immagini', '');
       return;
     }
-    const fonte = data.fonte === 'google' ? 'Google Images' : 'Unsplash';
-    let html = `<div class="img-grid-label">📷 <strong>${query}</strong> &nbsp;·&nbsp; ${fonte}</div><div class="img-search-grid">`;
+        const fonteMap = {google:'Google Images', pixabay:'Pixabay', wikimedia:'Wikimedia Commons', unsplash:'Unsplash'};
+    const fonte = fonteMap[data.fonte] || 'Web';
     data.immagini.forEach(img => {
       html += `<div class="img-search-item"><a href="${img.url}" target="_blank" rel="noopener">
         <img src="${img.thumbnail||img.url}" alt="${(img.title||query).slice(0,40)}" loading="lazy"
