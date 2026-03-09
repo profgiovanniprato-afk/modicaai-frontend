@@ -167,6 +167,16 @@
   .chip:hover { border-color: var(--sky); color: var(--sky); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
   body.dark .chip { background: var(--white); border-color: var(--border); color: var(--ink-mid); }
   body.dark .chip:hover { border-color: var(--sky); color: var(--sky); }
+
+  /* ── Pulsanti msg footer extra ── */
+  .btn-voice { color: var(--sky) !important; }
+  .btn-voice:hover { background: rgba(30,144,255,.08) !important; }
+  .btn-share { color: #8b5cf6 !important; }
+  .btn-share:hover { background: rgba(139,92,246,.08) !important; }
+
+  /* ── Chip suggerimenti — hover vocale ── */
+  .btn-dark[id="btnVoice"] { transition: opacity 0.2s; }
+
   /* Toggle dark mode */
   .btn-dark { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--white); color:var(--ink-mid); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.18s; flex-shrink:0; }
   .btn-dark:hover { border-color:var(--sky); color:var(--sky); }
@@ -374,6 +384,9 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Nuova chat
     </button>
+    <button class="btn-dark" id="btnVoice" onclick="toggleVoice()" title="Attiva risposta vocale automatica" style="opacity:0.45">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+    </button>
     <button class="btn-dark" id="btnDark" onclick="toggleDark()" title="Dark mode">
       <svg id="iconDark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
     </button>
@@ -439,6 +452,36 @@
 const API_URL = "https://modicaai-api.onrender.com";
 let lang = 'it';
 let cronologia = [];
+let SESSION_ID = null;
+let userLat = null;
+let userLon = null;
+let voiceEnabled = false;
+let speechSynth = window.speechSynthesis || null;
+let currentUtterance = null;
+
+// ── Init sessione server-side ─────────────────────────────────────
+(async () => {
+  try {
+    const r = await fetch(API_URL + '/session/new');
+    const d = await r.json();
+    SESSION_ID = d.session_id;
+  } catch(e) {
+    SESSION_ID = 'local-' + Math.random().toString(36).slice(2);
+  }
+})();
+
+// ── Geolocalizzazione silente all'avvio ───────────────────────────
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      userLat = pos.coords.latitude;
+      userLon = pos.coords.longitude;
+      console.log('Posizione utente:', userLat, userLon);
+    },
+    () => { /* negata o non disponibile — usiamo Modica default */ },
+    { timeout: 5000, maximumAge: 60000 }
+  );
+}
 
 // ── Utilità ──────────────────────────────────────────────────────
 function setLang(btn, l) {
@@ -449,8 +492,13 @@ function setLang(btn, l) {
 
 function nuovaChat() {
   cronologia = [];
+  if (speechSynth) speechSynth.cancel();
+  // Rigenera session_id per nuova conversazione
+  fetch(API_URL + '/session/new').then(r => r.json()).then(d => { SESSION_ID = d.session_id; }).catch(() => {});
   document.getElementById('chatArea').innerHTML = '';
   document.getElementById('hero').classList.remove('hidden');
+  const grid = document.getElementById('chipsGrid');
+  if (grid) grid.style.display = '';
   document.getElementById('searchInput').value = '';
   document.getElementById('searchInput').placeholder = 'Chiedimi qualcosa...';
 }
@@ -470,15 +518,30 @@ function addMessage(type, html, badge, raw) {
     div.innerHTML = `<span>${html}</span>`;
   } else {
     const cid = 'c' + Date.now();
+    const vid = 'v' + Date.now();
+    const sid = 's' + Date.now();
+    const hasVoice = !!speechSynth;
+    const voiceBtn = hasVoice
+      ? `<button class="btn-copy-msg btn-voice" id="${vid}" onclick="leggiAdAlta(this)" title="Ascolta">${voiceIcon} Ascolta</button>`
+      : '';
+    const shareBtn = (navigator.share || navigator.clipboard)
+      ? `<button class="btn-copy-msg btn-share" id="${sid}" onclick="condividiRisposta(this)" title="Condividi">${shareIcon} Condividi</button>`
+      : '';
     div.innerHTML = `
       <div class="msg-ai-wrap">
         <div class="msg-ai">${html}</div>
         <div class="msg-footer">
           <span class="source-badge">${badge}</span>
           <button class="btn-copy-msg" id="${cid}" onclick="copiaMsg(this)">${copyIcon} Copia</button>
+          ${voiceBtn}
+          ${shareBtn}
         </div>
       </div>`;
     div.querySelector('#' + cid).dataset.t = raw || '';
+    if (hasVoice) div.querySelector('#' + vid).dataset.t = raw || '';
+    if (navigator.share || navigator.clipboard) div.querySelector('#' + sid).dataset.t = raw || '';
+    // Leggi automaticamente se voce attivata dall'utente
+    if (voiceEnabled && raw) setTimeout(() => leggiTesto(raw), 200);
   }
   area.appendChild(div);
   div.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -489,6 +552,67 @@ function copiaMsg(btn) {
     btn.textContent = '✅ Copiato!';
     btn.classList.add('copied');
     setTimeout(() => { btn.innerHTML = copyIcon + ' Copia'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── Icone extra ────────────────────────────────────────────────────
+const voiceIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+const shareIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
+const stopIcon  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`;
+
+// ── Risposta vocale (Web Speech API) ──────────────────────────────
+function leggiTesto(testo) {
+  if (!speechSynth) return;
+  speechSynth.cancel();
+  currentUtterance = new SpeechSynthesisUtterance(testo);
+  currentUtterance.lang = lang === 'it' ? 'it-IT' : 'en-US';
+  currentUtterance.rate = 1.0;
+  currentUtterance.pitch = 1.0;
+  const voci = speechSynth.getVoices();
+  const voceLocale = voci.find(v => v.lang.startsWith(currentUtterance.lang));
+  if (voceLocale) currentUtterance.voice = voceLocale;
+  speechSynth.speak(currentUtterance);
+}
+
+function leggiAdAlta(btn) {
+  const t = btn.dataset.t;
+  if (!t) return;
+  if (speechSynth && speechSynth.speaking) {
+    speechSynth.cancel();
+    btn.innerHTML = voiceIcon + ' Ascolta';
+    return;
+  }
+  btn.innerHTML = stopIcon + ' Stop';
+  leggiTesto(t);
+  if (currentUtterance) {
+    currentUtterance.onend  = () => { btn.innerHTML = voiceIcon + ' Ascolta'; };
+    currentUtterance.onerror = () => { btn.innerHTML = voiceIcon + ' Ascolta'; };
+  }
+}
+
+function toggleVoice() {
+  voiceEnabled = !voiceEnabled;
+  const btn = document.getElementById('btnVoice');
+  if (btn) {
+    btn.style.opacity = voiceEnabled ? '1' : '0.45';
+    btn.title = voiceEnabled ? 'Risposta vocale attiva — clicca per disattivare' : 'Attiva risposta vocale automatica';
+  }
+}
+
+// ── Condivisione risposta ─────────────────────────────────────────
+async function condividiRisposta(btn) {
+  const t = btn.dataset.t;
+  if (!t) return;
+  const testo = `ModicaAI risponde:\n\n${t}\n\n👉 modicaai.it`;
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'ModicaAI', text: testo, url: 'https://modicaai.it' });
+      return;
+    } catch(e) { /* fallback clipboard */ }
+  }
+  navigator.clipboard.writeText(testo).then(() => {
+    btn.innerHTML = '✓ Copiato';
+    setTimeout(() => { btn.innerHTML = shareIcon + ' Condividi'; }, 2000);
   });
 }
 
