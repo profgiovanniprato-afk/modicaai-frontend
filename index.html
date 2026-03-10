@@ -21,7 +21,22 @@
   <meta name="twitter:description" content="Prezzi carburanti live, notizie, meteo, ristoranti. Gratuito.">
   <meta name="twitter:image"       content="https://modicaai.it/icons/icon-512.png">
   <!-- JSON-LD Schema.org -->
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"ModicaAI","url":"https://modicaai.it","description":"Assistente AI territoriale per Modica, Sicilia","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":["it","en"]},{"@type":"LocalBusiness","name":"ModicaAI","url":"https://modicaai.it","areaServed":{"@type":"City","name":"Modica","addressRegion":"Sicilia","addressCountry":"IT"},"contactPoint":{"@type":"ContactPoint","email":"infomodicaai@gmail.com","contactType":"customer support"}}]}</script>
+  <!-- Canonical univoco -->
+  <link rel="canonical" href="https://www.modicaai.it/" />
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebApplication","name":"ModicaAI","url":"https://www.modicaai.it","description":"Assistente AI per Modica, Sicilia. Ristoranti, meteo, farmacie, prezzi carburanti, news locali e turismo.","applicationCategory":"TravelApplication","operatingSystem":"Web, Android, iOS","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":["it","en"]},
+    {"@type":"LocalBusiness","name":"ModicaAI","url":"https://www.modicaai.it","description":"Assistente AI per la città di Modica. Scopri cosa fare a Modica, ristoranti, farmacie, meteo e news locali.","areaServed":{"@type":"City","name":"Modica","addressRegion":"Ragusa","addressCountry":"IT"},"geo":{"@type":"GeoCoordinates","latitude":"36.8604","longitude":"14.7742"},"contactPoint":{"@type":"ContactPoint","email":"infomodicaai@gmail.com","contactType":"customer support"}},
+    {"@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"Cosa fare a Modica?","acceptedAnswer":{"@type":"Answer","text":"Modica offre il Duomo di San Giorgio, il cioccolato IGP, il centro barocco UNESCO, musei, grotte e ottima gastronomia. ModicaAI ti guida tra ristoranti, eventi e attrazioni locali."}},
+      {"@type":"Question","name":"Cos'è ModicaAI?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI è l'assistente AI gratuito dedicato a Modica, Sicilia. Risponde su ristoranti, farmacie di turno, meteo, prezzi carburanti, notizie locali e turismo. Disponibile 24/7 senza registrazione."}},
+      {"@type":"Question","name":"Qual è la farmacia di turno a Modica oggi?","acceptedAnswer":{"@type":"Answer","text":"Chiedi a ModicaAI 'farmacia di turno Modica oggi' per ricevere in tempo reale la farmacia aperta."}},
+      {"@type":"Question","name":"Qual è il meteo a Modica?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI fornisce meteo aggiornato di Modica in tempo reale: temperatura, condizioni e previsioni."}},
+      {"@type":"Question","name":"Dove mangiare a Modica?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI suggerisce i migliori ristoranti di Modica, trattorie tipiche e locali gourmet. Chiedi 'ristoranti Modica' o 'dove mangiare cioccolato di Modica'."}}
+    ]}
+  ]}
+  </script>
 <meta name="keywords" content="Modica, assistente virtuale Modica, chatbot Modica, cosa fare a Modica, ristoranti Modica, farmacia di turno Modica, meteo Modica, turismo Modica, Modica Sicilia, cioccolato di Modica, ModicaAI">
 <meta name="author" content="ModicaAI">
 <meta name="robots" content="index, follow">
@@ -1384,5 +1399,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
+<!-- SEO Content — visibile ai crawler, nascosto nell'UI -->
+<section id="seo-content" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+  <h1>ModicaAI — Assistente AI per Modica, Sicilia</h1>
+  <h2>Cosa fare a Modica</h2>
+  <p>ModicaAI è il tuo assistente intelligente gratuito per scoprire tutto su Modica, la città del cioccolato in Sicilia. Chiedi informazioni su ristoranti, eventi, farmacie di turno, meteo, prezzi carburanti, storia e turismo barocco.</p>
+  <h2>Servizi disponibili</h2>
+  <ul>
+    <li>Ristoranti e dove mangiare a Modica</li>
+    <li>Farmacia di turno a Modica oggi</li>
+    <li>Meteo Modica in tempo reale</li>
+    <li>Prezzi carburanti a Modica</li>
+    <li>Notizie locali di Modica</li>
+    <li>Cosa vedere a Modica: Duomo di San Giorgio, centro barocco UNESCO</li>
+    <li>Cioccolato di Modica IGP</li>
+    <li>Informazioni turistiche su Modica, Ragusa e dintorni</li>
+  </ul>
+  <h2>Domande frequenti su Modica</h2>
+  <h3>Cosa vedere a Modica?</h3>
+  <p>Il Duomo di San Giorgio, il Duomo di San Pietro, il Museo del Cioccolato, il Castello dei Conti, le Grotte di S. Nicola e il vivace corso principale sono le attrazioni principali di Modica.</p>
+  <h3>Il cioccolato di Modica</h3>
+  <p>Il cioccolato di Modica è un prodotto IGP lavorato a freddo, senza grassi aggiunti, con una texture granulosa unica al mondo. ModicaAI ti indica i migliori cioccolatieri locali.</p>
+  <h3>Come raggiungere Modica</h3>
+  <p>Modica si raggiunge in treno da Catania, Siracusa e Ragusa, o in auto dall'autostrada A18. L'aeroporto più vicino è quello di Catania Fontanarossa.</p>
+</section>
 </body>
 </html>
