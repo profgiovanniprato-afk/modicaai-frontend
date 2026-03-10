@@ -485,9 +485,7 @@
     <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Ultime notizie</button>
     <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo oggi</button>
     <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
-    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
-    <button class="chip" onclick="askChip(this,'Cerca foto di Modica centro storico')">📷 Cerca foto</button>
-  </div>
+    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>  </div>
 
   <!-- Suggerimenti iniziali -->
   <div class="suggestions-grid" id="suggestionsGrid" style="display:none"></div>
@@ -694,261 +692,6 @@ async function condividiRisposta(btn) {
   });
 }
 
-// ── Ricerca immagini ─────────────────────────────────────────────
-function isRicercaImmagini(q) {
-  const d = q.toLowerCase().trim();
-
-  // Verbi di RICERCA — cerca/trova/mostra/fammi vedere + parola visiva
-  const verbiCerca = /^(cerca|trova|ricerca|mostrami|fammi vedere|search|find|show me)/;
-  const oggettiVisivi = /(foto|fotografie|immagine|immagini|fotografia|pictures|photos|images)/;
-  if (verbiCerca.test(d) && oggettiVisivi.test(d)) return true;
-
-  // Pattern "cerca [articolo] foto/immagine di X"
-  if (/cerca (la|le|una|delle|degli|dei|il|lo|un|le) (foto|immagine|immagini|fotografia)/.test(d)) return true;
-
-  // "fotografie/immagini di X" senza verbi di generazione → cerca
-  const noGenera = !d.match(/^(crea|genera|fai|disegna|dipingi|illustra)/);
-  if (noGenera && /^(fotografie|immagini|foto)\s+di\s+\w/.test(d)) return true;
-
-  return false;
-}
-
-function estraiQueryImmagini(q) {
-  // Approccio con regex invece di lista statica — molto più robusto
-  const d = q.trim();
-
-  // Rimuove tutto il prefisso verbale + articoli/preposizioni iniziali
-  // Pattern: [verbo] [articolo opzionale] [parola visiva opzionale] [preposizioni]
-  const prefissoRe = /^(?:cerca|mostrami|mostra|fammi vedere|fammi|trova|ricerca|show me|find|search|get|fetch)\s+(?:la|le|una|un|uno|delle|dei|degli|l[''`]|lo)?\s*(?:foto|immagine|immagini|fotografia|fotografie|picture|pictures|photo|photos|image|images)?\s*(?:di|del|della|dello|dei|degli|delle|d[''`]|su|sul|sulla|sullo|sulle|sui|degli)?\s*/i;
-
-  let query = d.replace(prefissoRe, '').trim();
-
-  // Se non ha matchato nulla di significativo, usa l'input originale ripulito
-  if (!query || query.length < 2) query = d;
-
-  // Rimuovi articoli iniziali rimasti
-  query = query.replace(/^(il|lo|la|le|gli|i|un|una|uno)\s+/i, '').trim();
-
-  // Se la query non menziona Modica/Sicilia, aggiungila automaticamente
-  // per evitare disambiguità (es. "Duomo San Giorgio" → Ragusa Ibla invece di Modica)
-  const ql = query.toLowerCase();
-  const haLuogo = ql.includes('modica') || ql.includes('sicilia') || ql.includes('ragusa') || ql.includes('sicily');
-  if (!haLuogo) {
-    query = query + ' Modica Sicilia';
-  }
-
-  return query.trim();
-}
-
-async function cercaImmagini(q) {
-  const query = estraiQueryImmagini(q);
-  addMessage('user', q, '');
-  showTyping('🔍 Cerco immagini di ' + query + '...');
-
-  const immagini = await cercaImmaginiDiretta(query);
-  removeTyping();
-
-  if (immagini && immagini.length > 0) {
-    mostraGrigliaImmagini(query, immagini);
-  } else {
-    addMessage('ai',
-      `Non ho trovato immagini per "<strong>${query}</strong>". ` +
-      `Prova su <a href="https://www.google.com/search?q=${encodeURIComponent(query)}&tbm=isch" target="_blank">Google Immagini</a>.`,
-      'Immagini', '');
-  }
-}
-
-// Cerca immagini direttamente da Wikimedia — funziona dal browser senza backend
-async function cercaImmaginiDiretta(query) {
-
-  // API 1: Wikimedia Commons search (generator=search sul namespace File)
-  // Usa iiprop=url|thumburl separati da pipe codificato
-  try {
-    const params = new URLSearchParams({
-      action: 'query',
-      generator: 'search',
-      gsrnamespace: '6',
-      gsrsearch: 'filetype:bitmap ' + query,
-      gsrlimit: '8',
-      prop: 'imageinfo',
-      iiprop: 'url|thumburl',
-      iiurlwidth: '500',
-      format: 'json',
-      origin: '*'
-    });
-    const res = await fetch('https://commons.wikimedia.org/w/api.php?' + params);
-    if (res.ok) {
-      const data = await res.json();
-      const pages = Object.values(data?.query?.pages || {});
-      const imgs = pages
-        .map(p => {
-          const ii = p.imageinfo?.[0];
-          if (!ii) return null;
-          // thumburl potrebbe essere assente se il server non lo restituisce
-          // in quel caso costruiamo un URL thumbnail manualmente dall'url originale
-          const fullUrl = ii.url || '';
-          const thumbUrl = ii.thumburl || fullUrl;
-          if (!fullUrl) return null;
-          return {
-            url: fullUrl,
-            thumbnail: thumbUrl,
-            title: (p.title || '').replace('File:', '').replace(/\.[^.]+$/, '')
-          };
-        })
-        .filter(i => i && i.url && !i.url.match(/\.(svg|ogg|ogv|webm|pdf|djvu)$/i))
-        .slice(0, 5);
-      if (imgs.length > 0) {
-        console.log('Wikimedia Commons OK:', imgs.length, 'immagini');
-        return imgs;
-      }
-    }
-  } catch(e) { console.warn('Wikimedia error:', e.message); }
-
-  // API 2: Wikipedia — cerca l'articolo e prende le immagini della pagina
-  // (non solo thumbnail ma tutte le immagini nell'articolo)
-  try {
-    const params2 = new URLSearchParams({
-      action: 'query',
-      titles: query,
-      prop: 'images',
-      imlimit: '20',
-      format: 'json',
-      origin: '*'
-    });
-    const res2 = await fetch('https://it.wikipedia.org/w/api.php?' + params2);
-    if (res2.ok) {
-      const data2 = await res2.json();
-      const pages2 = Object.values(data2?.query?.pages || {});
-      // Raccoglie i titoli di tutte le immagini nell'articolo
-      const imgTitles = [];
-      for (const p of pages2) {
-        if (p.images) imgTitles.push(...p.images.map(i => i.title));
-      }
-      // Filtra solo foto reali (non icone SVG/PNG piccole)
-      const fotTitles = imgTitles
-        .filter(t => t && /\.(jpg|jpeg|png|gif)$/i.test(t))
-        .slice(0, 8);
-
-      if (fotTitles.length > 0) {
-        // Recupera URL delle immagini
-        const params3 = new URLSearchParams({
-          action: 'query',
-          titles: fotTitles.join('|'),
-          prop: 'imageinfo',
-          iiprop: 'url|thumburl',
-          iiurlwidth: '500',
-          format: 'json',
-          origin: '*'
-        });
-        const res3 = await fetch('https://it.wikipedia.org/w/api.php?' + params3);
-        if (res3.ok) {
-          const data3 = await res3.json();
-          const pages3 = Object.values(data3?.query?.pages || {});
-          const imgs2 = pages3
-            .map(p => {
-              const ii = p.imageinfo?.[0];
-              if (!ii?.url) return null;
-              return {
-                url: ii.url,
-                thumbnail: ii.thumburl || ii.url,
-                title: (p.title || '').replace('File:', '').replace(/\.[^.]+$/, '')
-              };
-            })
-            .filter(Boolean)
-            .slice(0, 5);
-          if (imgs2.length > 0) {
-            console.log('Wikipedia immagini articolo OK:', imgs2.length);
-            return imgs2;
-          }
-        }
-      }
-    }
-  } catch(e) { console.warn('Wikipedia error:', e.message); }
-
-  // API 3: Wikipedia search — cerca articoli correlati e prende thumbnail
-  try {
-    const params4 = new URLSearchParams({
-      action: 'query',
-      list: 'search',
-      srsearch: query,
-      srlimit: '5',
-      format: 'json',
-      origin: '*'
-    });
-    const res4 = await fetch('https://it.wikipedia.org/w/api.php?' + params4);
-    if (res4.ok) {
-      const data4 = await res4.json();
-      const results = data4?.query?.search || [];
-      const titles = results.map(r => r.title).slice(0, 3);
-      if (titles.length > 0) {
-        const params5 = new URLSearchParams({
-          action: 'query',
-          titles: titles.join('|'),
-          prop: 'pageimages',
-          piprop: 'thumbnail',
-          pithumbsize: '500',
-          pilimit: '5',
-          format: 'json',
-          origin: '*'
-        });
-        const res5 = await fetch('https://it.wikipedia.org/w/api.php?' + params5);
-        if (res5.ok) {
-          const data5 = await res5.json();
-          const pages5 = Object.values(data5?.query?.pages || {});
-          const imgs3 = pages5
-            .filter(p => p.thumbnail?.source)
-            .map(p => ({
-              url: p.thumbnail.source,
-              thumbnail: p.thumbnail.source,
-              title: p.title || query
-            }));
-          if (imgs3.length > 0) {
-            console.log('Wikipedia search thumbnails OK:', imgs3.length);
-            return imgs3;
-          }
-        }
-      }
-    }
-  } catch(e) { console.warn('Wikipedia search error:', e.message); }
-
-  return [];
-}
-
-
-function mostraGrigliaImmagini(query, immagini, fonte) {
-  const fonteLabel = {
-    google: 'Google Images', pixabay: 'Pixabay',
-    wikimedia: 'Wikimedia Commons', wikipedia: 'Wikipedia',
-    web: 'Web'
-  }[fonte] || fonte;
-
-  let html = `<div class="img-grid-label">📷 <strong>${query}</strong> &nbsp;·&nbsp; ${fonteLabel}</div><div class="img-search-grid">`;
-  immagini.forEach(img => {
-    const thumb = img.thumbnail || img.url;
-    const full  = img.url || img.thumbnail;
-    const title = (img.title || '').slice(0, 50);
-    html += `<div class="img-search-item">
-      <a href="${full}" target="_blank" rel="noopener">
-        <img src="${thumb}" alt="${title}" loading="lazy"
-          onerror="this.parentElement.parentElement.style.display='none'"
-          style="width:100%;height:120px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .2s"
-          onmouseover="this.style.transform='scale(1.04)'"
-          onmouseout="this.style.transform='scale(1)'">
-      </a>
-      <div class="img-search-caption">${title}</div>
-    </div>`;
-  });
-  html += '</div>';
-
-  const area = document.getElementById('chatArea');
-  const wrap = document.createElement('div');
-  wrap.className = 'msg msg-ai';
-  wrap.innerHTML = `<div class="msg-ai-wrap"><div class="msg-ai">${html}</div>
-    <div class="msg-footer"><span class="source-badge">${fonteLabel}</span></div></div>`;
-  area.appendChild(wrap);
-  wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
-}
-
 
 function showTyping(label) {
   const area = document.getElementById('chatArea');
@@ -985,8 +728,8 @@ function isRichiestaImmagine(q) {
   // Regola 4: "fammi un/una + oggetto creativo visivo"
   if (/^fammi (un|una|uno)\s+(disegno|illustrazione|ritratto|paesaggio|sfondo|wallpaper)/.test(d)) return true;
 
-  // Regola 5: "foto/sfondo/wallpaper di X" come prima parola → generazione
-  if (/^(foto|sfondo|sfondi|wallpaper)\s+(di|del|della|dello|dei|degli|delle)\s+\w/.test(d)) return true;
+  // Regola 5: "foto/sfondo/wallpaper di X" o "foto X" come prima parola → generazione
+  if (/^(foto|sfondo|sfondi|wallpaper)\s+(di|del|della|dello|dei|degli|delle)?\s*\w/.test(d)) return true;
 
   // Regola 6: keyword esplicite inglesi
   const kwEn = ['create an image','generate an image','create a photo','generate a photo',
@@ -1017,7 +760,6 @@ async function ask(q) {
   if (!q) return;
   document.getElementById('searchInput').value = '';
 
-  if (isRicercaImmagini(q)) { cercaImmagini(q); return; }
   if (isRichiestaImmagine(q)) { generaImmagine(q); return; }
   if (typeof gtag !== 'undefined') gtag('event', 'domanda', { event_category: 'chat' });
 
