@@ -1132,11 +1132,12 @@ async function generaImmagine(prompt) {
           <br><small style="color:var(--ink-soft);font-size:11px">Generata con Pollinations AI · FLUX</small>`;
       }
     } else {
-      // Fallback: prova come JSON (compatibilità)
-      let errMsg = 'Generazione fallita.';
+      let errMsg = '⚠️ Servizio immagini temporaneamente non disponibile. Riprova tra qualche secondo.';
       try {
-        const data = await res.json();
-        if (data.error === 'timeout') errMsg = '⏳ Pollinations ha impiegato troppo. Riprova tra qualche secondo.';
+        const errData = await res.json();
+        if (errData.error === 'generation_failed' || res.status === 503) {
+          errMsg = '⏳ Il servizio immagini è momentaneamente occupato. Riprova tra 30 secondi.';
+        }
       } catch(e) {}
       if (container) container.innerHTML = `<p style="color:var(--ink-soft)">${errMsg}</p>`;
     }
