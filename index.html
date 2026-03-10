@@ -554,7 +554,20 @@ function nuovaChat() {
 }
 
 function formatText(t) {
-  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\* /g,'• ').replace(/\n/g,'<br>');
+  if (!t) return '';
+  return t
+    // Grassetto
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Corsivo
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Bullet points — solo "* " o "- " a inizio riga
+    .replace(/^[\*\-] (.+)$/gm, '<li>$1</li>')
+    // Avvolge li in ul
+    .replace(/(<li>.*<\/li>(\n)?)+/g, m => '<ul style="margin:6px 0 6px 16px;padding:0">' + m + '</ul>')
+    // Link markdown [testo](url)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" style="color:var(--accent)">$1</a>')
+    // Newline
+    .replace(/\n/g, '<br>');
 }
 
 const copyIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
@@ -686,33 +699,30 @@ function isRicercaImmagini(q) {
 }
 
 function estraiQueryImmagini(q) {
-  const d = q.toLowerCase();
-  // Rimuove prima le frasi più lunghe (ordine decrescente per lunghezza)
-  const rm = [
-    'cerca la foto di','cerca la foto del','cerca la foto della','cerca la foto dei',
-    'cerca le foto di','cerca le foto del','cerca una foto di',
-    'cerca foto di','cerca foto del','cerca foto della','cerca foto dei',
-    'cerca immagini di','cerca immagini del','cerca immagini della',
-    'cerca immagine di','cerca un immagine di','cerca una foto di',
-    'mostrami foto di','mostrami immagini di','mostrami una foto di',
-    'fammi vedere foto di','fammi vedere immagini di','fammi vedere le foto di',
-    'trova foto di','trova immagini di','trova una foto di',
-    'search images of','search photos of','find photos of','pictures of','photos of',
-    'cerca la foto','cerca le foto','cerca una foto',
-    'cerca foto','cerca immagini','cerca immagine',
-    'mostrami foto','mostrami immagini','mostrami una foto',
-    'fammi vedere foto','fammi vedere immagini','fammi vedere',
-    'trova foto','trova immagini',
-    'ricerca foto','ricerca immagini',
-  ].sort((a,b) => b.length - a.length);
-  for (const r of rm) {
-    if (d.includes(r)) {
-      const after = q.slice(d.indexOf(r) + r.length).trim();
-      // Rimuove preposizioni iniziali: "di", "del", "della", "dello", "dei"
-      return after.replace(/^(di |del |della |dello |dei |degli |delle |d'|lo |la |le |gli |i |il |un |una )/i, '').trim();
-    }
+  // Approccio con regex invece di lista statica — molto più robusto
+  const d = q.trim();
+
+  // Rimuove tutto il prefisso verbale + articoli/preposizioni iniziali
+  // Pattern: [verbo] [articolo opzionale] [parola visiva opzionale] [preposizioni]
+  const prefissoRe = /^(?:cerca|mostrami|mostra|fammi vedere|fammi|trova|ricerca|show me|find|search|get|fetch)\s+(?:la|le|una|un|uno|delle|dei|degli|l[''`]|lo)?\s*(?:foto|immagine|immagini|fotografia|fotografie|picture|pictures|photo|photos|image|images)?\s*(?:di|del|della|dello|dei|degli|delle|d[''`]|su|sul|sulla|sullo|sulle|sui|degli)?\s*/i;
+
+  let query = d.replace(prefissoRe, '').trim();
+
+  // Se non ha matchato nulla di significativo, usa l'input originale ripulito
+  if (!query || query.length < 2) query = d;
+
+  // Rimuovi articoli iniziali rimasti
+  query = query.replace(/^(il|lo|la|le|gli|i|un|una|uno)\s+/i, '').trim();
+
+  // Se la query non menziona Modica/Sicilia, aggiungila automaticamente
+  // per evitare disambiguità (es. "Duomo San Giorgio" → Ragusa Ibla invece di Modica)
+  const ql = query.toLowerCase();
+  const haLuogo = ql.includes('modica') || ql.includes('sicilia') || ql.includes('ragusa') || ql.includes('sicily');
+  if (!haLuogo) {
+    query = query + ' Modica Sicilia';
   }
-  return q.trim();
+
+  return query.trim();
 }
 
 async function cercaImmagini(q) {
@@ -1085,7 +1095,7 @@ async function generaImmagine(prompt) {
   addMessage('user', prompt, '');
   showTyping();
   const lbl = document.querySelector('.typing-label');
-  if (lbl) lbl.textContent = '🎨 Sto generando l\'immagine...';
+  if (lbl) lbl.textContent = '🎨 Genero l\'immagine... (10-20 secondi)';
 
   try {
     const res = await fetch(API_URL + '/genera-immagine', {
@@ -1097,15 +1107,36 @@ async function generaImmagine(prompt) {
     removeTyping();
 
     if (data.url) {
+      // Mostra subito un placeholder con spinner, poi carica l'immagine
+      const cid = 'img' + Date.now();
       const imgHtml = `
-        <div style="text-align:center">
-          <img src="${data.url}"
-               style="max-width:100%;border-radius:14px;margin-top:4px;box-shadow:0 4px 20px rgba(0,0,0,0.12);"
-               alt="Immagine generata"
-               onerror="this.parentElement.innerHTML='<p style=&quot;color:var(--ink-soft)&quot;>Generazione in corso, ricarica tra qualche secondo...</p>'">
-          <br><small style="color:var(--ink-soft);font-size:11px;">Generata con Pollinations AI · FLUX</small>
+        <div style="text-align:center" id="${cid}">
+          <div style="padding:32px;color:var(--ink-soft);font-size:13px">
+            ⏳ Generazione in corso...
+          </div>
+          <br><small style="color:var(--ink-soft);font-size:11px">Generata con Pollinations AI · FLUX</small>
         </div>`;
       addMessage('ai', imgHtml, 'Pollinations', '');
+
+      // Carica l'immagine in background
+      const img = new Image();
+      img.onload = () => {
+        const container = document.getElementById(cid);
+        if (container) {
+          container.innerHTML = `
+            <img src="${data.url}"
+                 style="max-width:100%;border-radius:14px;margin-top:4px;box-shadow:0 4px 20px rgba(0,0,0,0.12);"
+                 alt="Immagine generata">
+            <br><small style="color:var(--ink-soft);font-size:11px">Generata con Pollinations AI · FLUX</small>`;
+        }
+      };
+      img.onerror = () => {
+        const container = document.getElementById(cid);
+        if (container) {
+          container.innerHTML = `<p style="color:var(--ink-soft)">⚠️ Generazione fallita. <a href="${data.url}" target="_blank">Prova ad aprire direttamente</a></p>`;
+        }
+      };
+      img.src = data.url;
     } else {
       addMessage('ai', '⚠️ Non sono riuscito a generare l\'immagine. Riprova con una descrizione diversa.', 'Pollinations', '');
     }
