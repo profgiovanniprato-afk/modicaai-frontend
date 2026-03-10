@@ -1095,54 +1095,54 @@ async function generaImmagine(prompt) {
   addMessage('user', prompt, '');
   showTyping();
   const lbl = document.querySelector('.typing-label');
-  if (lbl) lbl.textContent = '🎨 Genero l\'immagine... (10-20 secondi)';
+  if (lbl) lbl.textContent = '🎨 Genero l\'immagine... (20-40 secondi)';
+
+  const cid = 'img' + Date.now();
+  // Mostra placeholder subito
+  const imgHtml = `
+    <div style="text-align:center" id="${cid}">
+      <div style="padding:40px 20px;color:var(--ink-soft);font-size:13px">
+        <div style="font-size:28px;margin-bottom:8px">🎨</div>
+        Generazione in corso...<br>
+        <small style="font-size:11px;opacity:.6">Pollinations AI · FLUX — può impiegare fino a 40 secondi</small>
+      </div>
+    </div>`;
+  addMessage('ai', imgHtml, 'Pollinations', '');
+  removeTyping();
 
   try {
+    // Il backend scarica l'immagine server-side e la restituisce come blob
     const res = await fetch(API_URL + '/genera-immagine', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt })
     });
-    const data = await res.json();
-    removeTyping();
 
-    if (data.url) {
-      // Mostra subito un placeholder con spinner, poi carica l'immagine
-      const cid = 'img' + Date.now();
-      const imgHtml = `
-        <div style="text-align:center" id="${cid}">
-          <div style="padding:32px;color:var(--ink-soft);font-size:13px">
-            ⏳ Generazione in corso...
-          </div>
-          <br><small style="color:var(--ink-soft);font-size:11px">Generata con Pollinations AI · FLUX</small>
-        </div>`;
-      addMessage('ai', imgHtml, 'Pollinations', '');
+    const container = document.getElementById(cid);
 
-      // Carica l'immagine in background
-      const img = new Image();
-      img.onload = () => {
-        const container = document.getElementById(cid);
-        if (container) {
-          container.innerHTML = `
-            <img src="${data.url}"
-                 style="max-width:100%;border-radius:14px;margin-top:4px;box-shadow:0 4px 20px rgba(0,0,0,0.12);"
-                 alt="Immagine generata">
-            <br><small style="color:var(--ink-soft);font-size:11px">Generata con Pollinations AI · FLUX</small>`;
-        }
-      };
-      img.onerror = () => {
-        const container = document.getElementById(cid);
-        if (container) {
-          container.innerHTML = `<p style="color:var(--ink-soft)">⚠️ Generazione fallita. <a href="${data.url}" target="_blank">Prova ad aprire direttamente</a></p>`;
-        }
-      };
-      img.src = data.url;
+    if (res.ok && res.headers.get('Content-Type')?.includes('image')) {
+      // Risposta è l'immagine stessa (proxy backend)
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      if (container) {
+        container.innerHTML = `
+          <img src="${objectUrl}"
+               style="max-width:100%;border-radius:14px;margin-top:4px;box-shadow:0 4px 20px rgba(0,0,0,0.15);"
+               alt="Immagine generata">
+          <br><small style="color:var(--ink-soft);font-size:11px">Generata con Pollinations AI · FLUX</small>`;
+      }
     } else {
-      addMessage('ai', '⚠️ Non sono riuscito a generare l\'immagine. Riprova con una descrizione diversa.', 'Pollinations', '');
+      // Fallback: prova come JSON (compatibilità)
+      let errMsg = 'Generazione fallita.';
+      try {
+        const data = await res.json();
+        if (data.error === 'timeout') errMsg = '⏳ Pollinations ha impiegato troppo. Riprova tra qualche secondo.';
+      } catch(e) {}
+      if (container) container.innerHTML = `<p style="color:var(--ink-soft)">${errMsg}</p>`;
     }
   } catch (e) {
-    removeTyping();
-    addMessage('ai', '⚠️ Errore di connessione durante la generazione. Riprova tra qualche secondo.', 'Pollinations', '');
+    const container = document.getElementById(cid);
+    if (container) container.innerHTML = `<p style="color:var(--ink-soft)">⚠️ Errore di connessione. Riprova tra qualche secondo.</p>`;
   }
 }
 
