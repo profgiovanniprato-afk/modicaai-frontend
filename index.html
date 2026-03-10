@@ -1108,57 +1108,65 @@ async function ask(q) {
 // ── Genera Immagine (Pollinations AI) ──────────────────────────────
 async function generaImmagine(prompt) {
   addMessage('user', prompt, '');
-  showTyping();
-  const lbl = document.querySelector('.typing-label');
-  if (lbl) lbl.textContent = '🎨 Genero l\'immagine... (20-40 secondi)';
-
   const cid = 'img' + Date.now();
-  // Mostra placeholder subito
+  // Mostra placeholder subito, senza typing indicator
   const imgHtml = `
     <div style="text-align:center" id="${cid}">
       <div style="padding:40px 20px;color:var(--ink-soft);font-size:13px">
         <div style="font-size:28px;margin-bottom:8px">🎨</div>
-        Generazione in corso...<br>
-        <small style="font-size:11px;opacity:.6">Pollinations AI · FLUX — può impiegare fino a 40 secondi</small>
+        <span id="${cid}_lbl">Avvio generazione...</span><br>
+        <small style="font-size:11px;opacity:.6">FLUX · può impiegare 30-60 secondi</small>
       </div>
     </div>`;
-  addMessage('ai', imgHtml, 'Pollinations', '');
-  removeTyping();
+  addMessage('ai', imgHtml, 'FLUX AI', '');
+
+  const container = () => document.getElementById(cid);
+  const lbl      = () => document.getElementById(cid + '_lbl');
 
   try {
-    // Il backend scarica l'immagine server-side e la restituisce come blob
-    const res = await fetch(API_URL + '/genera-immagine', {
+    // Step 1: avvia job (ritorna subito con job_id)
+    const startRes = await fetch(API_URL + '/genera-immagine/avvia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt })
     });
+    if (!startRes.ok) throw new Error('avvio fallito');
+    const { job_id } = await startRes.json();
+    if (lbl()) lbl().textContent = 'Generazione in corso...';
 
-    const container = document.getElementById(cid);
+    // Step 2: polling ogni 3s per max 90s
+    const maxTentativi = 30; // 30 × 3s = 90s
+    for (let i = 0; i < maxTentativi; i++) {
+      await new Promise(r => setTimeout(r, 3000));
+      if (lbl()) lbl().textContent = `Generazione in corso... (${(i+1)*3}s)`;
 
-    if (res.ok && res.headers.get('Content-Type')?.includes('image')) {
-      // Risposta è l'immagine stessa (proxy backend)
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      if (container) {
-        container.innerHTML = `
-          <img src="${objectUrl}"
-               style="max-width:100%;border-radius:14px;margin-top:4px;box-shadow:0 4px 20px rgba(0,0,0,0.15);"
-               alt="Immagine generata">
-          <br><small style="color:var(--ink-soft);font-size:11px">Generata con Pollinations AI · FLUX</small>`;
-      }
-    } else {
-      let errMsg = '⚠️ Servizio immagini temporaneamente non disponibile. Riprova tra qualche secondo.';
-      try {
-        const errData = await res.json();
-        if (errData.error === 'generation_failed' || res.status === 503) {
-          errMsg = '⏳ Il servizio immagini è momentaneamente occupato. Riprova tra 30 secondi.';
+      const pollRes = await fetch(API_URL + '/genera-immagine/stato/' + job_id);
+
+      if (pollRes.status === 202) continue; // ancora pending
+
+      if (pollRes.ok && pollRes.headers.get('Content-Type')?.includes('image')) {
+        const blob = await pollRes.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        if (container()) {
+          container().innerHTML = `
+            <img src="${objectUrl}"
+                 style="max-width:100%;border-radius:14px;margin-top:4px;box-shadow:0 4px 20px rgba(0,0,0,0.15);"
+                 alt="Immagine generata: ${prompt}">
+            <br><small style="color:var(--ink-soft);font-size:11px">✨ Generata con FLUX AI</small>`;
         }
-      } catch(e) {}
-      if (container) container.innerHTML = `<p style="color:var(--ink-soft)">${errMsg}</p>`;
+        return;
+      }
+
+      // status error o not_found
+      if (container()) container().innerHTML = `<p style="color:var(--ink-soft)">⏳ Servizio immagini momentaneamente occupato. Riprova tra qualche secondo.</p>`;
+      return;
     }
+
+    // Timeout polling
+    if (container()) container().innerHTML = `<p style="color:var(--ink-soft)">⏳ Generazione troppo lenta. Riprova tra qualche secondo.</p>`;
+
   } catch (e) {
-    const container = document.getElementById(cid);
-    if (container) container.innerHTML = `<p style="color:var(--ink-soft)">⚠️ Errore di connessione. Riprova tra qualche secondo.</p>`;
+    if (container()) container().innerHTML = `<p style="color:var(--ink-soft)">⚠️ Errore di connessione. Riprova tra qualche secondo.</p>`;
   }
 }
 
