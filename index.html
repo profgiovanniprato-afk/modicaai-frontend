@@ -495,10 +495,10 @@
 </div>
 <div class="site-footer">
   <a href="https://modicaai.it">modicaai.it</a> &nbsp;·&nbsp; Modica, Sicilia &nbsp;·&nbsp;
-  © 2026 ModicaAI &nbsp;·&nbsp; <a href="mailto:infomodicaai@gmail.com">infomodicaai@gmail.com</a>
+  © 2026 ModicaAI &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection#51383f373e3c3e35383230303811363c30383d7f323e3c"><span class="__cf_email__" data-cfemail="0b62656d6466646f62686a6a624b6c666a626725686466">[email&#160;protected]</span></a>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const API_URL = "https://modicaai-api.onrender.com";
 let lang = 'it';
 let cronologia = [];
@@ -945,21 +945,25 @@ function isRichiestaImmagine(q) {
   // Regola 0: se inizia con verbo di ricerca → non è generazione
   if (/^(cerca|trova|mostra|mostrami|fammi vedere|ricerca|search|find|show)/.test(d)) return false;
 
-  // Regola 1: verbo creativo + oggetto visivo qualsiasi → genera
-  // (disegna castello, crea sfondo, genera tramonto, illustra paesaggio...)
-  if (/^(crea|genera|fai|disegna|disegnami|dipingi|dipingimi|illustra|illustrami|costruisci|progetta)/.test(d)) return true;
+  // Parole visive che indicano chiaramente una richiesta di immagine
+  const visivo = /(foto|sfondo|sfondi|wallpaper|immagine|immagini|disegno|disegna|illustrazione|ritratto|paesaggio|dipinto|artwork|picture|poster)/;
 
-  // Regola 2: "voglio un/una + oggetto visivo"
+  // Regola 1: verbo creativo visivo esplicito (disegna/dipingi/illustra) → sempre generazione
+  if (/^(disegna|disegnami|dipingi|dipingimi|illustra|illustrami)/.test(d)) return true;
+
+  // Regola 2: crea/genera/fai SOLO se seguito da parola visiva
+  if (/^(crea|genera|fai|costruisci|progetta)/.test(d) && visivo.test(d)) return true;
+
+  // Regola 3: "voglio un/una + oggetto visivo"
   if (/^voglio (un|una|uno)\s+(foto|sfondo|wallpaper|immagine|disegno|illustrazione|ritratto|paesaggio)/.test(d)) return true;
 
-  // Regola 3: "fammi un/una + oggetto creativo"
+  // Regola 4: "fammi un/una + oggetto creativo visivo"
   if (/^fammi (un|una|uno)\s+(disegno|illustrazione|ritratto|paesaggio|sfondo|wallpaper)/.test(d)) return true;
 
-  // Regola 4: "foto/sfondo/wallpaper di X" come prima parola → generazione
-  // (NON "immagine di" da sola — troppo ambiguo)
+  // Regola 5: "foto/sfondo/wallpaper di X" come prima parola → generazione
   if (/^(foto|sfondo|sfondi|wallpaper)\s+(di|del|della|dello|dei|degli|delle)\s+\w/.test(d)) return true;
 
-  // Regola 5: keyword esplicite inglesi
+  // Regola 6: keyword esplicite inglesi
   const kwEn = ['create an image','generate an image','create a photo','generate a photo',
     'create background','generate background','create wallpaper','draw me','paint me','make me a'];
   if (kwEn.some(k => d.includes(k))) return true;
@@ -1073,14 +1077,13 @@ async function ask(q) {
   }
 }
 
-document.getElementById('searchInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') ask(this.value);
-});
-
 // ── Genera Immagine (Pollinations AI) ──────────────────────────────
 async function generaImmagine(prompt) {
   addMessage('user', prompt, '');
   showTyping();
+  const lbl = document.querySelector('.typing-label');
+  if (lbl) lbl.textContent = '🎨 Sto generando l\'immagine...';
+
   try {
     const res = await fetch(API_URL + '/genera-immagine', {
       method: 'POST',
@@ -1089,15 +1092,23 @@ async function generaImmagine(prompt) {
     });
     const data = await res.json();
     removeTyping();
-    if (data.immagine) {
-      const html = `<img src="data:image/jpeg;base64,${data.immagine}" style="max-width:100%;border-radius:12px;margin-top:4px;" alt="Immagine generata"><br><small style="color:var(--ink-soft)">Generata con Pollinations AI · FLUX</small>`;
-      addMessage('ai', html, 'Pollinations', '');
+
+    if (data.url) {
+      const imgHtml = `
+        <div style="text-align:center">
+          <img src="${data.url}"
+               style="max-width:100%;border-radius:14px;margin-top:4px;box-shadow:0 4px 20px rgba(0,0,0,0.12);"
+               alt="Immagine generata"
+               onerror="this.parentElement.innerHTML='<p style=&quot;color:var(--ink-soft)&quot;>Generazione in corso, ricarica tra qualche secondo...</p>'">
+          <br><small style="color:var(--ink-soft);font-size:11px;">Generata con Pollinations AI · FLUX</small>
+        </div>`;
+      addMessage('ai', imgHtml, 'Pollinations', '');
     } else {
-      addMessage('ai', data.error || 'Errore nella generazione.', 'Pollinations', '');
+      addMessage('ai', '⚠️ Non sono riuscito a generare l\'immagine. Riprova con una descrizione diversa.', 'Pollinations', '');
     }
   } catch (e) {
     removeTyping();
-    addMessage('ai', 'Errore di connessione durante la generazione.', 'Pollinations', '');
+    addMessage('ai', '⚠️ Errore di connessione durante la generazione. Riprova tra qualche secondo.', 'Pollinations', '');
   }
 }
 
