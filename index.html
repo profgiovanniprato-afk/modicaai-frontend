@@ -145,8 +145,12 @@
   }
   .fuel-ticker .ticker-label {
     background: #e63946;
-    font-size: 9px;
-    padding: 0 10px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0 12px; height: 100%;
+    display: flex; align-items: center;
+    flex-shrink: 0;
+    z-index: 1;
   }
   .fuel-ticker .ticker-track {
     animation: ticker-scroll 50s linear infinite;
@@ -1285,10 +1289,10 @@ async function aggiornaTicker() {
 
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  aggiornaNewsTicker();
-  aggiornaTicker();
-  setInterval(aggiornaNewsTicker, 5 * 60 * 1000);
-  setInterval(aggiornaTicker,    15 * 60 * 1000);
+  caricaNotizie();
+  caricaCarburantiFuel();
+  setInterval(caricaNotizie,          5 * 60 * 1000);
+  setInterval(caricaCarburantiFuel,  15 * 60 * 1000);
 
   // Dark mode
   const savedTheme = localStorage.getItem('modicaai_theme');
