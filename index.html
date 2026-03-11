@@ -217,25 +217,22 @@
   .traffic-modal-overlay {
     display: none; position: fixed; inset:0; z-index:2000;
     background: rgba(0,0,0,0.6); backdrop-filter:blur(4px);
-    align-items: center; justify-content: center;
+    align-items: center; justify-content: center; padding:16px;
   }
   .traffic-modal-overlay.open { display:flex; }
   .traffic-modal {
-    background: var(--white); border-radius:16px;
-    width: min(92vw, 680px); height: min(85vh, 560px);
+    background: var(--white); border-radius:20px;
+    width: min(92vw, 480px);
     display: flex; flex-direction:column;
-    overflow: visible;
+    overflow: hidden;
     box-shadow: 0 24px 60px rgba(0,0,0,0.35);
     animation: fadeUp 0.25s ease;
   }
   .traffic-modal-header {
     display:flex; align-items:center; justify-content:space-between;
-    padding: 14px 18px;
+    padding: 16px 18px 14px;
     border-bottom: 1px solid var(--border);
     flex-shrink:0;
-    border-radius:16px 16px 0 0;
-    background: var(--white);
-    position:relative; z-index:1;
   }
   .traffic-modal-title {
     font-family:'Outfit',sans-serif; font-size:15px; font-weight:700;
@@ -249,14 +246,41 @@
     color:var(--ink-mid); font-size:16px; transition:all 0.15s;
   }
   .traffic-modal-close:hover { border-color:var(--terra); color:var(--terra); }
-  #trafficMapContainer {
-    flex:1; min-height:0; position:relative;
-    border-radius: 0 0 16px 16px;
-    overflow: hidden;
+  #trafficMapContainer { padding: 18px; display:flex; flex-direction:column; gap:12px; }
+  .traffic-zona-card {
+    border-radius:14px; padding:16px 18px;
+    display:flex; align-items:center; gap:16px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
   }
-
+  .traffic-zona-card.verde  { border-color:rgba(34,197,94,0.35);  background:rgba(34,197,94,0.06);  }
+  .traffic-zona-card.giallo { border-color:rgba(251,191,36,0.35); background:rgba(251,191,36,0.06); }
+  .traffic-zona-card.rosso  { border-color:rgba(239,68,68,0.35);  background:rgba(239,68,68,0.06);  }
+  .traffic-zona-dot {
+    width:14px; height:14px; border-radius:50%; flex-shrink:0;
+  }
+  .verde  .traffic-zona-dot { background:#22c55e; }
+  .giallo .traffic-zona-dot { background:#fbbf24; }
+  .rosso  .traffic-zona-dot { background:#ef4444; }
+  .sconosciuto .traffic-zona-dot { background:#9ca3af; }
+  .traffic-zona-info { flex:1; }
+  .traffic-zona-nome { font-family:'Outfit',sans-serif; font-size:14px; font-weight:700; color:var(--ink); }
+  .traffic-zona-via  { font-family:'Outfit',sans-serif; font-size:11px; color:var(--ink-soft); margin-top:2px; }
+  .traffic-zona-stato { font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; }
+  .verde  .traffic-zona-stato { color:#16a34a; }
+  .giallo .traffic-zona-stato { color:#d97706; }
+  .rosso  .traffic-zona-stato { color:#dc2626; }
+  .sconosciuto .traffic-zona-stato { color:#6b7280; }
+  .traffic-zona-vel { font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:var(--ink-mid); text-align:right; }
+  .traffic-zona-vel span { font-size:10px; font-weight:400; display:block; color:var(--ink-soft); }
+  .traffic-modal-footer {
+    padding:12px 18px; border-top:1px solid var(--border);
+    font-family:'Outfit',sans-serif; font-size:11px; color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:space-between;
+  }
   body.dark .traffic-modal { background:var(--bg-card); }
   body.dark .traffic-modal-header { border-color:var(--border); }
+  body.dark .traffic-zona-card { background:rgba(255,255,255,0.04); }
 
   /* Ticker carburanti */
   .fuel-ticker {
@@ -535,8 +559,6 @@
 
 </style>
   <!-- MapLibre GL JS (sostituisce TomTom SDK v6, ritirato Feb 2026) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -574,6 +596,10 @@
       <button class="traffic-modal-close" onclick="chiudiMappaTraffco(null)" title="Chiudi">✕</button>
     </div>
     <div id="trafficMapContainer"></div>
+    <div class="traffic-modal-footer">
+      <span id="trafficTimestamp">Aggiornamento in corso...</span>
+      <span>💬 Chiedi dettagli nella chat</span>
+    </div>
   </div>
 </div>
 
@@ -1532,12 +1558,16 @@ async function caricaTraffco() {
 function aggiornaBarra(segmenti) {
   const container = document.getElementById('trafficSegments');
   if (!container) return;
-  // Le tre zone reali di Modica
   const html = segmenti.map(s => {
     const cls = s.stato || 'sconosciuto';
-    return `<div class="traffic-seg ${cls}"><div class="dot"></div>${s.label}</div>`;
+    return '<div class="traffic-seg ' + cls + '"><div class="dot"></div>' + s.label + '</div>';
   }).join('');
   container.innerHTML = html;
+  // Se il pannello dettaglio è aperto, aggiornalo in tempo reale
+  const overlay = document.getElementById('trafficModalOverlay');
+  if (overlay && overlay.classList.contains('open')) {
+    _renderPannelloTraffco();
+  }
 }
 
 function apriMappaTraffco() {
@@ -1545,53 +1575,44 @@ function apriMappaTraffco() {
   if (!overlay) return;
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  _caricaMappa();
+  _renderPannelloTraffco();
 }
 
-function _caricaMappa() {
+function _renderPannelloTraffco() {
   const container = document.getElementById('trafficMapContainer');
-  if (!container || container.dataset.loaded) return;
-  container.dataset.loaded = '1';
+  if (!container) return;
 
-  if (typeof L === 'undefined') {
-    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:Outfit,sans-serif;color:#888;flex-direction:column;gap:8px"><span style="font-size:28px">🗺️</span><span>Ricarica la pagina</span></div>';
+  const dati = window._trafficoDati;
+  if (!dati || !dati.segmenti || !dati.segmenti.length) {
+    container.innerHTML = '<div style="padding:32px;text-align:center;font-family:Outfit,sans-serif;color:var(--ink-soft);">Caricamento dati...</div>';
+    // Riprova tra 1 secondo se i dati non sono ancora arrivati
+    setTimeout(_renderPannelloTraffco, 1000);
     return;
   }
 
-  const TOMTOM_K = 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka';
-  container.style.height = '100%';
-  container.style.minHeight = '300px';
+  const desc = { verde:'Scorrevole', giallo:'Rallentato', rosso:'Congestionato', sconosciuto:'N/D' };
+  const icon = { verde:'🟢', giallo:'🟡', rosso:'🔴', sconosciuto:'⚪' };
 
-  var map = L.map(container, { zoomControl: true, attributionControl: true })
-             .setView([36.8620, 14.7650], 14);
+  container.innerHTML = dati.segmenti.map(function(s) {
+    var vel = s.velocita_attuale > 0
+      ? '<div class="traffic-zona-vel">' + s.velocita_attuale + ' km/h<span>velocità attuale</span></div>'
+      : '';
+    return '<div class="traffic-zona-card ' + s.stato + '">' +
+      '<div class="traffic-zona-dot"></div>' +
+      '<div class="traffic-zona-info">' +
+        '<div class="traffic-zona-nome">' + s.label + '</div>' +
+        '<div class="traffic-zona-via">' + (s.zona || '') + '</div>' +
+        '<div class="traffic-zona-stato">' + (icon[s.stato]||'') + ' ' + (desc[s.stato]||s.stato) + '</div>' +
+      '</div>' + vel +
+    '</div>';
+  }).join('');
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19, attribution: '© OpenStreetMap'
-  }).addTo(map);
-
-  L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=' + TOMTOM_K + '&tileSize=256', {
-    maxZoom: 19, opacity: 0.85, attribution: '© TomTom'
-  }).addTo(map);
-
-  L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=' + TOMTOM_K + '&tileSize=256', {
-    maxZoom: 19, opacity: 0.9
-  }).addTo(map);
-
-  var zone = [
-    { latlng:[36.8770,14.7630], label:'Modica Alta',  color:'#1A3A5C' },
-    { latlng:[36.8640,14.7740], label:'Modica Sorda', color:'#B8860B' },
-    { latlng:[36.8570,14.7600], label:'Modica Bassa', color:'#C1440E' },
-  ];
-  zone.forEach(function(z) {
-    var icon = L.divIcon({
-      className: '',
-      html: '<div style="background:' + z.color + ';color:#fff;padding:4px 10px;border-radius:10px;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.4);white-space:nowrap;">' + z.label + '</div>',
-      iconAnchor: [40, 10]
-    });
-    L.marker(z.latlng, { icon: icon, interactive: false }).addTo(map);
-  });
-
-  setTimeout(function() { map.invalidateSize(); }, 300);
+  // Timestamp
+  const ts = document.getElementById('trafficTimestamp');
+  if (ts && dati.timestamp) {
+    const d = new Date(dati.timestamp * 1000);
+    ts.textContent = 'Aggiornato alle ' + d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+  }
 }
 function chiudiMappaTraffco(e) {
   if (e && e.target !== document.getElementById('trafficModalOverlay')) return;
