@@ -526,9 +526,9 @@
   }
 
 </style>
-  <!-- TomTom Maps SDK -->
-  <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css" />
-  <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
+  <!-- MapLibre GL JS (sostituisce TomTom SDK v6, ritirato Feb 2026) -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 </head>
 <body>
 
@@ -1528,41 +1528,60 @@ function apriMappaTraffco() {
   if (!overlay) return;
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  // Aspetta che la modale sia effettivamente visibile e dimensionata
-  // requestAnimationFrame × 2 + timeout garantisce che il browser abbia calcolato le dimensioni
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      setTimeout(() => _inizializzaMappa(), 50);
-    });
-  });
+  // Aspetta che il browser abbia calcolato il layout della modale
+  setTimeout(() => _inizializzaMappa(), 200);
 }
 
 function _inizializzaMappa() {
+  const container = document.getElementById('trafficMapContainer');
+  if (!container) return;
+
   if (!trafficMapInit) {
     trafficMapInit = true;
     try {
-      // Forza dimensioni esplicite sul container prima di init
-      const container = document.getElementById('trafficMapContainer');
-      const modal = container.closest('.traffic-modal');
-      const header = modal.querySelector('.traffic-modal-header');
-      const availH = modal.offsetHeight - header.offsetHeight;
-      container.style.height = availH + 'px';
-      container.style.width = modal.offsetWidth + 'px';
-
-      trafficMap = tt.map({
-        key: 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka',
+      // MapLibre GL JS — sostituto ufficiale del TomTom SDK v6 (ritirato Feb 2026)
+      // Le tile vettoriali TomTom sono accessibili direttamente via URL REST
+      trafficMap = new maplibregl.Map({
         container: 'trafficMapContainer',
+        style: {
+          version: 8,
+          sources: {
+            'tomtom-base': {
+              type: 'raster',
+              tiles: [
+                `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${TOMTOM_KEY_MAP}&tileSize=256`
+              ],
+              tileSize: 256,
+              attribution: '© TomTom'
+            },
+            'tomtom-traffic-flow': {
+              type: 'raster',
+              tiles: [
+                `https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=${TOMTOM_KEY_MAP}&tileSize=256`
+              ],
+              tileSize: 256,
+            },
+            'tomtom-traffic-incidents': {
+              type: 'raster',
+              tiles: [
+                `https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=${TOMTOM_KEY_MAP}&tileSize=256`
+              ],
+              tileSize: 256,
+            }
+          },
+          layers: [
+            { id: 'base', type: 'raster', source: 'tomtom-base' },
+            { id: 'traffic-flow', type: 'raster', source: 'tomtom-traffic-flow', paint: { 'raster-opacity': 0.8 } },
+            { id: 'traffic-incidents', type: 'raster', source: 'tomtom-traffic-incidents', paint: { 'raster-opacity': 0.9 } }
+          ]
+        },
         center: [14.7642, 36.8463],
         zoom: 13,
-        style: 'tomtom://vector/1/basic-main',
       });
+
       trafficMap.on('load', () => {
-        trafficMap.addTier(new tt.TrafficFlowTilesTier());
-        trafficMap.addTier(new tt.TrafficIncidentsTier());
-        // Resize dopo il load per sicurezza
         trafficMap.resize();
-        // Marker per le 3 zone
+        // Marker per le 3 zone di Modica
         const zone = [
           { coords:[14.7630, 36.8770], label:'Modica Alta',  color:'#1A3A5C' },
           { coords:[14.7740, 36.8640], label:'Modica Sorda', color:'#B8860B' },
@@ -1570,21 +1589,27 @@ function _inizializzaMappa() {
         ];
         zone.forEach(z => {
           const el = document.createElement('div');
-          el.style.cssText = `background:${z.color};color:#fff;padding:3px 8px;border-radius:12px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.3);white-space:nowrap;cursor:default;`;
+          el.style.cssText = `background:${z.color};color:#fff;padding:4px 10px;border-radius:12px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.35);white-space:nowrap;cursor:default;pointer-events:none;`;
           el.textContent = z.label;
-          new tt.Marker({element:el}).setLngLat(z.coords).addTo(trafficMap);
+          new maplibregl.Marker({ element: el })
+            .setLngLat(z.coords)
+            .addTo(trafficMap);
         });
       });
+
+      trafficMap.on('error', (e) => {
+        console.warn('MapLibre errore tile:', e);
+      });
+
     } catch(err) {
-      console.error('Mappa TomTom errore:', err);
-      document.getElementById('trafficMapContainer').innerHTML =
+      console.error('Mappa errore:', err);
+      container.innerHTML =
         '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-family:Outfit,sans-serif;font-size:13px;flex-direction:column;gap:8px">' +
         '<span style="font-size:24px">🗺️</span><span>Mappa non disponibile</span>' +
         '<span style="font-size:11px;opacity:0.6">Verifica la connessione</span></div>';
-      trafficMapInit = false; // reset per permettere retry
+      trafficMapInit = false;
     }
   } else if (trafficMap) {
-    // Riapertura modale — resize per riadattare
     trafficMap.resize();
   }
 }
