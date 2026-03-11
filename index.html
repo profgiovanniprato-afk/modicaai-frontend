@@ -140,8 +140,7 @@
   body.dark .header { background:rgba(21,24,32,0.97); }
   body.dark .input-bar { background:rgba(21,24,32,0.97); box-shadow: 0 -4px 24px rgba(0,0,0,0.18); }
   body.dark .input-wrap { background:var(--white); }
-  body.dark .lang-toggle { background:var(--bg); }
-  body.dark .lang-btn.active { background:var(--white); }
+  body.dark .lang-indicator { background:var(--bg); }
   body.dark .btn-new-chat { background:var(--white); }
   body.dark .msg-ai { background:var(--white); }
   body.dark .typing { background:var(--white); }
@@ -250,9 +249,8 @@
   .logo-tagline { font-size:9px; font-weight:500; letter-spacing:1.8px; text-transform:uppercase; color:var(--ink-soft); margin-top:1px; }
 
   .header-right { display:flex; align-items:center; gap:10px; }
-  .lang-toggle { display:flex; gap:2px; background:var(--bg); border-radius:8px; padding:3px; border:1px solid var(--border); }
-  .lang-btn { padding:4px 11px; border-radius:6px; font-size:11px; font-weight:600; letter-spacing:0.5px; cursor:pointer; border:none; background:transparent; color:var(--ink-soft); transition:all 0.18s; font-family:'Outfit',sans-serif; text-transform:uppercase; }
-  .lang-btn.active { background:var(--white); color:var(--sky); box-shadow:var(--shadow-sm); }
+  .lang-indicator { padding:4px 10px; border-radius:8px; font-size:11px; font-weight:600; letter-spacing:0.5px; border:1px solid var(--border); background:var(--bg); color:var(--ink-soft); font-family:'Outfit',sans-serif; text-transform:uppercase; cursor:default; transition:all 0.3s; }
+  .lang-indicator.detected { color:var(--sky); border-color:var(--sky); }
 
   /* Pulsante nuova chat */
   .btn-new-chat { display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--white); font-size:12px; font-weight:500; color:var(--ink-mid); cursor:pointer; font-family:'Outfit',sans-serif; transition:all 0.18s; }
@@ -455,10 +453,7 @@
     <button class="btn-dark" id="btnDark" onclick="toggleDark()" title="Dark mode">
       <svg id="iconDark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
     </button>
-    <div class="lang-toggle">
-      <button class="lang-btn active" onclick="setLang(this,'it')">IT</button>
-      <button class="lang-btn" onclick="setLang(this,'en')">EN</button>
-    </div>
+    <div class="lang-indicator" id="langIndicator" title="Lingua rilevata automaticamente">🌐 IT</div>
   </div>
 </div>
 
@@ -514,6 +509,18 @@
 <script>
 const API_URL = "https://modicaai-api.onrender.com";
 let lang = 'it';
+const LANG_FLAGS = { it:'🇮🇹 IT', en:'🇬🇧 EN', de:'🇩🇪 DE', fr:'🇫🇷 FR', es:'🇪🇸 ES' };
+const TTS_LANG   = { it:'it-IT', en:'en-US', de:'de-DE', fr:'fr-FR', es:'es-ES' };
+
+function aggiorna_lingua(codice) {
+  if (!codice || codice === lang) return;
+  lang = codice;
+  const ind = document.getElementById('langIndicator');
+  if (ind) {
+    ind.textContent = LANG_FLAGS[codice] || ('🌐 ' + codice.toUpperCase());
+    ind.classList.toggle('detected', codice !== 'it');
+  }
+}
 let cronologia = [];
 let SESSION_ID = null;
 let userLat = null;
@@ -547,11 +554,7 @@ if (navigator.geolocation) {
 }
 
 // ── Utilità ──────────────────────────────────────────────────────
-function setLang(btn, l) {
-  lang = l;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
+// lingua gestita automaticamente dal backend via aggiorna_lingua()
 
 function nuovaChat() {
   cronologia = [];
@@ -641,7 +644,7 @@ function leggiTesto(testo) {
   if (!speechSynth) return;
   speechSynth.cancel();
   currentUtterance = new SpeechSynthesisUtterance(testo);
-  currentUtterance.lang = lang === 'it' ? 'it-IT' : 'en-US';
+  currentUtterance.lang = TTS_LANG[lang] || 'it-IT';
   currentUtterance.rate = 1.0;
   currentUtterance.pitch = 1.0;
   const voci = speechSynth.getVoices();
@@ -791,6 +794,7 @@ async function ask(q) {
           if (evt.type === 'meta') {
             const lbl = document.querySelector('.typing-label');
             if (lbl) lbl.textContent = ATTESA_MSGS[evt.intento] || ATTESA_MSGS.generale;
+            if (evt.lingua) aggiorna_lingua(evt.lingua);
           } else if (evt.type === 'token') {
             if (!typingRemoved) {
               removeTyping(); typingRemoved = true;
@@ -805,6 +809,7 @@ async function ask(q) {
             fullText += evt.text;
             if (msgDiv) { msgDiv.innerHTML = formatText(fullText); msgDiv.scrollIntoView({ behavior:'smooth', block:'end' }); }
           } else if (evt.type === 'done') {
+            if (evt.lingua) aggiorna_lingua(evt.lingua);
             if (msgDiv) {
               msgDiv.innerHTML = formatText(fullText);
               const ft = document.getElementById('ft-' + msgDiv.id);
@@ -836,6 +841,7 @@ async function ask(q) {
       const r2 = await fetch(API_URL+'/ask', { method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ domanda:q, session_id:SESSION_ID, cronologia:cronologia.slice(0,-1), lat:userLat, lon:userLon }) });
       const d2 = await r2.json();
+      if (d2.lingua) aggiorna_lingua(d2.lingua);
       removeTyping();
       addMessage('ai', formatText(d2.risposta), 'ModicaAI', d2.risposta);
       cronologia.push({ role:'assistant', content:d2.risposta });
