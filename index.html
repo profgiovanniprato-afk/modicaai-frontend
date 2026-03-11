@@ -1547,16 +1547,23 @@ function _inizializzaMappa() {
   const container = document.getElementById('trafficMapContainer');
   if (!container) return;
 
+  // Rileva mobile/tablet (Safari iOS non supporta WebGL in modal)
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Su mobile: iframe OpenStreetMap — zero WebGL, funziona sempre
+    _mappaFallbackIframe(container);
+    return;
+  }
+
+  // Desktop: MapLibre GL JS con layer traffico TomTom
   if (!trafficMapInit) {
     trafficMapInit = true;
-
-    // Verifica che MapLibre sia caricato
     if (typeof maplibregl === 'undefined') {
-      _mappaErrore(container, 'Libreria mappa non caricata', 'Controlla la connessione e ricarica');
+      _mappaFallbackIframe(container);
       trafficMapInit = false;
       return;
     }
-
     try {
       trafficMap = new maplibregl.Map({
         container: 'trafficMapContainer',
@@ -1566,7 +1573,7 @@ function _inizializzaMappa() {
           sources: {
             'base': {
               type: 'raster',
-              tiles: [`https://tile.openstreetmap.org/{z}/{x}/{y}.png`],
+              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
               tileSize: 256,
               attribution: '© OpenStreetMap contributors'
             },
@@ -1582,9 +1589,9 @@ function _inizializzaMappa() {
             }
           },
           layers: [
-            { id: 'base-layer',       type: 'raster', source: 'base' },
-            { id: 'flow-layer',       type: 'raster', source: 'traffic-flow',     paint: { 'raster-opacity': 0.75 } },
-            { id: 'incidents-layer',  type: 'raster', source: 'traffic-incidents', paint: { 'raster-opacity': 0.9  } }
+            { id: 'base-layer',      type: 'raster', source: 'base' },
+            { id: 'flow-layer',      type: 'raster', source: 'traffic-flow',     paint: { 'raster-opacity': 0.75 } },
+            { id: 'incidents-layer', type: 'raster', source: 'traffic-incidents', paint: { 'raster-opacity': 0.9  } }
           ]
         },
         center: [14.7642, 36.8463],
@@ -1592,10 +1599,8 @@ function _inizializzaMappa() {
         attributionControl: false,
         failIfMajorPerformanceCaveat: false,
       });
-
       trafficMap.addControl(new maplibregl.AttributionControl({ compact: true }));
       trafficMap.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
-
       trafficMap.on('load', () => {
         trafficMap.resize();
         const zone = [
@@ -1610,40 +1615,35 @@ function _inizializzaMappa() {
           new maplibregl.Marker({ element: el }).setLngLat(z.coords).addTo(trafficMap);
         });
       });
-
-      trafficMap.on('error', (e) => {
-        console.warn('MapLibre tile warn:', e.error?.message || e);
-      });
-
+      trafficMap.on('error', (e) => { console.warn('MapLibre tile:', e.error?.message || e); });
     } catch(err) {
       console.error('MapLibre init errore:', err);
-      // Fallback: iframe OpenStreetMap embed
       _mappaFallbackIframe(container);
       trafficMapInit = false;
     }
-
   } else if (trafficMap) {
     trafficMap.resize();
   }
 }
 
 function _mappaFallbackIframe(container) {
-  // Fallback: OpenStreetMap embed (zero dipendenze, funziona sempre)
+  // OpenStreetMap embed — funziona su qualsiasi device, zero dipendenze
+  // Bbox centrato su Modica: ovest,sud,est,nord
   container.innerHTML = `
     <div style="position:relative;width:100%;height:100%;border-radius:0 0 16px 16px;overflow:hidden;">
       <iframe
-        src="https://www.openstreetmap.org/export/embed.html?bbox=14.74,36.84,14.79,36.89&layer=mapnik&marker=36.8570,14.7600"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=14.740%2C36.845%2C14.790%2C36.890&layer=mapnik&mlat=36.8670&mlon=14.7650"
         style="width:100%;height:100%;border:none;display:block;"
         loading="lazy"
-        title="Mappa Modica"
+        title="Mappa Modica traffico"
       ></iframe>
-      <div style="position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;pointer-events:none;">
-        <span style="background:#1A3A5C;color:#fff;padding:3px 9px;border-radius:10px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.3);">Modica Alta</span>
-        <span style="background:#B8860B;color:#fff;padding:3px 9px;border-radius:10px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.3);">Modica Sorda</span>
-        <span style="background:#C1440E;color:#fff;padding:3px 9px;border-radius:10px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.3);">Modica Bassa</span>
+      <div style="position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;pointer-events:none;z-index:10;">
+        <span style="background:#1A3A5C;color:#fff;padding:4px 10px;border-radius:10px;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.3);">📍 Modica Alta</span>
+        <span style="background:#B8860B;color:#fff;padding:4px 10px;border-radius:10px;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.3);">📍 Modica Sorda</span>
+        <span style="background:#C1440E;color:#fff;padding:4px 10px;border-radius:10px;font-family:Outfit,sans-serif;font-size:12px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.3);">📍 Modica Bassa</span>
       </div>
-      <div style="position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,0.85);border-radius:8px;padding:3px 8px;font-family:Outfit,sans-serif;font-size:10px;color:#555;">
-        📡 Dati traffico nella chat
+      <div style="position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,0.9);border-radius:8px;padding:4px 10px;font-family:Outfit,sans-serif;font-size:11px;color:#555;box-shadow:0 1px 4px rgba(0,0,0,0.15);">
+        💬 Chiedi il traffico nella chat
       </div>
     </div>`;
 }
