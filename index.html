@@ -1506,14 +1506,26 @@ async function aggiornaTicker() {
 async function caricaTraffco() {
   try {
     const res = await fetch(API_URL + '/traffico');
-    if (!res.ok) return;
     const dati = await res.json();
-    if (!dati.segmenti || !dati.segmenti.length) return;
-    aggiornaBarra(dati.segmenti);
-    // Salva per uso AI
-    window._trafficoDati = dati;
+    console.log('[TRAFFICO]', JSON.stringify(dati)); // debug visibile in console
+    if (dati.segmenti && dati.segmenti.length) {
+      aggiornaBarra(dati.segmenti);
+      window._trafficoDati = dati;
+    } else {
+      // Nessun dato — mostra grigio
+      aggiornaBarra([
+        { label: 'Modica Alta',  stato: 'sconosciuto' },
+        { label: 'Modica Sorda', stato: 'sconosciuto' },
+        { label: 'Modica Bassa', stato: 'sconosciuto' },
+      ]);
+    }
   } catch(e) {
-    console.warn('Traffico non disponibile:', e);
+    console.error('[TRAFFICO] Errore:', e);
+    aggiornaBarra([
+      { label: 'Modica Alta',  stato: 'sconosciuto' },
+      { label: 'Modica Sorda', stato: 'sconosciuto' },
+      { label: 'Modica Bassa', stato: 'sconosciuto' },
+    ]);
   }
 }
 
@@ -1540,16 +1552,70 @@ function _caricaMappa() {
   const container = document.getElementById('trafficMapContainer');
   if (!container || container.dataset.loaded) return;
   container.dataset.loaded = '1';
-  // Google Maps embed con layer traffico — funziona su tutti i device, zero JS
-  container.innerHTML = `
-    <iframe
-      src="https://maps.google.com/maps?q=Modica,Sicily&t=m&z=14&output=embed&layer=traffic"
-      style="width:100%;height:100%;border:none;display:block;border-radius:0 0 16px 16px;"
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-      title="Traffico Modica"
-      allowfullscreen
-    ></iframe>`;
+
+  const TOMTOM_K = 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka';
+  const mapHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
+<style>
+  html,body,#map{margin:0;padding:0;width:100%;height:100%;overflow:hidden;}
+  .zone-label{background:transparent;border:none;box-shadow:none;}
+  .zone-label div{color:#fff;padding:4px 9px;border-radius:10px;font-family:sans-serif;font-size:11px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.4);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+var map = L.map('map', {zoomControl:true, attributionControl:true}).setView([36.8620, 14.7650], 14);
+
+// Base: OpenStreetMap
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// Layer traffico TomTom (flow colorato)
+L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=${TOMTOM_K}&tileSize=256', {
+  maxZoom: 19,
+  opacity: 0.8,
+  attribution: '© TomTom'
+}).addTo(map);
+
+// Layer incidenti TomTom
+L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=${TOMTOM_K}&tileSize=256', {
+  maxZoom: 19,
+  opacity: 0.9
+}).addTo(map);
+
+// Marker zone
+var zone = [
+  {latlng:[36.8770,14.7630], label:'Modica Alta',  color:'#1A3A5C'},
+  {latlng:[36.8640,14.7740], label:'Modica Sorda', color:'#B8860B'},
+  {latlng:[36.8570,14.7600], label:'Modica Bassa', color:'#C1440E'},
+];
+zone.forEach(function(z){
+  var icon = L.divIcon({
+    className:'zone-label',
+    html:'<div style="background:'+z.color+'">'+z.label+'</div>',
+    iconAnchor:[40,10]
+  });
+  L.marker(z.latlng, {icon:icon, interactive:false}).addTo(map);
+});
+<\/script>
+</body>
+</html>`;
+
+  const blob = new Blob([mapHtml], {type:'text/html'});
+  const url  = URL.createObjectURL(blob);
+  const iframe = document.createElement('iframe');
+  iframe.src = url;
+  iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;border-radius:0 0 16px 16px;';
+  iframe.title = 'Traffico Modica';
+  container.appendChild(iframe);
 }
 
 function chiudiMappaTraffco(e) {
