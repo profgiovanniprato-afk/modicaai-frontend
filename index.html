@@ -148,6 +148,107 @@
   body.dark .btn-copy-msg { background:var(--white); }
   body.dark .news-ticker { background:#0f1218; border-bottom:1px solid rgba(255,255,255,0.05); }
   body.dark .fuel-ticker { background:#0f1218; border-bottom:1px solid rgba(255,255,255,0.05); }
+  body.dark .traffic-bar { background:#0f1218; border-bottom:1px solid rgba(255,255,255,0.05); }
+
+  /* ── Barra Traffico Live ── */
+  .traffic-bar {
+    position: fixed; top:60px; left:0; right:0; z-index:498;
+    height: 28px;
+    background: #1a1a2e;
+    display: flex; align-items: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    user-select: none;
+  }
+  .traffic-bar:hover { background:#1e1e38; }
+  .traffic-bar .traffic-label {
+    background: #1a3a5c;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0 12px; height: 100%;
+    display: flex; align-items: center;
+    flex-shrink: 0; color: #fff;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .traffic-segments {
+    display: flex; align-items: center;
+    gap: 6px; padding: 0 14px;
+    overflow: hidden; flex: 1;
+  }
+  .traffic-seg {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600;
+    color: rgba(255,255,255,0.8);
+    white-space: nowrap;
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+  }
+  .traffic-seg .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: none;
+  }
+  .traffic-seg.verde  { border-color: rgba(34,197,94,0.4); }
+  .traffic-seg.giallo { border-color: rgba(251,191,36,0.4); }
+  .traffic-seg.rosso  { border-color: rgba(239,68,68,0.4); }
+  .traffic-seg.verde  .dot { background: #22c55e; }
+  .traffic-seg.giallo .dot { background: #fbbf24; }
+  .traffic-seg.rosso  .dot { background: #ef4444; animation: pulse-red 1.2s infinite; }
+  .traffic-seg.sconosciuto .dot { background: #6b7280; }
+  @keyframes pulse-red {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(1.3); }
+  }
+  .traffic-map-hint {
+    margin-left: auto; padding: 0 14px;
+    font-size: 9px; font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Modale mappa traffico ── */
+  .traffic-modal-overlay {
+    display: none; position: fixed; inset:0; z-index:2000;
+    background: rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .traffic-modal-overlay.open { display:flex; }
+  .traffic-modal {
+    background: var(--white); border-radius:16px;
+    width: min(92vw, 680px); height: min(85vh, 560px);
+    display: flex; flex-direction:column;
+    overflow:hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    animation: fadeUp 0.25s ease;
+  }
+  .traffic-modal-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink:0;
+  }
+  .traffic-modal-title {
+    font-family:'Outfit',sans-serif; font-size:15px; font-weight:700;
+    color: var(--ink); display:flex; align-items:center; gap:8px;
+  }
+  .traffic-modal-title span { font-size:11px; font-weight:500; color:var(--ink-soft); }
+  .traffic-modal-close {
+    width:30px; height:30px; border-radius:8px;
+    border:1px solid var(--border); background:var(--bg);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:var(--ink-mid); font-size:16px; transition:all 0.15s;
+  }
+  .traffic-modal-close:hover { border-color:var(--terra); color:var(--terra); }
+  #trafficMapContainer { flex:1; }
+  body.dark .traffic-modal { background:var(--bg-card); }
+  body.dark .traffic-modal-header { border-color:var(--border); }
 
   /* Ticker carburanti */
   .fuel-ticker {
@@ -235,10 +336,10 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
 
-  .top-stripe { position:fixed; top:60px; left:0; right:0; height:3px; z-index:400; background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky)); background-size:300% 100%; animation:stripe 6s linear infinite; }
+  .top-stripe { position:fixed; top:88px; left:0; right:0; height:3px; z-index:400; background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky)); background-size:300% 100%; animation:stripe 6s linear infinite; }
   @keyframes stripe{0%{background-position:0%}100%{background-position:300%}}
 
-  .header { position:fixed; top:63px; left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
+  .header { position:fixed; top:91px; left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
 
   .logo { display:flex; align-items:center; gap:10px; cursor:pointer; }
   .logo-mark { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(26,58,92,0.30); position:relative; overflow:hidden; flex-shrink:0; }
@@ -278,7 +379,7 @@
 
 
   /* Main */
-  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:148px 20px 200px; }
+  .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:176px 20px 200px; }
 
   /* Hero */
   .hero { text-align:center; margin-bottom:36px; }
@@ -425,6 +526,9 @@
   }
 
 </style>
+  <!-- TomTom Maps SDK -->
+  <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css" />
+  <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
 </head>
 <body>
 
@@ -438,6 +542,33 @@
     </div>
   </div>
 </div>
+
+<!-- ── Barra Traffico Live ── -->
+<div class="traffic-bar" id="trafficBar" onclick="apriMappaTraffco()" title="Clicca per vedere la mappa del traffico">
+  <div class="traffic-label">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+    Traffico Live
+  </div>
+  <div class="traffic-segments" id="trafficSegments">
+    <div class="traffic-seg sconosciuto"><div class="dot"></div>Caricamento...</div>
+  </div>
+  <div class="traffic-map-hint">🗺 Apri mappa ›</div>
+</div>
+
+<!-- ── Modale Mappa Traffico ── -->
+<div class="traffic-modal-overlay" id="trafficModalOverlay" onclick="chiudiMappaTraffco(event)">
+  <div class="traffic-modal">
+    <div class="traffic-modal-header">
+      <div class="traffic-modal-title">
+        🚗 Traffico in tempo reale
+        <span>Modica, Sicilia</span>
+      </div>
+      <button class="traffic-modal-close" onclick="chiudiMappaTraffco(null)" title="Chiudi">✕</button>
+    </div>
+    <div id="trafficMapContainer"></div>
+  </div>
+</div>
+
 <div class="news-ticker" id="newsTicker">
   <div class="ticker-label">📰 News</div>
   <div class="ticker-track-wrap">
@@ -522,7 +653,9 @@
     <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Ultime notizie</button>
     <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo oggi</button>
     <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
-    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>  </div>
+    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
+    <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico Live</button>
+  </div>
 
   <!-- Suggerimenti iniziali -->
   <div class="suggestions-grid" id="suggestionsGrid" style="display:none"></div>
@@ -563,6 +696,7 @@ const UI_STRINGS = {
     chip3: '🌤️ Meteo oggi',              chip3q: 'Che tempo fa oggi a Modica?',
     chip4: '💊 Farmacia di turno',       chip4q: 'Farmacia di turno adesso?',
     chip5: '🎨 Genera immagine',         chip5q: 'Genera un immagine del barocco siciliano',
+    chip6: '🚗 Traffico Live',              chip6q: 'Com\'è il traffico adesso a Modica?',
     wait:  'ModicaAI sta pensando...',
     waitMeteo:'🌤️ Controllo il meteo...', waitCarb:'⛽ Cerco i prezzi vicino a te...',
     waitNews:'📰 Leggo le ultime notizie...', waitRist:'🍽️ Cerco ristoranti aperti...',
@@ -583,6 +717,7 @@ const UI_STRINGS = {
     chip3: '🌤️ Weather today',            chip3q: 'What is the weather in Modica today?',
     chip4: '💊 On-duty pharmacy',         chip4q: 'Which pharmacy is on duty now?',
     chip5: '🎨 Generate image',           chip5q: 'Generate an image of Sicilian baroque',
+    chip6: '🚗 Live Traffic',               chip6q: 'How is the traffic in Modica right now?',
     wait:  'ModicaAI is thinking...',
     waitMeteo:'🌤️ Checking the weather...', waitCarb:'⛽ Finding prices near you...',
     waitNews:'📰 Reading the latest news...', waitRist:'🍽️ Finding open restaurants...',
@@ -603,6 +738,7 @@ const UI_STRINGS = {
     chip3: '🌤️ Wetter heute',             chip3q: 'Wie ist das Wetter heute in Modica?',
     chip4: '💊 Notfallapotheke',          chip4q: 'Welche Apotheke hat jetzt Bereitschaftsdienst?',
     chip5: '🎨 Bild generieren',          chip5q: 'Generiere ein Bild des sizilianischen Barocks',
+    chip6: '🚗 Live-Verkehr',               chip6q: 'Wie ist der Verkehr gerade in Modica?',
     wait:  'ModicaAI denkt nach...',
     waitMeteo:'🌤️ Überprüfe das Wetter...', waitCarb:'⛽ Suche Preise in deiner Nähe...',
     waitNews:'📰 Lese die neuesten Nachrichten...', waitRist:'🍽️ Suche geöffnete Restaurants...',
@@ -623,6 +759,7 @@ const UI_STRINGS = {
     chip3: "🌤️ Météo aujourd'hui",       chip3q: "Quel temps fait-il à Modica aujourd'hui ?",
     chip4: '💊 Pharmacie de garde',       chip4q: 'Quelle pharmacie est de garde maintenant ?',
     chip5: '🎨 Générer une image',        chip5q: 'Génère une image du baroque sicilien',
+    chip6: '🚗 Trafic en direct',            chip6q: "Comment est la circulation à Modica en ce moment ?"  ,
     wait:  'ModicaAI réfléchit...',
     waitMeteo:'🌤️ Vérification de la météo...', waitCarb:'⛽ Recherche des prix près de toi...',
     waitNews:'📰 Lecture des dernières nouvelles...', waitRist:'🍽️ Recherche de restaurants ouverts...',
@@ -643,6 +780,7 @@ const UI_STRINGS = {
     chip3: '🌤️ Tiempo hoy',              chip3q: '¿Qué tiempo hace hoy en Modica?',
     chip4: '💊 Farmacia de guardia',      chip4q: '¿Qué farmacia está de guardia ahora?',
     chip5: '🎨 Generar imagen',           chip5q: 'Genera una imagen del barroco siciliano',
+    chip6: '🚗 Tráfico en vivo',             chip6q: '¿Cómo está el tráfico en Modica ahora mismo?',
     wait:  'ModicaAI está pensando...',
     waitMeteo:'🌤️ Comprobando el tiempo...', waitCarb:'⛽ Buscando precios cerca de ti...',
     waitNews:'📰 Leyendo las últimas noticias...', waitRist:'🍽️ Buscando restaurantes abiertos...',
@@ -729,7 +867,7 @@ function applicaUI() {
   if (sub) sub.textContent = t('heroSub');
   // Chip suggerimenti
   const chips = document.querySelectorAll('.chip');
-  const chipKeys = ['chip1','chip2','chip3','chip4','chip5'];
+  const chipKeys = ['chip1','chip2','chip3','chip4','chip5','chip6'];
   chips.forEach((c, i) => {
     if (chipKeys[i]) {
       const lbl = t(chipKeys[i]);
@@ -986,7 +1124,7 @@ const ATTESA_MSGS = {
   notizie:'📰 Leggo le ultime notizie...', ristoranti:'🍽️ Cerco ristoranti aperti...',
   farmacia:'💊 Cerco farmacie di turno...', hotel:'🏨 Cerco strutture...',
   bar:'☕ Cerco bar aperti...', turismo:'🏛️ Cerco attrazioni...',
-  storia:'📜 Consulto le fonti...', eventi:'🎭 Cerco eventi...', generale:'ModicaAI sta pensando...',
+  storia:'📜 Consulto le fonti...', eventi:'🎭 Cerco eventi...', traffico:'🚗 Verifico il traffico...', generale:'ModicaAI sta pensando...',
 };
 
 async function ask(q) {
@@ -1354,9 +1492,105 @@ async function aggiornaTicker() {
 }
 
 // ── Init ──────────────────────────────────────────────────────
+// ── Traffico Live ───────────────────────────────────────────────
+const TOMTOM_KEY_FRONTEND = 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka'; // placeholder — la chiave è lato backend, la mappa usa una costante
+
+let trafficMap = null;
+let trafficMapInit = false;
+
+async function caricaTraffco() {
+  try {
+    const res = await fetch(API_URL + '/traffico');
+    if (!res.ok) return;
+    const dati = await res.json();
+    if (!dati.segmenti || !dati.segmenti.length) return;
+    aggiornaBarra(dati.segmenti);
+    // Salva per uso AI
+    window._trafficoDati = dati;
+  } catch(e) {
+    console.warn('Traffico non disponibile:', e);
+  }
+}
+
+function aggiornaBarra(segmenti) {
+  const container = document.getElementById('trafficSegments');
+  if (!container) return;
+  // Le tre zone reali di Modica
+  const html = segmenti.map(s => {
+    const cls = s.stato || 'sconosciuto';
+    return `<div class="traffic-seg ${cls}"><div class="dot"></div>${s.label}</div>`;
+  }).join('');
+  container.innerHTML = html;
+}
+
+function apriMappaTraffco() {
+  const overlay = document.getElementById('trafficModalOverlay');
+  if (!overlay) return;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Inizializza mappa TomTom solo la prima volta
+  if (!trafficMapInit) {
+    trafficMapInit = true;
+    setTimeout(() => {
+      try {
+        trafficMap = tt.map({
+          key: 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka',
+          container: 'trafficMapContainer',
+          center: [14.7642, 36.8463],  // Modica [lon, lat]
+          zoom: 13,
+          style: 'tomtom://vector/1/basic-main',
+        });
+        trafficMap.on('load', () => {
+          trafficMap.addTier(new tt.TrafficFlowTilesTier());
+          trafficMap.addTier(new tt.TrafficIncidentsTier());
+          // Marker per le 3 zone
+          const zone = [
+            { coords:[14.7630, 36.8770], label:'Modica Alta',  color:'#1A3A5C' },
+            { coords:[14.7740, 36.8640], label:'Modica Sorda', color:'#B8860B' },
+            { coords:[14.7600, 36.8570], label:'Modica Bassa', color:'#C1440E' },
+          ];
+          zone.forEach(z => {
+            const el = document.createElement('div');
+            el.style.cssText = `background:${z.color};color:#fff;padding:3px 8px;border-radius:12px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.3);white-space:nowrap;`;
+            el.textContent = z.label;
+            new tt.Marker({element:el}).setLngLat(z.coords).addTo(trafficMap);
+          });
+        });
+      } catch(err) {
+        console.error('Mappa TomTom errore:', err);
+        document.getElementById('trafficMapContainer').innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-family:Outfit,sans-serif;font-size:13px;flex-direction:column;gap:8px">' +
+          '<span style="font-size:24px">🗺️</span><span>Mappa non disponibile</span>' +
+          '<span style="font-size:11px;opacity:0.6">Chiave TomTom non configurata</span></div>';
+      }
+    }, 100);
+  } else if (trafficMap) {
+    setTimeout(() => trafficMap.resize(), 100);
+  }
+}
+
+function chiudiMappaTraffco(e) {
+  if (e && e.target !== document.getElementById('trafficModalOverlay')) return;
+  const overlay = document.getElementById('trafficModalOverlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Aggiornamento automatico ogni 2 minuti
+setInterval(caricaTraffco, 120000);
+
+// ── Service Worker ───────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   applicaUI();
   caricaNotizie();
+  caricaTraffco();
   caricaCarburantiFuel();
   setInterval(caricaNotizie,          5 * 60 * 1000);
   setInterval(caricaCarburantiFuel,  15 * 60 * 1000);
