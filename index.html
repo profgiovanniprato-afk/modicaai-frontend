@@ -246,7 +246,7 @@
     color:var(--ink-mid); font-size:16px; transition:all 0.15s;
   }
   .traffic-modal-close:hover { border-color:var(--terra); color:var(--terra); }
-  #trafficMapContainer { flex:1; }
+  #trafficMapContainer { flex:1; min-height:0; height:100%; width:100%; }
   body.dark .traffic-modal { background:var(--bg-card); }
   body.dark .traffic-modal-header { border-color:var(--border); }
 
@@ -1529,44 +1529,63 @@ function apriMappaTraffco() {
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // Inizializza mappa TomTom solo la prima volta
+  // Aspetta che la modale sia effettivamente visibile e dimensionata
+  // requestAnimationFrame × 2 + timeout garantisce che il browser abbia calcolato le dimensioni
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      setTimeout(() => _inizializzaMappa(), 50);
+    });
+  });
+}
+
+function _inizializzaMappa() {
   if (!trafficMapInit) {
     trafficMapInit = true;
-    setTimeout(() => {
-      try {
-        trafficMap = tt.map({
-          key: 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka',
-          container: 'trafficMapContainer',
-          center: [14.7642, 36.8463],  // Modica [lon, lat]
-          zoom: 13,
-          style: 'tomtom://vector/1/basic-main',
+    try {
+      // Forza dimensioni esplicite sul container prima di init
+      const container = document.getElementById('trafficMapContainer');
+      const modal = container.closest('.traffic-modal');
+      const header = modal.querySelector('.traffic-modal-header');
+      const availH = modal.offsetHeight - header.offsetHeight;
+      container.style.height = availH + 'px';
+      container.style.width = modal.offsetWidth + 'px';
+
+      trafficMap = tt.map({
+        key: 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka',
+        container: 'trafficMapContainer',
+        center: [14.7642, 36.8463],
+        zoom: 13,
+        style: 'tomtom://vector/1/basic-main',
+      });
+      trafficMap.on('load', () => {
+        trafficMap.addTier(new tt.TrafficFlowTilesTier());
+        trafficMap.addTier(new tt.TrafficIncidentsTier());
+        // Resize dopo il load per sicurezza
+        trafficMap.resize();
+        // Marker per le 3 zone
+        const zone = [
+          { coords:[14.7630, 36.8770], label:'Modica Alta',  color:'#1A3A5C' },
+          { coords:[14.7740, 36.8640], label:'Modica Sorda', color:'#B8860B' },
+          { coords:[14.7600, 36.8570], label:'Modica Bassa', color:'#C1440E' },
+        ];
+        zone.forEach(z => {
+          const el = document.createElement('div');
+          el.style.cssText = `background:${z.color};color:#fff;padding:3px 8px;border-radius:12px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.3);white-space:nowrap;cursor:default;`;
+          el.textContent = z.label;
+          new tt.Marker({element:el}).setLngLat(z.coords).addTo(trafficMap);
         });
-        trafficMap.on('load', () => {
-          trafficMap.addTier(new tt.TrafficFlowTilesTier());
-          trafficMap.addTier(new tt.TrafficIncidentsTier());
-          // Marker per le 3 zone
-          const zone = [
-            { coords:[14.7630, 36.8770], label:'Modica Alta',  color:'#1A3A5C' },
-            { coords:[14.7740, 36.8640], label:'Modica Sorda', color:'#B8860B' },
-            { coords:[14.7600, 36.8570], label:'Modica Bassa', color:'#C1440E' },
-          ];
-          zone.forEach(z => {
-            const el = document.createElement('div');
-            el.style.cssText = `background:${z.color};color:#fff;padding:3px 8px;border-radius:12px;font-family:Outfit,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.3);white-space:nowrap;`;
-            el.textContent = z.label;
-            new tt.Marker({element:el}).setLngLat(z.coords).addTo(trafficMap);
-          });
-        });
-      } catch(err) {
-        console.error('Mappa TomTom errore:', err);
-        document.getElementById('trafficMapContainer').innerHTML =
-          '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-family:Outfit,sans-serif;font-size:13px;flex-direction:column;gap:8px">' +
-          '<span style="font-size:24px">🗺️</span><span>Mappa non disponibile</span>' +
-          '<span style="font-size:11px;opacity:0.6">Chiave TomTom non configurata</span></div>';
-      }
-    }, 100);
+      });
+    } catch(err) {
+      console.error('Mappa TomTom errore:', err);
+      document.getElementById('trafficMapContainer').innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-family:Outfit,sans-serif;font-size:13px;flex-direction:column;gap:8px">' +
+        '<span style="font-size:24px">🗺️</span><span>Mappa non disponibile</span>' +
+        '<span style="font-size:11px;opacity:0.6">Verifica la connessione</span></div>';
+      trafficMapInit = false; // reset per permettere retry
+    }
   } else if (trafficMap) {
-    setTimeout(() => trafficMap.resize(), 100);
+    // Riapertura modale — resize per riadattare
+    trafficMap.resize();
   }
 }
 
