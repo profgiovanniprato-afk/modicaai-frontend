@@ -535,8 +535,8 @@
 
 </style>
   <!-- MapLibre GL JS (sostituisce TomTom SDK v6, ritirato Feb 2026) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
-  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -1553,71 +1553,46 @@ function _caricaMappa() {
   if (!container || container.dataset.loaded) return;
   container.dataset.loaded = '1';
 
+  if (typeof L === 'undefined') {
+    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:Outfit,sans-serif;color:#888;flex-direction:column;gap:8px"><span style="font-size:28px">🗺️</span><span>Ricarica la pagina</span></div>';
+    return;
+  }
+
   const TOMTOM_K = 'rB0ZgOAc7jSvl5Pq5qoRiCIvX2w4S4Ka';
-  const mapHtml = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
-<style>
-  html,body,#map{margin:0;padding:0;width:100%;height:100%;overflow:hidden;}
-  .zone-label{background:transparent;border:none;box-shadow:none;}
-  .zone-label div{color:#fff;padding:4px 9px;border-radius:10px;font-family:sans-serif;font-size:11px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.4);white-space:nowrap;}
-</style>
-</head>
-<body>
-<div id="map"></div>
-<script>
-var map = L.map('map', {zoomControl:true, attributionControl:true}).setView([36.8620, 14.7650], 14);
+  container.style.height = '100%';
+  container.style.minHeight = '300px';
 
-// Base: OpenStreetMap
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '© OpenStreetMap'
-}).addTo(map);
+  var map = L.map(container, { zoomControl: true, attributionControl: true })
+             .setView([36.8620, 14.7650], 14);
 
-// Layer traffico TomTom (flow colorato)
-L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=${TOMTOM_K}&tileSize=256', {
-  maxZoom: 19,
-  opacity: 0.8,
-  attribution: '© TomTom'
-}).addTo(map);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution: '© OpenStreetMap'
+  }).addTo(map);
 
-// Layer incidenti TomTom
-L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=${TOMTOM_K}&tileSize=256', {
-  maxZoom: 19,
-  opacity: 0.9
-}).addTo(map);
+  L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?key=' + TOMTOM_K + '&tileSize=256', {
+    maxZoom: 19, opacity: 0.85, attribution: '© TomTom'
+  }).addTo(map);
 
-// Marker zone
-var zone = [
-  {latlng:[36.8770,14.7630], label:'Modica Alta',  color:'#1A3A5C'},
-  {latlng:[36.8640,14.7740], label:'Modica Sorda', color:'#B8860B'},
-  {latlng:[36.8570,14.7600], label:'Modica Bassa', color:'#C1440E'},
-];
-zone.forEach(function(z){
-  var icon = L.divIcon({
-    className:'zone-label',
-    html:'<div style="background:'+z.color+'">'+z.label+'</div>',
-    iconAnchor:[40,10]
+  L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=' + TOMTOM_K + '&tileSize=256', {
+    maxZoom: 19, opacity: 0.9
+  }).addTo(map);
+
+  var zone = [
+    { latlng:[36.8770,14.7630], label:'Modica Alta',  color:'#1A3A5C' },
+    { latlng:[36.8640,14.7740], label:'Modica Sorda', color:'#B8860B' },
+    { latlng:[36.8570,14.7600], label:'Modica Bassa', color:'#C1440E' },
+  ];
+  zone.forEach(function(z) {
+    var icon = L.divIcon({
+      className: '',
+      html: '<div style="background:' + z.color + ';color:#fff;padding:4px 10px;border-radius:10px;font-family:Outfit,sans-serif;font-size:11px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.4);white-space:nowrap;">' + z.label + '</div>',
+      iconAnchor: [40, 10]
+    });
+    L.marker(z.latlng, { icon: icon, interactive: false }).addTo(map);
   });
-  L.marker(z.latlng, {icon:icon, interactive:false}).addTo(map);
-});
-<\/script>
-</body>
-</html>`;
 
-  const blob = new Blob([mapHtml], {type:'text/html'});
-  const url  = URL.createObjectURL(blob);
-  const iframe = document.createElement('iframe');
-  iframe.src = url;
-  iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;border-radius:0 0 16px 16px;';
-  iframe.title = 'Traffico Modica';
-  container.appendChild(iframe);
+  setTimeout(function() { map.invalidateSize(); }, 300);
 }
-
 function chiudiMappaTraffco(e) {
   if (e && e.target !== document.getElementById('trafficModalOverlay')) return;
   const overlay = document.getElementById('trafficModalOverlay');
