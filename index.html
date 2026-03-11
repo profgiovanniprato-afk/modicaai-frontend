@@ -140,8 +140,7 @@
   body.dark .header { background:rgba(21,24,32,0.97); }
   body.dark .input-bar { background:rgba(21,24,32,0.97); box-shadow: 0 -4px 24px rgba(0,0,0,0.18); }
   body.dark .input-wrap { background:var(--white); }
-  body.dark .lang-toggle { background:var(--bg); }
-  body.dark .lang-btn.active { background:var(--white); }
+  body.dark .lang-indicator { background:var(--bg); }
   body.dark .btn-new-chat { background:var(--white); }
   body.dark .msg-ai { background:var(--white); }
   body.dark .typing { background:var(--white); }
@@ -250,9 +249,8 @@
   .logo-tagline { font-size:9px; font-weight:500; letter-spacing:1.8px; text-transform:uppercase; color:var(--ink-soft); margin-top:1px; }
 
   .header-right { display:flex; align-items:center; gap:10px; }
-  .lang-toggle { display:flex; gap:2px; background:var(--bg); border-radius:8px; padding:3px; border:1px solid var(--border); }
-  .lang-btn { padding:4px 9px; border-radius:6px; font-size:10px; font-weight:600; letter-spacing:0.5px; cursor:pointer; border:none; background:transparent; color:var(--ink-soft); transition:all 0.18s; font-family:'Outfit',sans-serif; }
-  .lang-btn.active { background:var(--white); color:var(--sky); box-shadow:var(--shadow-sm); }
+  .lang-indicator { padding:4px 10px; border-radius:8px; font-size:11px; font-weight:600; letter-spacing:0.5px; border:1px solid var(--border); background:var(--bg); color:var(--ink-soft); font-family:'Outfit',sans-serif; text-transform:uppercase; cursor:default; transition:all 0.3s; }
+  .lang-indicator.detected { color:var(--sky); border-color:var(--sky); }
 
   /* Pulsante nuova chat */
   .btn-new-chat { display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--white); font-size:12px; font-weight:500; color:var(--ink-mid); cursor:pointer; font-family:'Outfit',sans-serif; transition:all 0.18s; }
@@ -455,13 +453,7 @@
     <button class="btn-dark" id="btnDark" onclick="toggleDark()" title="Dark mode">
       <svg id="iconDark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
     </button>
-    <div class="lang-toggle" id="langToggle">
-      <button class="lang-btn active" onclick="setLang(this,'it')">🇮🇹 IT</button>
-      <button class="lang-btn" onclick="setLang(this,'en')">🇬🇧 EN</button>
-      <button class="lang-btn" onclick="setLang(this,'de')">🇩🇪 DE</button>
-      <button class="lang-btn" onclick="setLang(this,'fr')">🇫🇷 FR</button>
-      <button class="lang-btn" onclick="setLang(this,'es')">🇪🇸 ES</button>
-    </div>
+    <div class="lang-indicator" id="langIndicator" title="Lingua rilevata automaticamente">🌐 IT</div>
   </div>
 </div>
 
@@ -517,151 +509,17 @@
 <script>
 const API_URL = "https://modicaai-api.onrender.com";
 let lang = 'it';
-const TTS_LANG = { it:'it-IT', en:'en-US', de:'de-DE', fr:'fr-FR', es:'es-ES' };
+const LANG_FLAGS = { it:'🇮🇹 IT', en:'🇬🇧 EN', de:'🇩🇪 DE', fr:'🇫🇷 FR', es:'🇪🇸 ES' };
+const TTS_LANG   = { it:'it-IT', en:'en-US', de:'de-DE', fr:'fr-FR', es:'es-ES' };
 
-// ── Dizionario UI multilingua ─────────────────────────────────────
-const UI_STRINGS = {
-  it: {
-    placeholder: 'Chiedimi qualcosa...',
-    heroSub: 'Il tuo assistente locale per Modica',
-    chip1: '⛽ Benzina più economica',   chip1q: 'Dove conviene fare benzina oggi?',
-    chip2: '📰 Ultime notizie',          chip2q: 'Quali sono le ultime notizie di oggi?',
-    chip3: '🌤️ Meteo oggi',              chip3q: 'Che tempo fa oggi a Modica?',
-    chip4: '💊 Farmacia di turno',       chip4q: 'Farmacia di turno adesso?',
-    chip5: '🎨 Genera immagine',         chip5q: 'Genera un immagine del barocco siciliano',
-    wait:  'ModicaAI sta pensando...',
-    waitMeteo:'🌤️ Controllo il meteo...', waitCarb:'⛽ Cerco i prezzi vicino a te...',
-    waitNews:'📰 Leggo le ultime notizie...', waitRist:'🍽️ Cerco ristoranti aperti...',
-    waitFarm:'💊 Cerco farmacie di turno...', waitHotel:'🏨 Cerco strutture...',
-    waitBar:'☕ Cerco bar aperti...', waitTur:'🏛️ Cerco attrazioni...',
-    waitStor:'📜 Consulto le fonti...', waitEv:'🎭 Cerco eventi...',
-    errTooMany: 'Stai inviando troppe richieste. Aspetta un momento e riprova.',
-    errServer: 'Errore temporaneo del server. Riprova tra qualche secondo.',
-    errWakeup: '⏳ Il server si sta svegliando, riprova tra 10 secondi. È normale al primo avvio.',
-    copy: 'Copia', listen: 'Ascolta', share: 'Condividi',
-    enhanceHint: 'Scrivi prima un testo da ottimizzare...',
-  },
-  en: {
-    placeholder: 'Ask me anything...',
-    heroSub: 'Your local assistant for Modica',
-    chip1: '⛽ Cheapest fuel',            chip1q: 'Where is the cheapest fuel today?',
-    chip2: '📰 Latest news',              chip2q: 'What are the latest news today?',
-    chip3: '🌤️ Weather today',            chip3q: 'What is the weather in Modica today?',
-    chip4: '💊 On-duty pharmacy',         chip4q: 'Which pharmacy is on duty now?',
-    chip5: '🎨 Generate image',           chip5q: 'Generate an image of Sicilian baroque',
-    wait:  'ModicaAI is thinking...',
-    waitMeteo:'🌤️ Checking the weather...', waitCarb:'⛽ Finding prices near you...',
-    waitNews:'📰 Reading the latest news...', waitRist:'🍽️ Finding open restaurants...',
-    waitFarm:'💊 Finding on-duty pharmacies...', waitHotel:'🏨 Finding accommodations...',
-    waitBar:'☕ Finding open cafés...', waitTur:'🏛️ Finding attractions...',
-    waitStor:'📜 Checking sources...', waitEv:'🎭 Finding events...',
-    errTooMany: 'Too many requests. Please wait a moment and try again.',
-    errServer: 'Temporary server error. Please try again in a few seconds.',
-    errWakeup: '⏳ The server is waking up, try again in 10 seconds. This is normal on first load.',
-    copy: 'Copy', listen: 'Listen', share: 'Share',
-    enhanceHint: 'Write some text to optimize first...',
-  },
-  de: {
-    placeholder: 'Frag mich etwas...',
-    heroSub: 'Dein lokaler Assistent für Modica',
-    chip1: '⛽ Günstigster Kraftstoff',   chip1q: 'Wo gibt es heute den günstigsten Kraftstoff?',
-    chip2: '📰 Neueste Nachrichten',      chip2q: 'Was sind die neuesten Nachrichten heute?',
-    chip3: '🌤️ Wetter heute',             chip3q: 'Wie ist das Wetter heute in Modica?',
-    chip4: '💊 Notfallapotheke',          chip4q: 'Welche Apotheke hat jetzt Bereitschaftsdienst?',
-    chip5: '🎨 Bild generieren',          chip5q: 'Generiere ein Bild des sizilianischen Barocks',
-    wait:  'ModicaAI denkt nach...',
-    waitMeteo:'🌤️ Überprüfe das Wetter...', waitCarb:'⛽ Suche Preise in deiner Nähe...',
-    waitNews:'📰 Lese die neuesten Nachrichten...', waitRist:'🍽️ Suche geöffnete Restaurants...',
-    waitFarm:'💊 Suche Notfallapotheken...', waitHotel:'🏨 Suche Unterkünfte...',
-    waitBar:'☕ Suche geöffnete Cafés...', waitTur:'🏛️ Suche Sehenswürdigkeiten...',
-    waitStor:'📜 Überprüfe Quellen...', waitEv:'🎭 Suche Veranstaltungen...',
-    errTooMany: 'Zu viele Anfragen. Bitte warte einen Moment und versuche es erneut.',
-    errServer: 'Vorübergehender Serverfehler. Bitte in ein paar Sekunden erneut versuchen.',
-    errWakeup: '⏳ Der Server startet, versuche es in 10 Sekunden erneut.',
-    copy: 'Kopieren', listen: 'Anhören', share: 'Teilen',
-    enhanceHint: 'Schreibe zuerst einen Text zum Optimieren...',
-  },
-  fr: {
-    placeholder: 'Pose-moi une question...',
-    heroSub: 'Ton assistant local pour Modica',
-    chip1: '⛽ Carburant moins cher',     chip1q: 'Où trouver le carburant le moins cher aujourd'hui ?',
-    chip2: '📰 Dernières nouvelles',      chip2q: 'Quelles sont les dernières nouvelles aujourd'hui ?',
-    chip3: '🌤️ Météo aujourd'hui',       chip3q: 'Quel temps fait-il à Modica aujourd'hui ?',
-    chip4: '💊 Pharmacie de garde',       chip4q: 'Quelle pharmacie est de garde maintenant ?',
-    chip5: '🎨 Générer une image',        chip5q: 'Génère une image du baroque sicilien',
-    wait:  'ModicaAI réfléchit...',
-    waitMeteo:'🌤️ Vérification de la météo...', waitCarb:'⛽ Recherche des prix près de toi...',
-    waitNews:'📰 Lecture des dernières nouvelles...', waitRist:'🍽️ Recherche de restaurants ouverts...',
-    waitFarm:'💊 Recherche des pharmacies de garde...', waitHotel:'🏨 Recherche d'hébergements...',
-    waitBar:'☕ Recherche de cafés ouverts...', waitTur:'🏛️ Recherche d'attractions...',
-    waitStor:'📜 Consultation des sources...', waitEv:'🎭 Recherche d'événements...',
-    errTooMany: 'Trop de requêtes. Veuillez attendre un moment et réessayer.',
-    errServer: 'Erreur serveur temporaire. Veuillez réessayer dans quelques secondes.',
-    errWakeup: '⏳ Le serveur démarre, réessaie dans 10 secondes.',
-    copy: 'Copier', listen: 'Écouter', share: 'Partager',
-    enhanceHint: 'Écris d'abord un texte à optimiser...',
-  },
-  es: {
-    placeholder: 'Pregúntame algo...',
-    heroSub: 'Tu asistente local para Modica',
-    chip1: '⛽ Gasolina más barata',      chip1q: '¿Dónde está la gasolina más barata hoy?',
-    chip2: '📰 Últimas noticias',         chip2q: '¿Cuáles son las últimas noticias hoy?',
-    chip3: '🌤️ Tiempo hoy',              chip3q: '¿Qué tiempo hace hoy en Modica?',
-    chip4: '💊 Farmacia de guardia',      chip4q: '¿Qué farmacia está de guardia ahora?',
-    chip5: '🎨 Generar imagen',           chip5q: 'Genera una imagen del barroco siciliano',
-    wait:  'ModicaAI está pensando...',
-    waitMeteo:'🌤️ Comprobando el tiempo...', waitCarb:'⛽ Buscando precios cerca de ti...',
-    waitNews:'📰 Leyendo las últimas noticias...', waitRist:'🍽️ Buscando restaurantes abiertos...',
-    waitFarm:'💊 Buscando farmacias de guardia...', waitHotel:'🏨 Buscando alojamientos...',
-    waitBar:'☕ Buscando cafeterías abiertas...', waitTur:'🏛️ Buscando atracciones...',
-    waitStor:'📜 Consultando fuentes...', waitEv:'🎭 Buscando eventos...',
-    errTooMany: 'Demasiadas solicitudes. Espera un momento e inténtalo de nuevo.',
-    errServer: 'Error temporal del servidor. Inténtalo de nuevo en unos segundos.',
-    errWakeup: '⏳ El servidor se está iniciando, inténtalo en 10 segundos.',
-    copy: 'Copiar', listen: 'Escuchar', share: 'Compartir',
-    enhanceHint: 'Escribe primero un texto para optimizar...',
-  },
-};
-
-function t(key) { return (UI_STRINGS[lang] || UI_STRINGS.it)[key] || UI_STRINGS.it[key] || key; }
-
-function setLang(btn, l) {
-  lang = l;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  applicaUI();
-}
-
-function applicaUI() {
-  // Placeholder input
-  const inp = document.getElementById('searchInput');
-  if (inp) inp.placeholder = t('placeholder');
-  // Hero subtitle
-  const sub = document.querySelector('.hero-sub');
-  if (sub) sub.textContent = t('heroSub');
-  // Chip suggerimenti
-  const chips = document.querySelectorAll('.chip');
-  const chipKeys = ['chip1','chip2','chip3','chip4','chip5'];
-  chips.forEach((c, i) => {
-    if (chipKeys[i]) {
-      const lbl = t(chipKeys[i]);
-      const q   = t(chipKeys[i] + 'q');
-      c.textContent = lbl;
-      c.onclick = () => askChip(c, q);
-    }
-  });
-  // ATTESA_MSGS runtime
-  window.ATTESA_MSGS_ACTIVE = {
-    meteo: t('waitMeteo'), carburanti: t('waitCarb'), notizie: t('waitNews'),
-    ristoranti: t('waitRist'), farmacia: t('waitFarm'), hotel: t('waitHotel'),
-    bar: t('waitBar'), turismo: t('waitTur'), storia: t('waitStor'),
-    eventi: t('waitEv'), generale: t('wait'),
-  };
-}
-
-// Aggiorna lingua dal backend (rilevamento automatico) — solo se non già impostata manualmente
 function aggiorna_lingua(codice) {
-  // Non sovrascrivere la scelta manuale dell'utente
+  if (!codice || codice === lang) return;
+  lang = codice;
+  const ind = document.getElementById('langIndicator');
+  if (ind) {
+    ind.textContent = LANG_FLAGS[codice] || ('🌐 ' + codice.toUpperCase());
+    ind.classList.toggle('detected', codice !== 'it');
+  }
 }
 let cronologia = [];
 let SESSION_ID = null;
@@ -696,7 +554,7 @@ if (navigator.geolocation) {
 }
 
 // ── Utilità ──────────────────────────────────────────────────────
-
+// lingua gestita automaticamente dal backend via aggiorna_lingua()
 
 function nuovaChat() {
   cronologia = [];
@@ -705,11 +563,10 @@ function nuovaChat() {
   fetch(API_URL + '/session/new').then(r => r.json()).then(d => { SESSION_ID = d.session_id; }).catch(() => {});
   document.getElementById('chatArea').innerHTML = '';
   document.getElementById('hero').classList.remove('hidden');
-  applicaUI();
   const grid = document.getElementById('chipsGrid');
   if (grid) grid.style.display = '';
   document.getElementById('searchInput').value = '';
-  document.getElementById('searchInput').placeholder = t('placeholder');
+  document.getElementById('searchInput').placeholder = 'Chiedimi qualcosa...';
 }
 
 function formatText(t) {
@@ -936,8 +793,7 @@ async function ask(q) {
           const evt = JSON.parse(line.slice(6));
           if (evt.type === 'meta') {
             const lbl = document.querySelector('.typing-label');
-            const _am = window.ATTESA_MSGS_ACTIVE || ATTESA_MSGS;
-            if (lbl) lbl.textContent = _am[evt.intento] || _am.generale;
+            if (lbl) lbl.textContent = ATTESA_MSGS[evt.intento] || ATTESA_MSGS.generale;
             if (evt.lingua) aggiorna_lingua(evt.lingua);
           } else if (evt.type === 'token') {
             if (!typingRemoved) {
@@ -992,7 +848,7 @@ async function ask(q) {
       if (cronologia.length > 20) cronologia = cronologia.slice(-20);
     } catch(e2) {
       removeTyping();
-      addMessage('ai', t('errWakeup'), 'ModicaAI', '');
+      addMessage('ai', '⏳ Il server si sta svegliando, riprova tra 10 secondi. È normale al primo avvio.', 'ModicaAI', '');
     }
   }
 }
@@ -1101,9 +957,9 @@ async function enhancePrompt() {
   const testo = input.value.trim();
 
   if (!testo) {
-    input.placeholder = t('enhanceHint');
+    input.placeholder = 'Scrivi prima un testo da ottimizzare...';
     input.focus();
-    setTimeout(() => { input.placeholder = t('placeholder'); }, 2000);
+    setTimeout(() => { input.placeholder = 'Chiedimi qualcosa...'; }, 2000);
     return;
   }
 
@@ -1267,7 +1123,6 @@ async function aggiornaTicker() {
 
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  applicaUI();
   caricaNotizie();
   caricaCarburantiFuel();
   setInterval(caricaNotizie,          5 * 60 * 1000);
