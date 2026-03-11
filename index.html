@@ -254,6 +254,24 @@
   .lang-btn { padding:4px 9px; border-radius:6px; font-size:10px; font-weight:600; letter-spacing:0.5px; cursor:pointer; border:none; background:transparent; color:var(--ink-soft); transition:all 0.18s; font-family:'Outfit',sans-serif; }
   .lang-btn.active { background:var(--white); color:var(--sky); box-shadow:var(--shadow-sm); }
 
+  /* ── Lang dropdown mobile ── */
+  .lang-mobile-btn { display:none; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; border:1px solid var(--border); background:var(--white); font-size:11px; font-weight:600; color:var(--ink-mid); cursor:pointer; font-family:'Outfit',sans-serif; position:relative; white-space:nowrap; }
+  .lang-mobile-btn:hover { border-color:var(--sky); color:var(--sky); }
+  .lang-dropdown { display:none; position:absolute; top:calc(100% + 6px); right:0; background:var(--white); border:1px solid var(--border); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:500; overflow:hidden; min-width:120px; }
+  .lang-dropdown.open { display:block; }
+  .lang-drop-item { display:flex; align-items:center; gap:8px; padding:9px 14px; font-size:12px; font-weight:600; color:var(--ink-mid); cursor:pointer; font-family:'Outfit',sans-serif; transition:background 0.15s; border:none; background:transparent; width:100%; text-align:left; }
+  .lang-drop-item:hover { background:var(--bg); color:var(--sky); }
+  .lang-drop-item.active { color:var(--sky); background:var(--bg); }
+  body.dark .lang-dropdown { background:var(--bg-card); border-color:var(--border); }
+  body.dark .lang-drop-item:hover { background:rgba(255,255,255,0.06); }
+
+  @media (max-width: 640px) {
+    .lang-toggle { display:none; }
+    .lang-mobile-btn { display:flex; }
+    .btn-new-chat .btn-label { display:none; }
+    .btn-new-chat { padding:6px 8px; }
+  }
+
   /* Pulsante nuova chat */
   .btn-new-chat { display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--white); font-size:12px; font-weight:500; color:var(--ink-mid); cursor:pointer; font-family:'Outfit',sans-serif; transition:all 0.18s; }
   .btn-new-chat:hover { border-color:var(--sky); color:var(--sky); }
@@ -447,7 +465,7 @@
   <div class="header-right">
     <button class="btn-new-chat" onclick="nuovaChat()" title="Nuova conversazione">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Nuova chat
+      <span class="btn-label">Nuova chat</span>
     </button>
     <button class="btn-dark" id="btnVoice" onclick="toggleVoice()" title="Attiva risposta vocale automatica" style="opacity:0.45">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
@@ -455,12 +473,28 @@
     <button class="btn-dark" id="btnDark" onclick="toggleDark()" title="Dark mode">
       <svg id="iconDark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
     </button>
+    <!-- Bottoni lingua — desktop -->
     <div class="lang-toggle" id="langToggle">
       <button class="lang-btn active" onclick="setLang(this,'it')">🇮🇹 IT</button>
       <button class="lang-btn" onclick="setLang(this,'en')">🇬🇧 EN</button>
       <button class="lang-btn" onclick="setLang(this,'de')">🇩🇪 DE</button>
       <button class="lang-btn" onclick="setLang(this,'fr')">🇫🇷 FR</button>
       <button class="lang-btn" onclick="setLang(this,'es')">🇪🇸 ES</button>
+    </div>
+    <!-- Bottone lingua — mobile (dropdown) -->
+    <div style="position:relative">
+      <button class="lang-mobile-btn" id="langMobileBtn" onclick="toggleLangDropdown()" title="Cambia lingua">
+        <span id="langMobileFlag">🇮🇹</span>
+        <span id="langMobileCode">IT</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-drop-item active" id="drop-it" onclick="setLangMobile('it','🇮🇹','IT')">🇮🇹 <span>Italiano</span></button>
+        <button class="lang-drop-item" id="drop-en" onclick="setLangMobile('en','🇬🇧','EN')">🇬🇧 <span>English</span></button>
+        <button class="lang-drop-item" id="drop-de" onclick="setLangMobile('de','🇩🇪','DE')">🇩🇪 <span>Deutsch</span></button>
+        <button class="lang-drop-item" id="drop-fr" onclick="setLangMobile('fr','🇫🇷','FR')">🇫🇷 <span>Français</span></button>
+        <button class="lang-drop-item" id="drop-es" onclick="setLangMobile('es','🇪🇸','ES')">🇪🇸 <span>Español</span></button>
+      </div>
     </div>
   </div>
 </div>
@@ -629,8 +663,62 @@ function setLang(btn, l) {
   lang = l;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  // Sincronizza anche il dropdown mobile
+  _syncMobileLangUI(l);
   applicaUI();
 }
+
+const LANG_DATA = {
+  it: { flag:'🇮🇹', code:'IT' },
+  en: { flag:'🇬🇧', code:'EN' },
+  de: { flag:'🇩🇪', code:'DE' },
+  fr: { flag:'🇫🇷', code:'FR' },
+  es: { flag:'🇪🇸', code:'ES' },
+};
+
+function toggleLangDropdown() {
+  const dd = document.getElementById('langDropdown');
+  if (dd) dd.classList.toggle('open');
+}
+
+function setLangMobile(l, flag, code) {
+  lang = l;
+  // Aggiorna bottone mobile
+  const flagEl = document.getElementById('langMobileFlag');
+  const codeEl = document.getElementById('langMobileCode');
+  if (flagEl) flagEl.textContent = flag;
+  if (codeEl) codeEl.textContent = code;
+  // Aggiorna active nel dropdown
+  document.querySelectorAll('.lang-drop-item').forEach(b => b.classList.remove('active'));
+  const active = document.getElementById('drop-' + l);
+  if (active) active.classList.add('active');
+  // Chiudi dropdown
+  const dd = document.getElementById('langDropdown');
+  if (dd) dd.classList.remove('open');
+  // Sincronizza bottoni desktop
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  applicaUI();
+}
+
+function _syncMobileLangUI(l) {
+  const d = LANG_DATA[l] || LANG_DATA.it;
+  const flagEl = document.getElementById('langMobileFlag');
+  const codeEl = document.getElementById('langMobileCode');
+  if (flagEl) flagEl.textContent = d.flag;
+  if (codeEl) codeEl.textContent = d.code;
+  document.querySelectorAll('.lang-drop-item').forEach(b => b.classList.remove('active'));
+  const active = document.getElementById('drop-' + l);
+  if (active) active.classList.add('active');
+}
+
+// Chiudi dropdown cliccando fuori
+document.addEventListener('click', e => {
+  const btn = document.getElementById('langMobileBtn');
+  const dd  = document.getElementById('langDropdown');
+  if (dd && btn && !btn.contains(e.target) && !dd.contains(e.target)) {
+    dd.classList.remove('open');
+  }
+});
 
 function applicaUI() {
   // Placeholder input
