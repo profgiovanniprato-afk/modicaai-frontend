@@ -538,8 +538,8 @@
 
 </style>
   <!-- MapLibre GL JS (sostituisce TomTom SDK v6, ritirato Feb 2026) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
-  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 </head>
 <body>
 
@@ -1554,13 +1554,6 @@ function _inizializzaMappa() {
     if (typeof maplibregl === 'undefined') {
       _mappaErrore(container, 'Libreria mappa non caricata', 'Controlla la connessione e ricarica');
       trafficMapInit = false;
-      return;
-    }
-
-    // Verifica WebGL (necessario per MapLibre)
-    if (!maplibregl.supported()) {
-      // Fallback: iframe Google Maps statico senza API key
-      _mappaFallbackIframe(container);
       return;
     }
 
