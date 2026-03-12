@@ -1163,7 +1163,9 @@ function formatText(t) {
     .replace(/\n/g, '<br>');
 }
 
-// ── Risposta vocale (Web Speech API) ──────────────────────────────(type, html, badge, raw) {
+// ── Risposta vocale (Web Speech API) ──────────────────────────────
+
+function addMessage(type, html, badge, raw) {
   document.getElementById('hero').classList.add('hidden');
   const heroWidgets = document.getElementById('heroWidgets');
   if (heroWidgets) heroWidgets.classList.add('hidden');
