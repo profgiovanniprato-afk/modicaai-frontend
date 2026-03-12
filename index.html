@@ -468,8 +468,48 @@
   .footer-info a[href^="mailto"] { color:var(--gold); }
   .footer-info a:hover { color:var(--gold); }
 
-  /* Input bar */
-  .input-bar { position:fixed; bottom:32px; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:10px 16px 14px; display:flex; flex-direction:column; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
+  /* ── Upload file ── */
+  .btn-upload {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--white); color: var(--ink-mid);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.18s; font-size: 16px;
+  }
+  .btn-upload:hover { border-color: var(--sky); color: var(--sky); transform: scale(1.08); }
+  .btn-upload.active { border-color: var(--gold); color: var(--gold); background: rgba(184,134,11,0.06); }
+  body.dark .btn-upload { border-color: var(--border); background: var(--white); color: var(--ink-mid); }
+
+  /* Preview file caricato — sopra i chip */
+  .file-preview {
+    display: none; align-items: center; gap: 8px;
+    max-width: 660px; width: 100%;
+    background: rgba(184,134,11,0.07);
+    border: 1px solid rgba(184,134,11,0.25);
+    border-radius: 10px; padding: 8px 12px;
+    margin-bottom: 8px;
+    font-family: 'Outfit', sans-serif;
+    animation: fadeUp 0.25s ease;
+  }
+  .file-preview.show { display: flex; }
+  .file-preview-icon { font-size: 18px; flex-shrink: 0; }
+  .file-preview-info { flex: 1; min-width: 0; }
+  .file-preview-name { font-size: 12px; font-weight: 600; color: var(--ink); 
+                        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-preview-sub  { font-size: 10px; color: var(--ink-soft); margin-top: 1px; }
+  .file-preview-remove {
+    width: 22px; height: 22px; border-radius: 50%; border: none;
+    background: rgba(0,0,0,0.08); color: var(--ink-mid);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; transition: all 0.15s;
+  }
+  .file-preview-remove:hover { background: rgba(193,68,14,0.15); color: var(--terra); }
+  body.dark .file-preview { background: rgba(212,160,23,0.08); border-color: rgba(212,160,23,0.2); }
+  body.dark .file-preview-name { color: var(--ink); }
+  body.dark .file-preview-sub  { color: var(--ink-soft); }
+  body.dark .hero-widgets .bar-widget { background: rgba(30,35,48,0.92); }
+
+  .input-bar { position:fixed; bottom:34px; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:10px 16px 14px; display:flex; flex-direction:column; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
 
   /* ── Widget meteo e orologio — fissi in alto a sinistra sotto l'header ── */
   .hero { text-align:center; padding: 24px 20px 8px; }
@@ -789,6 +829,16 @@
 </div>
 
 <div class="input-bar">
+  <!-- Preview file caricato — visibile quando c'è un file attivo -->
+  <div class="file-preview" id="filePreview">
+    <div class="file-preview-icon" id="filePreviewIcon">📄</div>
+    <div class="file-preview-info">
+      <div class="file-preview-name" id="filePreviewName">documento.pdf</div>
+      <div class="file-preview-sub" id="filePreviewSub">Pronto — fai una domanda o chiedi un riassunto</div>
+    </div>
+    <button class="file-preview-remove" onclick="rimuoviFile()" title="Rimuovi file">✕</button>
+  </div>
+
   <!-- Chip suggerimenti — sopra l'input, spariscono con la chat -->
   <div class="chips-grid" id="chipsGrid">
     <button class="chip" onclick="askChip(this,'Dove conviene fare benzina oggi?')">⛽ Benzina</button>
@@ -799,6 +849,14 @@
     <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico</button>
   </div>
   <div class="input-wrap">
+    <!-- Input file nascosto -->
+    <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.txt"
+           style="display:none" onchange="gestisciFile(this)">
+    <!-- Pulsante upload -->
+    <button class="btn-upload" id="btnUpload" onclick="document.getElementById('fileInput').click()"
+            title="Carica un file (PDF, Word, TXT)">
+      📎
+    </button>
     <input type="text" id="searchInput" placeholder="Chiedimi qualcosa..." autocomplete="off">
     <button class="btn-enhance" id="btnEnhance" onclick="enhancePrompt()" title="✨ Ottimizza prompt con AI">
       ✨
@@ -1030,6 +1088,13 @@ let userLon = null;
 let voiceEnabled = false;
 let speechSynth = window.speechSynthesis || null;
 let currentUtterance = null;
+let fileContesto = null; // testo estratto dal file attivo
+
+// ── Icone SVG — dichiarate subito per evitare uso prima della definizione ──
+const copyIcon  = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+const voiceIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+const shareIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
+const stopIcon  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`;
 
 // ── Init sessione server-side ─────────────────────────────────────
 (async () => {
@@ -1060,6 +1125,11 @@ if (navigator.geolocation) {
 
 function nuovaChat() {
   cronologia = [];
+  fileContesto = null;
+  const preview = document.getElementById('filePreview');
+  if (preview) preview.classList.remove('show');
+  const btnUpload = document.getElementById('btnUpload');
+  if (btnUpload) btnUpload.classList.remove('active');
   if (speechSynth) speechSynth.cancel();
   // Rigenera session_id per nuova conversazione
   fetch(API_URL + '/session/new').then(r => r.json()).then(d => { SESSION_ID = d.session_id; }).catch(() => {});
@@ -1093,9 +1163,7 @@ function formatText(t) {
     .replace(/\n/g, '<br>');
 }
 
-const copyIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
-
-function addMessage(type, html, badge, raw) {
+// ── Risposta vocale (Web Speech API) ──────────────────────────────(type, html, badge, raw) {
   document.getElementById('hero').classList.add('hidden');
   const heroWidgets = document.getElementById('heroWidgets');
   if (heroWidgets) heroWidgets.classList.add('hidden');
@@ -1144,11 +1212,6 @@ function copiaMsg(btn) {
     setTimeout(() => { btn.innerHTML = copyIcon + ' Copia'; btn.classList.remove('copied'); }, 2000);
   });
 }
-
-// ── Icone extra ────────────────────────────────────────────────────
-const voiceIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
-const shareIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
-const stopIcon  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`;
 
 // ── Risposta vocale (Web Speech API) ──────────────────────────────
 function leggiTesto(testo) {
@@ -1275,6 +1338,9 @@ async function ask(q) {
   document.getElementById('searchInput').value = '';
 
   if (isRichiestaImmagine(q)) { generaImmagine(q); return; }
+
+  // Se c'è un file caricato, usa askConFile che include il contesto
+  if (fileContesto) { await askConFile(q); return; }
   if (typeof gtag !== 'undefined') gtag('event', 'domanda', { event_category: 'chat' });
 
   addMessage('user', q, '');
@@ -1741,7 +1807,203 @@ function chiudiMappaTraffco(e) {
 
 // setInterval traffico spostato dentro DOMContentLoaded
 
-// ── Orologio real-time ───────────────────────────────────────────
+// ── Upload e analisi file ─────────────────────────────────────────
+
+const FILE_ICONS = { pdf:'📕', docx:'📘', doc:'📘', txt:'📄' };
+
+function estensione(nome) {
+  return nome.split('.').pop().toLowerCase();
+}
+
+async function gestisciFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const ext = estensione(file.name);
+  const tipiAccettati = ['pdf','docx','doc','txt'];
+  if (!tipiAccettati.includes(ext)) {
+    addMessage('ai', '⚠️ Formato non supportato. Carica un PDF, Word (.docx) o testo (.txt).', 'ModicaAI', '');
+    return;
+  }
+
+  // Dimensione massima 10MB
+  if (file.size > 10 * 1024 * 1024) {
+    addMessage('ai', '⚠️ File troppo grande. Massimo 10MB.', 'ModicaAI', '');
+    return;
+  }
+
+  // Mostra stato caricamento nel preview
+  const preview = document.getElementById('filePreview');
+  const previewName = document.getElementById('filePreviewName');
+  const previewSub  = document.getElementById('filePreviewSub');
+  const previewIcon = document.getElementById('filePreviewIcon');
+  const btnUpload   = document.getElementById('btnUpload');
+
+  previewIcon.textContent = FILE_ICONS[ext] || '📄';
+  previewName.textContent = file.name;
+  previewSub.textContent  = 'Analisi in corso...';
+  preview.classList.add('show');
+  btnUpload.classList.add('active');
+
+  // Nasconde chips se visibili
+  const grid = document.getElementById('chipsGrid');
+  if (grid) grid.style.display = 'none';
+
+  try {
+    // Converti in base64
+    const b64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload  = e => res(e.target.result.split(',')[1]);
+      reader.onerror = () => rej(new Error('Lettura file fallita'));
+      reader.readAsDataURL(file);
+    });
+
+    // Invia al backend per estrazione testo
+    const risposta = await fetch(API_URL + '/analizza-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_b64: b64, nome: file.name, tipo: ext })
+    });
+
+    const dati = await risposta.json();
+
+    if (!risposta.ok || dati.errore) {
+      previewSub.textContent = '❌ ' + (dati.errore || 'Errore elaborazione');
+      btnUpload.classList.remove('active');
+      fileContesto = null;
+      return;
+    }
+
+    // Salva contesto e aggiorna preview
+    fileContesto = { nome: file.name, testo: dati.testo, chars: dati.chars, troncato: dati.troncato };
+    const kb = Math.round(dati.chars / 100) / 10;
+    const avviso = dati.troncato ? ' (testo troncato — file molto lungo)' : '';
+    previewSub.textContent = `✅ Pronto · ${kb}k caratteri${avviso}`;
+
+    // Messaggio in chat con riassunto automatico
+    const domandaRiassunto = `Ho caricato il file "${file.name}". Fanne un riassunto conciso.`;
+    const inputEl = document.getElementById('searchInput');
+    inputEl.value = '';
+    await askConFile(domandaRiassunto);
+
+  } catch(e) {
+    previewSub.textContent = '❌ Errore di connessione';
+    btnUpload.classList.remove('active');
+    fileContesto = null;
+    console.error('[FILE]', e);
+  }
+
+  // Reset input file per permettere di ricaricare lo stesso file
+  input.value = '';
+}
+
+function rimuoviFile() {
+  fileContesto = null;
+  const preview = document.getElementById('filePreview');
+  const btnUpload = document.getElementById('btnUpload');
+  preview.classList.remove('show');
+  btnUpload.classList.remove('active');
+  // Mostra i chip di nuovo se la chat è vuota
+  const chatArea = document.getElementById('chatArea');
+  if (!chatArea || !chatArea.innerHTML.trim()) {
+    const grid = document.getElementById('chipsGrid');
+    if (grid) grid.style.display = 'flex';
+  }
+}
+
+async function askConFile(domanda) {
+  // Versione di ask() che include il testo del file come contesto
+  domanda = domanda.trim();
+  if (!domanda) return;
+
+  const inputEl = document.getElementById('searchInput');
+  if (inputEl) inputEl.value = '';
+
+  addMessage('user', domanda, '');
+  showTyping(t('wait'));
+  cronologia.push({ role: 'user', content: domanda });
+
+  const contestoFile = fileContesto
+    ? `\n\n=== CONTENUTO FILE: "${fileContesto.nome}" ===\n${fileContesto.testo}\n=== FINE FILE ===`
+    : '';
+
+  const domandaArricchita = domanda + contestoFile;
+
+  let fullText = '', msgDiv = null, typingRemoved = false;
+
+  try {
+    const res = await fetch(API_URL + '/ask-stream', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        domanda: domandaArricchita,
+        session_id: SESSION_ID,
+        cronologia: cronologia.slice(0, -1),
+        lat: userLat, lon: userLon
+      })
+    });
+
+    if (!res.ok || !res.body) throw new Error('no stream');
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split('\n'); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        try {
+          const evt = JSON.parse(line.slice(6));
+          if (evt.type === 'token') {
+            if (!typingRemoved) {
+              removeTyping(); typingRemoved = true;
+              const area = document.getElementById('chatArea');
+              const wrap = document.createElement('div');
+              wrap.className = 'msg msg-ai';
+              const cid = 'cs' + Date.now();
+              wrap.innerHTML = `<div class="msg-ai-wrap"><div class="msg-ai" id="${cid}"></div><div class="msg-footer" id="ft-${cid}" style="display:none"><span class="source-badge">ModicaAI</span></div></div>`;
+              area.appendChild(wrap);
+              msgDiv = document.getElementById(cid);
+            }
+            fullText += evt.text;
+            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); msgDiv.scrollIntoView({ behavior:'smooth', block:'end' }); }
+          } else if (evt.type === 'done') {
+            if (msgDiv) {
+              msgDiv.innerHTML = formatText(fullText);
+              const ft = document.getElementById('ft-' + msgDiv.id);
+              if (ft) {
+                const c2='c2'+Date.now(), v2='v2'+Date.now(), s2='s2'+Date.now();
+                ft.innerHTML = `<span class="source-badge">📄 ${fileContesto ? fileContesto.nome : 'File'}</span>
+                  <button class="btn-copy-msg" id="${c2}" onclick="copiaMsg(this)">${copyIcon} Copia</button>
+                  ${speechSynth?`<button class="btn-copy-msg btn-voice" id="${v2}" onclick="leggiAdAlta(this)">${voiceIcon} Ascolta</button>`:''}
+                  ${(navigator.share||navigator.clipboard)?`<button class="btn-copy-msg btn-share" id="${s2}" onclick="condividiRisposta(this)">${shareIcon} Condividi</button>`:''}`;
+                ft.style.display = '';
+                document.getElementById(c2).dataset.t = fullText;
+                if (speechSynth) document.getElementById(v2).dataset.t = fullText;
+                const shareEl = document.getElementById(s2);
+                if (shareEl) shareEl.dataset.t = fullText;
+              }
+            }
+            cronologia.push({ role:'assistant', content: fullText });
+            if (cronologia.length > 20) cronologia = cronologia.slice(-20);
+          } else if (evt.type === 'error') {
+            if (!typingRemoved) removeTyping();
+            addMessage('ai', evt.text || 'Errore.', 'ModicaAI', '');
+          }
+        } catch(e) {}
+      }
+    }
+    if (!typingRemoved) { removeTyping(); addMessage('ai','Risposta non ricevuta.','ModicaAI',''); }
+  } catch(e) {
+    removeTyping();
+    addMessage('ai', t('errWakeup'), 'ModicaAI', '');
+  }
+}
+
+
 function aggiornaOrologio() {
   const now = new Date();
   const hh = now.getHours().toString().padStart(2,'0');
