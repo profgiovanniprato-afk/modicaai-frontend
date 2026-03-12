@@ -8,18 +8,20 @@
 <title>ModicaAI — Assistente AI per Modica, Sicilia</title>
 <meta name="description" content="ModicaAI — Assistente AI per Modica, Sicilia. Prezzi carburanti live, notizie locali, meteo, ristoranti, farmacie di turno. Gratuito, senza login.">
 
-  <!-- Open Graph / WhatsApp / Facebook -->
-  <meta property="og:type"        content="website">
-  <meta property="og:url"         content="https://modicaai.it">
-  <meta property="og:title"       content="ModicaAI — Assistente AI di Modica">
-  <meta property="og:description" content="L'unica AI con prezzi carburanti live, notizie locali e servizi di Modica. Gratuito, senza login.">
-  <meta property="og:image"       content="https://modicaai.it/icons/icon-512.png">
-  <meta property="og:locale"      content="it_IT">
-  <!-- Twitter Card -->
-  <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content="ModicaAI — Assistente AI di Modica">
-  <meta name="twitter:description" content="Prezzi carburanti live, notizie, meteo, ristoranti. Gratuito.">
-  <meta name="twitter:image"       content="https://modicaai.it/icons/icon-512.png">
+<!-- Open Graph / WhatsApp / Telegram — unico blocco canonico -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.modicaai.it/">
+<meta property="og:title" content="ModicaAI — Assistente AI per Modica, Sicilia">
+<meta property="og:description" content="Chiedi tutto su Modica: ristoranti, meteo, farmacie di turno, storia e turismo. L'assistente AI locale di Modica, disponibile 24/7.">
+<meta property="og:image" content="https://www.modicaai.it/icon-512.png">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="ModicaAI">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ModicaAI — Assistente AI per Modica, Sicilia">
+<meta name="twitter:description" content="Chiedi tutto su Modica: ristoranti, meteo, farmacie di turno, storia e turismo.">
+<meta name="twitter:image" content="https://www.modicaai.it/icon-512.png">
   <!-- JSON-LD Schema.org -->
   <!-- Canonical univoco -->
   <link rel="canonical" href="https://www.modicaai.it/" />
@@ -40,22 +42,6 @@
 <meta name="keywords" content="Modica, assistente virtuale Modica, chatbot Modica, cosa fare a Modica, ristoranti Modica, farmacia di turno Modica, meteo Modica, turismo Modica, Modica Sicilia, cioccolato di Modica, ModicaAI">
 <meta name="author" content="ModicaAI">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.modicaai.it/">
-
-<!-- Open Graph (Facebook, WhatsApp, Telegram) -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://www.modicaai.it/">
-<meta property="og:title" content="ModicaAI — Assistente AI per Modica, Sicilia">
-<meta property="og:description" content="Chiedi tutto su Modica: ristoranti, meteo, farmacie di turno, storia e turismo. L'assistente AI locale di Modica, disponibile 24/7.">
-<meta property="og:image" content="https://www.modicaai.it/icon-512.png">
-<meta property="og:locale" content="it_IT">
-<meta property="og:site_name" content="ModicaAI">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ModicaAI — Assistente AI per Modica, Sicilia">
-<meta name="twitter:description" content="Chiedi tutto su Modica: ristoranti, meteo, farmacie di turno, storia e turismo.">
-<meta name="twitter:image" content="https://www.modicaai.it/icon-512.png">
 
 <!-- Geo tag (segnala a Google la posizione geografica) -->
 <meta name="geo.region" content="IT-RG">
@@ -246,7 +232,20 @@
     color:var(--ink-mid); font-size:16px; transition:all 0.15s;
   }
   .traffic-modal-close:hover { border-color:var(--terra); color:var(--terra); }
-  #trafficMapContainer { padding: 18px; display:flex; flex-direction:column; gap:12px; }
+  #trafficMapContainer { padding: 14px 18px 18px; display:flex; flex-direction:column; gap:12px; }
+  .traffic-map-iframe-wrap {
+    border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  .traffic-map-iframe-wrap iframe {
+    display: block; width: 100%; height: 220px; border: 0;
+  }
+  .traffic-cards-label {
+    font-family: 'Outfit', sans-serif; font-size: 11px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--ink-soft); padding: 4px 0 2px;
+  }
   .traffic-zona-card {
     border-radius:14px; padding:16px 18px;
     display:flex; align-items:center; gap:16px;
@@ -315,28 +314,28 @@
   .fuel-ticker .ticker-item:hover { color: #ffd166; }
 
 
-  /* ── Chip suggerimenti hero ── */
+  /* ── Chip suggerimenti — sopra l'input ── */
   .chips-grid {
-    display: flex; flex-wrap: wrap; gap: 8px;
+    display: flex; flex-wrap: wrap; gap: 7px;
     justify-content: center;
-    max-width: 540px; margin: 18px auto 0;
-    animation: fadeUp 0.5s 0.3s ease both;
+    max-width: 660px; width: 100%;
+    margin: 0 auto 10px;
+    animation: fadeUp 0.4s ease both;
   }
-  /* Spazio tra chips e prima risposta chat */
-  .chat-area:not(:empty) { margin-top: 32px; }
   .chip {
-    padding: 7px 14px; border-radius: 20px;
-    border: 1.5px solid var(--border);
+    padding: 6px 13px; border-radius: 20px;
+    border: 1px solid var(--border);
     background: var(--white); color: var(--ink-mid);
-    font-size: 12px; font-weight: 500;
+    font-size: 12px; font-weight: 400;
     cursor: pointer; transition: all 0.18s;
     font-family: 'Outfit', sans-serif;
     white-space: nowrap;
-    min-width: 160px; text-align: center;
+    letter-spacing: 0.1px;
   }
-  .chip:hover { border-color: var(--sky); color: var(--sky); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  .chip:hover { border-color: var(--sky); color: var(--sky); background: rgba(26,58,92,0.04); }
   body.dark .chip { background: var(--white); border-color: var(--border); color: var(--ink-mid); }
-  body.dark .chip:hover { border-color: var(--sky); color: var(--sky); }
+  body.dark .chip:hover { border-color: var(--sky); color: var(--sky); background: rgba(74,143,191,0.08); }
+  @media(max-width:480px) { .chips-grid { gap:5px; } .chip { font-size:11px; padding:5px 10px; } }
 
   /* ── Griglia immagini ricerca ── */
   .img-search-grid {
@@ -412,28 +411,21 @@
 
   /* Main */
   .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:176px 20px 200px; }
+  /* Quando non c'è chat: hero + chips centrati verticalmente */
+  .main.empty { justify-content: center; padding-top: 120px; padding-bottom: 180px; }
 
-  /* Hero */
-  .hero { text-align:center; margin-bottom:36px; }
+  /* Hero — stile Claude/ChatGPT: minimalista, centrato */
+  .hero { text-align:center; padding: 24px 20px 8px; }
   .hero.hidden { display:none; }
-  .hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:3.5px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; animation:fadeUp 0.6s 0.1s ease both; }
-  .hero-logo-big { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:14px; animation:fadeUp 0.6s 0.2s ease both; }
-  .hero-mark { width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 24px rgba(26,58,92,0.25); position:relative; overflow:hidden; flex-shrink:0; }
-  .hero-mark::after { content:''; position:absolute; bottom:-6px; right:-6px; width:22px; height:22px; background:var(--gold); border-radius:50%; opacity:0.6; }
+  .hero-eyebrow { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; animation:fadeUp 0.5s 0.05s ease both; opacity:0.8; }
+  .hero-logo-big { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:12px; animation:fadeUp 0.5s 0.1s ease both; }
+  .hero-mark { width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 18px rgba(26,58,92,0.22); position:relative; overflow:hidden; flex-shrink:0; }
+  .hero-mark::after { content:''; position:absolute; bottom:-5px; right:-5px; width:18px; height:18px; background:var(--gold); border-radius:50%; opacity:0.55; }
   .hero-mark svg { position:relative; z-index:1; }
-  .hero-title { font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; color:var(--ink); letter-spacing:-1.5px; line-height:1.15; padding:0 4px; }
+  .hero-title { font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:600; color:var(--ink); letter-spacing:-1px; line-height:1.1; }
   .hero-title em { font-style:italic; color:var(--gold); }
-  .hero-divider { width:40px; height:1.5px; margin:20px auto 18px; background:linear-gradient(90deg,transparent,var(--gold),transparent); animation:fadeUp 0.6s 0.3s ease both; }
-  .hero-sub { font-size:15px; color:var(--ink-soft); font-weight:300; line-height:1.5; margin-bottom:6px; animation:fadeUp 0.6s 0.35s ease both; }
-
-  /* Suggerimenti iniziali */
-  .suggestions-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; max-width:660px; margin-bottom:8px; animation:fadeUp 0.6s 0.45s ease both; }
-  @media(max-width:480px){ .suggestions-grid{grid-template-columns:1fr;} .chip { min-width: unset; width: 100%; } .chips-grid { max-width: 100%; } }
-  .sug-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:14px 16px; cursor:pointer; transition:all 0.2s; text-align:left; font-family:'Outfit',sans-serif; }
-  .sug-card:hover { border-color:var(--sky); box-shadow:var(--shadow-md); transform:translateY(-1px); }
-  .sug-card-icon { font-size:20px; margin-bottom:6px; }
-  .sug-card-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
-  .sug-card-sub { font-size:11px; color:var(--ink-soft); }
+  .hero-divider { width:32px; height:1px; margin:16px auto 14px; background:linear-gradient(90deg,transparent,var(--gold),transparent); animation:fadeUp 0.5s 0.2s ease both; }
+  .hero-sub { font-size:16px; color:var(--ink-soft); font-weight:300; line-height:1.5; animation:fadeUp 0.5s 0.25s ease both; }
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
@@ -475,7 +467,7 @@
   .footer-info a:hover { color:var(--gold); }
 
   /* Input bar */
-  .input-bar { position:fixed; bottom:32px; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:12px 16px 18px; display:flex; justify-content:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
+  .input-bar { position:fixed; bottom:32px; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:10px 16px 14px; display:flex; flex-direction:column; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
   .input-wrap { width:100%; max-width:660px; display:flex; align-items:center; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:0 6px 0 20px; height:52px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
   .input-wrap:focus-within { border-color:var(--sky); box-shadow:0 4px 20px rgba(26,58,92,0.12); }
   .input-wrap input { flex:1; border:none; outline:none; font-family:'Outfit',sans-serif; font-size:15px; color:var(--ink); background:transparent; }
@@ -558,7 +550,6 @@
   }
 
 </style>
-  <!-- MapLibre GL JS (sostituisce TomTom SDK v6, ritirato Feb 2026) -->
 </head>
 <body>
 
@@ -582,7 +573,7 @@
   <div class="traffic-segments" id="trafficSegments">
     <div class="traffic-seg sconosciuto"><div class="dot"></div>Caricamento...</div>
   </div>
-  <div class="traffic-map-hint">🗺 Apri mappa ›</div>
+  <div class="traffic-map-hint">🗺 Mappa live ›</div>
 </div>
 
 <!-- ── Modale Mappa Traffico ── -->
@@ -665,12 +656,12 @@
 </div>
 
 
-<div class="main">
+<div class="main empty" id="main">
   <div class="hero" id="hero">
     <div class="hero-eyebrow">Assistente AI · Modica, Sicilia</div>
     <div class="hero-logo-big">
       <div class="hero-mark">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z" fill="white" opacity="0.9"/>
           <circle cx="12" cy="10" r="3" fill="white" opacity="0.55"/>
         </svg>
@@ -681,23 +672,19 @@
     <div class="hero-sub">Il tuo assistente locale per Modica</div>
   </div>
 
-  <!-- Chip suggerimenti -->
-  <div class="chips-grid" id="chipsGrid">
-    <button class="chip" onclick="askChip(this,'Dove conviene fare benzina oggi?')">⛽ Benzina più economica</button>
-    <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Ultime notizie</button>
-    <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo oggi</button>
-    <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
-    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
-    <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico Live</button>
-  </div>
-
-  <!-- Suggerimenti iniziali -->
-  <div class="suggestions-grid" id="suggestionsGrid" style="display:none"></div>
-
   <div class="chat-area" id="chatArea"></div>
 </div>
 
 <div class="input-bar">
+  <!-- Chip suggerimenti — sopra l'input, spariscono con la chat -->
+  <div class="chips-grid" id="chipsGrid">
+    <button class="chip" onclick="askChip(this,'Dove conviene fare benzina oggi?')">⛽ Benzina</button>
+    <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Notizie</button>
+    <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo</button>
+    <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia</button>
+    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Immagine</button>
+    <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico</button>
+  </div>
   <div class="input-wrap">
     <input type="text" id="searchInput" placeholder="Chiedimi qualcosa..." autocomplete="off">
     <button class="btn-enhance" id="btnEnhance" onclick="enhancePrompt()" title="✨ Ottimizza prompt con AI">
@@ -965,9 +952,11 @@ function nuovaChat() {
   fetch(API_URL + '/session/new').then(r => r.json()).then(d => { SESSION_ID = d.session_id; }).catch(() => {});
   document.getElementById('chatArea').innerHTML = '';
   document.getElementById('hero').classList.remove('hidden');
+  const main = document.getElementById('main');
+  if (main) main.classList.add('empty');
   applicaUI();
   const grid = document.getElementById('chipsGrid');
-  if (grid) grid.style.display = '';
+  if (grid) { grid.style.display = 'flex'; }
   document.getElementById('searchInput').value = '';
   document.getElementById('searchInput').placeholder = t('placeholder');
 }
@@ -993,6 +982,8 @@ const copyIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" st
 
 function addMessage(type, html, badge, raw) {
   document.getElementById('hero').classList.add('hidden');
+  const main = document.getElementById('main');
+  if (main) main.classList.remove('empty');
   const area = document.getElementById('chatArea');
   const div = document.createElement('div');
   div.className = `msg msg-${type}`;
@@ -1226,6 +1217,10 @@ async function ask(q) {
                 ft.style.display = '';
                 document.getElementById(c2).dataset.t = fullText;
                 if (speechSynth) document.getElementById(v2).dataset.t = fullText;
+                if (navigator.share || navigator.clipboard) {
+                  const shareEl = document.getElementById(s2);
+                  if (shareEl) shareEl.dataset.t = fullText;
+                }
                 if (voiceEnabled && fullText) setTimeout(()=>leggiTesto(fullText),200);
               }
             }
@@ -1489,41 +1484,8 @@ async function caricaNotizie() {
   } catch(e) { console.warn('Ticker news error', e); }
 }
 
-async function aggiornaTicker() {
-  try {
-    const res = await fetch(API_URL + '/carburanti');
-    const data = await res.json();
-    if (!data || !data.length) return;
-    const track2 = document.getElementById('fuelTrack');
-    if (!track2) return;
-    track2.innerHTML = '';
-    const items2 = [...data.slice(0,6), ...data.slice(0,6)];
-    items2.forEach(item => {
-      const span = document.createElement('span');
-      span.className = 'fuel-item';
-      const prezzo = parseFloat(item.prezzo || 0).toFixed(3);
-      const dist   = item.distanza ? `(${parseFloat(item.distanza).toFixed(1)} km)` : '';
-      span.innerHTML = `<strong>${item.gestore || 'Stazione'}</strong> ${item.carburante || 'Benzina'} ${item.self ? 'self' : 'servito'}:<strong class="fuel-price">${prezzo} €/L</strong>${dist}`;
-      track2.appendChild(span);
-    });
-    const fuelTicker = document.getElementById('fuelTicker');
-    if (fuelTicker) {
-      fuelTicker.onclick = () => ask('Dove conviene fare benzina oggi?');
-    }
-    // Animazione fuel ticker
-    requestAnimationFrame(() => {
-      const totalWidth2 = track2.scrollWidth / 2;
-      let pos2 = 0;
-      function step2() {
-        pos2 -= 0.3;
-        if (Math.abs(pos2) >= totalWidth2) pos2 = 0;
-        track2.style.transform = `translateX(${pos2}px)`;
-        requestAnimationFrame(step2);
-      }
-      requestAnimationFrame(step2);
-    });
-  } catch(e) { console.warn('Ticker fuel error', e); }
-}
+// aggiornaTicker() rimossa — era obsoleta e incompatibile con la struttura {stazioni:[]}
+// Tutta la logica fuel ticker è in caricaCarburantiFuel()
 
 // ── Init ──────────────────────────────────────────────────────
 // ── Traffico Live ───────────────────────────────────────────────
@@ -1566,7 +1528,7 @@ function aggiornaBarra(segmenti) {
   // Se il pannello dettaglio è aperto, aggiornalo in tempo reale
   const overlay = document.getElementById('trafficModalOverlay');
   if (overlay && overlay.classList.contains('open')) {
-    _renderPannelloTraffco();
+    _renderPannelloTraffco(0);
   }
 }
 
@@ -1575,25 +1537,38 @@ function apriMappaTraffco() {
   if (!overlay) return;
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  _renderPannelloTraffco();
+  _renderPannelloTraffco(0);
 }
 
-function _renderPannelloTraffco() {
+function _renderPannelloTraffco(tentativo) {
+  tentativo = tentativo || 0;
   const container = document.getElementById('trafficMapContainer');
   if (!container) return;
 
   const dati = window._trafficoDati;
   if (!dati || !dati.segmenti || !dati.segmenti.length) {
-    container.innerHTML = '<div style="padding:32px;text-align:center;font-family:Outfit,sans-serif;color:var(--ink-soft);">Caricamento dati...</div>';
-    // Riprova tra 1 secondo se i dati non sono ancora arrivati
-    setTimeout(_renderPannelloTraffco, 1000);
+    if (tentativo < 5) {
+      container.innerHTML = '<div style="padding:32px;text-align:center;font-family:Outfit,sans-serif;color:var(--ink-soft);">Caricamento dati...</div>';
+      setTimeout(() => _renderPannelloTraffco(tentativo + 1), 1000);
+    } else {
+      container.innerHTML = '<div style="padding:32px;text-align:center;font-family:Outfit,sans-serif;color:var(--ink-soft);">Dati traffico non disponibili al momento.</div>';
+    }
     return;
   }
+
+  const GOOGLE_MAPS_KEY = 'AIzaSyA9enL1x0SeVDZrVqFI-kJ3PYrrdHy8qPE';
+  const mapHtml = `<div class="traffic-map-iframe-wrap">
+    <iframe
+      src="https://www.google.com/maps/embed/v1/view?key=${GOOGLE_MAPS_KEY}&center=36.8570,14.7640&zoom=14&maptype=roadmap&layer=traffic"
+      allowfullscreen loading="lazy" title="Traffico Modica live">
+    </iframe>
+  </div>
+  <div class="traffic-cards-label">Dettaglio zone</div>`;
 
   const desc = { verde:'Scorrevole', giallo:'Rallentato', rosso:'Congestionato', sconosciuto:'N/D' };
   const icon = { verde:'🟢', giallo:'🟡', rosso:'🔴', sconosciuto:'⚪' };
 
-  container.innerHTML = dati.segmenti.map(function(s) {
+  container.innerHTML = mapHtml + dati.segmenti.map(function(s) {
     var vel = s.velocita_attuale > 0
       ? '<div class="traffic-zona-vel">' + s.velocita_attuale + ' km/h<span>velocità attuale</span></div>'
       : '';
@@ -1639,13 +1614,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(caricaNotizie,          5 * 60 * 1000);
   setInterval(caricaCarburantiFuel,  15 * 60 * 1000);
 
-  // Dark mode
-  const savedTheme = localStorage.getItem('modicaai_theme');
-  if (savedTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    const btn = document.getElementById('darkBtn');
-    if (btn) btn.textContent = '☀️';
-  }
+  // Dark mode — gestita dall'IIFE sopra (chiave 'modicaai-dark'), nessuna duplicazione
 
   // Enter per inviare
   const input = document.getElementById('searchInput');
@@ -1657,6 +1626,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Sveglia il backend Render subito (evita cold start al primo messaggio)
   fetch(API_URL + '/health', { method: 'GET' }).catch(() => {});
+  // Keepalive automatico ogni 10 minuti — evita cold start su Render free tier
+  setInterval(() => { fetch(API_URL + '/health', { method: 'GET' }).catch(() => {}); }, 10 * 60 * 1000);
 
   // Email nel footer — scritta via JS per evitare offuscamento Cloudflare
   const m = document.getElementById('sitemail');
