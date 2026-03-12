@@ -1785,7 +1785,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pulisce cache SW obsoleta (v3) se presente
   if ('caches' in window) {
     caches.keys().then(keys => {
-      keys.filter(k => k.includes('v3') || k.includes('v2') || k.includes('v1'))
+      keys.filter(k => k.includes('v1') || k.includes('v2') || k.includes('v3') || k.includes('v4'))
           .forEach(k => caches.delete(k));
     });
   }
