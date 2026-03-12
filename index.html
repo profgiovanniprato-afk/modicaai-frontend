@@ -493,7 +493,7 @@
   .bar-widget-sub  { font-size: 10px; color: var(--ink-soft); margin-left: 2px; }
   body.dark .bar-widget { background: rgba(30,35,48,0.85); border-color: var(--border); }
   .hero-widgets.hidden { display: none; }
-  @media(max-width:640px) { .hero-widgets { display: none; } }
+  @media(max-width:640px) { .hero-widgets { display: flex; } }
   .input-wrap { width:100%; max-width:660px; display:flex; align-items:center; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:0 6px 0 20px; height:52px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
   .input-wrap:focus-within { border-color:var(--sky); box-shadow:0 4px 20px rgba(26,58,92,0.12); }
   .input-wrap input { flex:1; border:none; outline:none; font-family:'Outfit',sans-serif; font-size:15px; color:var(--ink); background:transparent; }
@@ -573,6 +573,76 @@
   @keyframes ticker-scroll {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE MOBILE — max 640px
+  ═══════════════════════════════════════════ */
+  @media (max-width: 640px) {
+
+    /* Barre fisse — riduco altezze su mobile */
+    .news-ticker  { height: 26px; }
+    .fuel-ticker  { height: 24px; top: 26px; }
+    .traffic-bar  { height: 24px; top: 50px; }
+    .top-stripe   { top: 74px; }
+    .header       { top: 77px; height: 50px; padding: 0 14px; }
+    .main         { padding: 160px 12px 180px; }
+    .main.empty   { padding-top: 100px; padding-bottom: 160px; }
+
+    /* Hero — più compatto */
+    .hero         { padding: 16px 12px 6px; }
+    .hero-eyebrow { font-size: 9px; letter-spacing: 2.5px; margin-bottom: 10px; }
+    .hero-mark    { width: 40px; height: 40px; border-radius: 12px; }
+    .hero-title   { font-size: 38px; letter-spacing: -0.5px; }
+    .hero-divider { margin: 12px auto 10px; }
+    .hero-sub     { font-size: 14px; }
+
+    /* Logo header */
+    .logo-name    { font-size: 17px; }
+    .logo-tagline { display: none; }
+    .logo-mark    { width: 30px; height: 30px; border-radius: 8px; }
+
+    /* Ticker labels più piccole */
+    .ticker-label, .fuel-ticker .ticker-label, .traffic-label {
+      font-size: 9px; padding: 0 8px; letter-spacing: 1px;
+    }
+    .traffic-map-hint { font-size: 8px; padding: 0 8px; }
+
+    /* Chips sopra l'input */
+    .chips-grid   { gap: 5px; max-width: 100%; padding: 0 4px; }
+    .chip         { font-size: 11px; padding: 5px 10px; }
+
+    /* Input bar */
+    .input-bar    { padding: 8px 10px 10px; }
+    .input-wrap   { height: 46px; padding: 0 5px 0 16px; }
+    .input-wrap input { font-size: 14px; }
+    .btn-send     { width: 36px; height: 36px; }
+    .btn-enhance  { width: 30px; height: 30px; font-size: 13px; }
+
+    /* Messaggi chat */
+    .msg-ai       { font-size: 13px; padding: 13px 15px; }
+    .msg-user span { font-size: 13px; padding: 9px 14px; }
+
+    /* Widget — su mobile: orizzontali, uno accanto all'altro, più piccoli */
+    .hero-widgets {
+      flex-direction: row;
+      gap: 8px;
+      top: 82px; /* sotto header mobile */
+      left: 10px;
+    }
+    .bar-widget   {
+      padding: 4px 8px;
+      border-radius: 8px;
+      gap: 5px;
+    }
+    .bar-widget-icon { font-size: 13px; }
+    .bar-widget-main { font-size: 11px; }
+    .bar-widget-sub  { display: none; } /* nasconde la riga descrizione su mobile */
+
+    /* Modal traffico */
+    .traffic-modal { border-radius: 14px; }
+    .traffic-zona-card { padding: 12px 14px; }
+    .traffic-zona-nome { font-size: 13px; }
   }
 
 </style>
