@@ -75,7 +75,8 @@ self.addEventListener('fetch', e => {
         if (cached) return cached;
         return fetch(e.request).then(res => {
           if (res.ok && !url.includes('chrome-extension')) {
-            caches.open(CACHE_STATIC).then(c => c.put(e.request, res.clone()));
+            const clone = res.clone(); // clona PRIMA di return
+            caches.open(CACHE_STATIC).then(c => c.put(e.request, clone));
           }
           return res;
         }).catch(() => caches.match('/index.html'));
