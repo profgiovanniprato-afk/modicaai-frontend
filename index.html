@@ -415,7 +415,6 @@
   .main.empty { justify-content: center; padding-top: 120px; padding-bottom: 180px; }
 
   /* Hero — stile Claude/ChatGPT: minimalista, centrato */
-  .hero { text-align:center; padding: 24px 20px 8px; }
   .hero.hidden { display:none; }
   .hero-eyebrow { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; animation:fadeUp 0.5s 0.05s ease both; opacity:0.8; }
   .hero-logo-big { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:12px; animation:fadeUp 0.5s 0.1s ease both; }
@@ -468,6 +467,33 @@
 
   /* Input bar */
   .input-bar { position:fixed; bottom:32px; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:10px 16px 14px; display:flex; flex-direction:column; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
+
+  /* ── Widget meteo e orologio — fissi in alto a sinistra sotto l'header ── */
+  .hero { text-align:center; padding: 24px 20px 8px; }
+  .hero-widgets {
+    position: fixed;
+    top: 152px; left: 20px;
+    z-index: 250;
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: 'Outfit', sans-serif;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+  .bar-widget {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 5px 10px;
+    box-shadow: var(--shadow-sm);
+    pointer-events: none;
+  }
+  .bar-widget-icon { font-size: 16px; line-height: 1; }
+  .bar-widget-main { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .bar-widget-sub  { font-size: 10px; color: var(--ink-soft); margin-left: 2px; }
+  body.dark .bar-widget { background: rgba(30,35,48,0.85); border-color: var(--border); }
+  .hero-widgets.hidden { display: none; }
+  @media(max-width:640px) { .hero-widgets { display: none; } }
   .input-wrap { width:100%; max-width:660px; display:flex; align-items:center; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:0 6px 0 20px; height:52px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
   .input-wrap:focus-within { border-color:var(--sky); box-shadow:0 4px 20px rgba(26,58,92,0.12); }
   .input-wrap input { flex:1; border:none; outline:none; font-family:'Outfit',sans-serif; font-size:15px; color:var(--ink); background:transparent; }
@@ -673,6 +699,20 @@
   </div>
 
   <div class="chat-area" id="chatArea"></div>
+</div>
+
+<!-- Widget fissi in alto a sinistra — meteo + orologio -->
+<div class="hero-widgets" id="heroWidgets">
+  <div class="bar-widget" id="meteoWidget">
+    <div class="bar-widget-icon" id="meteoIcon">🌤️</div>
+    <div class="bar-widget-main" id="meteoTemp">--°</div>
+    <div class="bar-widget-sub" id="meteoDesc">Modica</div>
+  </div>
+  <div class="bar-widget" id="clockWidget">
+    <div class="bar-widget-icon">🕐</div>
+    <div class="bar-widget-main" id="clockTime">--:--</div>
+    <div class="bar-widget-sub" id="clockDate">...</div>
+  </div>
 </div>
 
 <div class="input-bar">
@@ -952,6 +992,8 @@ function nuovaChat() {
   fetch(API_URL + '/session/new').then(r => r.json()).then(d => { SESSION_ID = d.session_id; }).catch(() => {});
   document.getElementById('chatArea').innerHTML = '';
   document.getElementById('hero').classList.remove('hidden');
+  const heroWidgets = document.getElementById('heroWidgets');
+  if (heroWidgets) heroWidgets.classList.remove('hidden');
   const main = document.getElementById('main');
   if (main) main.classList.add('empty');
   applicaUI();
@@ -982,6 +1024,8 @@ const copyIcon = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" st
 
 function addMessage(type, html, badge, raw) {
   document.getElementById('hero').classList.add('hidden');
+  const heroWidgets = document.getElementById('heroWidgets');
+  if (heroWidgets) heroWidgets.classList.add('hidden');
   const main = document.getElementById('main');
   if (main) main.classList.remove('empty');
   const area = document.getElementById('chatArea');
@@ -1558,21 +1602,13 @@ function _renderPannelloTraffco(tentativo) {
   }
 
   const GOOGLE_MAPS_KEY = 'AIzaSyA9enL1x0SeVDZrVqFI-kJ3PYrrdHy8qPE';
-  // Usa Google Maps link diretto — non embed API (richiede Maps Embed API separata)
-  // Il pulsante apre Google Maps con layer traffico nel browser
   const mapHtml = `<div class="traffic-map-iframe-wrap">
-    <a href="https://www.google.com/maps/@36.8570,14.7640,14z/data=!5m1!1e1" 
-       target="_blank" rel="noopener"
-       style="display:flex;align-items:center;justify-content:center;gap:10px;
-              padding:18px;background:var(--bg);border-radius:14px;
-              text-decoration:none;color:var(--sky);font-family:'Outfit',sans-serif;
-              font-size:13px;font-weight:600;border:1px solid var(--border);
-              transition:all 0.18s;"
-       onmouseover="this.style.borderColor='var(--sky)'"
-       onmouseout="this.style.borderColor='var(--border)'">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
-      Apri mappa traffico live su Google Maps →
-    </a>
+    <iframe
+      src="https://www.google.com/maps/embed/v1/view?key=${GOOGLE_MAPS_KEY}&center=36.8570,14.7640&zoom=14&maptype=roadmap&layer=traffic"
+      width="100%" height="220" style="border:0;border-radius:12px;display:block"
+      allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+      title="Traffico Modica live">
+    </iframe>
   </div>
   <div class="traffic-cards-label">Dettaglio zone</div>`;
 
@@ -1608,6 +1644,46 @@ function chiudiMappaTraffco(e) {
 }
 
 // setInterval traffico spostato dentro DOMContentLoaded
+
+// ── Orologio real-time ───────────────────────────────────────────
+function aggiornaOrologio() {
+  const now = new Date();
+  const hh = now.getHours().toString().padStart(2,'0');
+  const mm = now.getMinutes().toString().padStart(2,'0');
+  const giorni = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+  const mesi   = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  const gg = giorni[now.getDay()];
+  const d  = now.getDate();
+  const m  = mesi[now.getMonth()];
+  const el_time = document.getElementById('clockTime');
+  const el_date = document.getElementById('clockDate');
+  if (el_time) el_time.textContent = `${hh}:${mm}`;
+  if (el_date) el_date.textContent = `${gg} ${d} ${m}`;
+}
+aggiornaOrologio();
+setInterval(aggiornaOrologio, 30000);
+
+// ── Meteo widget ─────────────────────────────────────────────────
+const METEO_ICONS = {
+  '01d':'☀️','01n':'🌙','02d':'⛅','02n':'⛅',
+  '03d':'☁️','03n':'☁️','04d':'☁️','04n':'☁️',
+  '09d':'🌧️','09n':'🌧️','10d':'🌦️','10n':'🌦️',
+  '11d':'⛈️','11n':'⛈️','13d':'❄️','13n':'❄️',
+  '50d':'🌫️','50n':'🌫️'
+};
+async function caricaMeteoWidget() {
+  try {
+    const res = await fetch(API_URL + '/meteo-widget');
+    if (!res.ok) return;
+    const d = await res.json();
+    const icon = document.getElementById('meteoIcon');
+    const temp = document.getElementById('meteoTemp');
+    const desc = document.getElementById('meteoDesc');
+    if (icon) icon.textContent = METEO_ICONS[d.icona] || '🌤️';
+    if (temp) temp.textContent = `${d.temp}°`;
+    if (desc) desc.textContent = d.desc;
+  } catch(e) { /* silenzioso */ }
+}
 
 // ── Service Worker ───────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
@@ -1646,6 +1722,7 @@ document.addEventListener('DOMContentLoaded', () => {
   caricaNotizie();
   caricaTraffco();
   caricaCarburantiFuel();
+  caricaMeteoWidget();
   setInterval(caricaNotizie,          5 * 60 * 1000);
   setInterval(caricaCarburantiFuel,  15 * 60 * 1000);
   setInterval(caricaTraffco,          2 * 60 * 1000); // ogni 2 minuti
