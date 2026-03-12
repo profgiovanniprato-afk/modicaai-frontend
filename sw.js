@@ -1,6 +1,6 @@
-// ModicaAI Service Worker v3 — cache-first per assets, network-first per API
-const CACHE_STATIC = 'modicaai-static-v3';
-const CACHE_API    = 'modicaai-api-v3';
+// ModicaAI Service Worker v4 — network-first per API live, cache-first per assets
+const CACHE_STATIC = 'modicaai-static-v4';
+const CACHE_API    = 'modicaai-api-v4';
 
 const STATIC_ASSETS = [
   '/',
@@ -38,24 +38,33 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = e.request.url;
 
-  // API backend → network-first con fallback offline
+  // API backend → SEMPRE network-first (dati live: carburanti, news, traffico)
+  // Fallback cache solo se rete completamente offline
   if (url.includes('modicaai-api.onrender.com')) {
-    // Per /carburanti e /news: stale-while-revalidate (risposta veloce + aggiorna)
-    if (url.includes('/carburanti') || url.includes('/news')) {
-      e.respondWith(
-        caches.open(CACHE_API).then(async cache => {
-          const cached = await cache.match(e.request);
-          const fetchPromise = fetch(e.request).then(res => {
-            if (res.ok) cache.put(e.request, res.clone());
-            return res;
-          }).catch(() => null);
-          return cached || fetchPromise ||
-            new Response(JSON.stringify({items:[], stazioni:[], error:'offline'}),
-              {headers:{'Content-Type':'application/json'}});
-        })
-      );
+    // /ask, /ask-stream, /genera-immagine → sempre rete, mai cache
+    if (url.includes('/ask') || url.includes('/genera-immagine') || url.includes('/session')) {
+      return; // lascia passare normalmente
     }
-    // Altre route API (/ask, /genera-immagine): sempre network
+
+    // /carburanti, /news, /traffico, /health → network-first con fallback cache
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_API).then(c => c.put(e.request, clone));
+          }
+          return res;
+        })
+        .catch(async () => {
+          // Solo se rete non disponibile → usa cache
+          const cached = await caches.match(e.request);
+          return cached || new Response(
+            JSON.stringify({ items: [], stazioni: [], segmenti: [], error: 'offline' }),
+            { headers: { 'Content-Type': 'application/json' } }
+          );
+        })
+    );
     return;
   }
 
@@ -75,7 +84,7 @@ self.addEventListener('fetch', e => {
   }
 });
 
-// ── Background Sync: notifica aggiornamenti ───────────────────────
+// ── Messaggi dal client ───────────────────────────────────────────
 self.addEventListener('message', e => {
   if (e.data === 'skipWaiting') self.skipWaiting();
 });

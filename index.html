@@ -1596,8 +1596,7 @@ function chiudiMappaTraffco(e) {
   document.body.style.overflow = '';
 }
 
-// Aggiornamento automatico ogni 2 minuti
-setInterval(caricaTraffco, 120000);
+// setInterval traffico spostato dentro DOMContentLoaded
 
 // ── Service Worker ───────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
@@ -1613,6 +1612,20 @@ document.addEventListener('DOMContentLoaded', () => {
   caricaCarburantiFuel();
   setInterval(caricaNotizie,          5 * 60 * 1000);
   setInterval(caricaCarburantiFuel,  15 * 60 * 1000);
+  setInterval(caricaTraffco,          2 * 60 * 1000); // ogni 2 minuti
+
+  // Retry dopo 35s — se Render era in cold start al caricamento, ora è sveglio
+  setTimeout(() => {
+    const fuelTrack = document.getElementById('fuelTrack');
+    const hasNoFuel = !fuelTrack || fuelTrack.innerHTML.includes('Caricamento');
+    const tickerTrack = document.getElementById('tickerTrack');
+    const hasNoNews = !tickerTrack || tickerTrack.innerHTML.includes('Caricamento');
+    const trafficSegs = document.getElementById('trafficSegments');
+    const hasNoTraffic = !trafficSegs || trafficSegs.innerHTML.includes('Caricamento') || trafficSegs.innerHTML.includes('sconosciuto');
+    if (hasNoFuel) caricaCarburantiFuel();
+    if (hasNoNews) caricaNotizie();
+    if (hasNoTraffic) caricaTraffco();
+  }, 35000);
 
   // Dark mode — gestita dall'IIFE sopra (chiave 'modicaai-dark'), nessuna duplicazione
 
@@ -1626,8 +1639,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Sveglia il backend Render subito (evita cold start al primo messaggio)
   fetch(API_URL + '/health', { method: 'GET' }).catch(() => {});
-  // Keepalive automatico ogni 10 minuti — evita cold start su Render free tier
-  setInterval(() => { fetch(API_URL + '/health', { method: 'GET' }).catch(() => {}); }, 10 * 60 * 1000);
+  // Keepalive ogni 8 minuti — Render free spegne dopo 15 min di inattività
+  setInterval(() => { fetch(API_URL + '/health', { method: 'GET' }).catch(() => {}); }, 8 * 60 * 1000);
 
   // Email nel footer — scritta via JS per evitare offuscamento Cloudflare
   const m = document.getElementById('sitemail');
