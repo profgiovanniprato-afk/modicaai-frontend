@@ -623,69 +623,119 @@
   ═══════════════════════════════════════════ */
   @media (max-width: 640px) {
 
-    /* Barre fisse — riduco altezze su mobile */
+    /* Barre fisse — altezze ridotte */
     .news-ticker  { height: 26px; }
     .fuel-ticker  { height: 24px; top: 26px; }
     .traffic-bar  { height: 24px; top: 50px; }
     .top-stripe   { top: 74px; }
-    .header       { top: 77px; height: 50px; padding: 0 14px; }
-    .main         { padding: 160px 12px 180px; }
-    .main.empty   { padding-top: 100px; padding-bottom: 160px; }
+    .header       { top: 77px; height: 50px; padding: 0 12px; }
 
-    /* Hero — più compatto */
-    .hero         { padding: 16px 12px 6px; }
-    .hero-eyebrow { font-size: 9px; letter-spacing: 2.5px; margin-bottom: 10px; }
-    .hero-mark    { width: 40px; height: 40px; border-radius: 12px; }
-    .hero-title   { font-size: 38px; letter-spacing: -0.5px; }
-    .hero-divider { margin: 12px auto 10px; }
-    .hero-sub     { font-size: 14px; }
+    /* Main — padding adattato + safe-area per iOS */
+    .main         { padding: 155px 10px 200px; }
+    .main.empty   { padding-top: 95px; padding-bottom: 200px; }
+
+    /* Hero — compatto */
+    .hero         { padding: 14px 10px 4px; }
+    .hero-eyebrow { font-size: 9px; letter-spacing: 2px; margin-bottom: 8px; }
+    .hero-mark    { width: 38px; height: 38px; border-radius: 11px; }
+    .hero-title   { font-size: 36px; letter-spacing: -0.5px; }
+    .hero-divider { margin: 10px auto 8px; }
+    .hero-sub     { font-size: 13px; }
 
     /* Logo header */
-    .logo-name    { font-size: 17px; }
+    .logo-name    { font-size: 16px; }
     .logo-tagline { display: none; }
-    .logo-mark    { width: 30px; height: 30px; border-radius: 8px; }
+    .logo-mark    { width: 28px; height: 28px; border-radius: 7px; }
+    .logo-mark::after { display: none; }
 
-    /* Ticker labels più piccole */
+    /* Ticker */
     .ticker-label, .fuel-ticker .ticker-label, .traffic-label {
-      font-size: 9px; padding: 0 8px; letter-spacing: 1px;
+      font-size: 9px; padding: 0 7px; letter-spacing: 0.8px;
     }
-    .traffic-map-hint { font-size: 8px; padding: 0 8px; }
+    .traffic-map-hint { display: none; } /* nascosto su mobile — spazio limitato */
+    .traffic-seg { font-size: 9px; padding: 2px 6px; }
 
-    /* Chips sopra l'input */
-    .chips-grid   { gap: 5px; max-width: 100%; padding: 0 4px; }
-    .chip         { font-size: 11px; padding: 5px 10px; }
+    /* Chips */
+    .chips-grid   { gap: 5px; max-width: 100%; padding: 0 2px; margin-bottom: 8px; }
+    .chip         { font-size: 11px; padding: 5px 9px; min-width: unset; }
 
-    /* Input bar */
-    .input-bar    { padding: 8px 10px 10px; }
-    .input-wrap   { height: 46px; padding: 0 5px 0 16px; }
-    .input-wrap input { font-size: 14px; }
-    .btn-send     { width: 36px; height: 36px; }
-    .btn-enhance  { width: 30px; height: 30px; font-size: 13px; }
+    /* File preview */
+    .file-preview { padding: 6px 10px; margin-bottom: 6px; }
+    .file-preview-name { font-size: 11px; }
+
+    /* Input bar — più compatta, safe-area iOS */
+    .input-bar {
+      padding: 8px 10px 12px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    }
+
+    /* Input wrap — spazio per tutti i bottoni */
+    .input-wrap {
+      height: 44px;
+      padding: 0 4px 0 4px;
+      gap: 2px;
+    }
+
+    /* Pulsante upload — visibile e cliccabile su mobile */
+    .btn-upload {
+      width: 32px; height: 32px;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    /* Input testo — padding sinistra */
+    .input-wrap input {
+      font-size: 14px;
+      padding: 0 4px 0 8px;
+      min-width: 0;
+    }
+
+    /* Bottone enhance — più piccolo */
+    .btn-enhance  { width: 28px; height: 28px; font-size: 13px; flex-shrink: 0; }
+
+    /* Bottone invio */
+    .btn-send     { width: 34px; height: 34px; flex-shrink: 0; }
+    .btn-send svg { width: 16px; height: 16px; }
 
     /* Messaggi chat */
-    .msg-ai       { font-size: 13px; padding: 13px 15px; }
+    .msg-ai       { font-size: 13px; padding: 12px 14px; line-height: 1.65; }
     .msg-user span { font-size: 13px; padding: 9px 14px; }
+    .msg-footer   { flex-wrap: wrap; gap: 6px; }
+    .btn-copy-msg { font-size: 10px; padding: 2px 8px; }
 
-    /* Widget — su mobile: orizzontali, uno accanto all'altro, più piccoli */
+    /* Widget meteo/orologio — orizzontali */
     .hero-widgets {
       flex-direction: row;
-      gap: 8px;
-      top: 82px; /* sotto header mobile */
+      gap: 7px;
+      top: 82px;
       left: 10px;
     }
-    .bar-widget   {
-      padding: 4px 8px;
-      border-radius: 8px;
-      gap: 5px;
-    }
-    .bar-widget-icon { font-size: 13px; }
-    .bar-widget-main { font-size: 11px; }
-    .bar-widget-sub  { display: none; } /* nasconde la riga descrizione su mobile */
+    .bar-widget        { padding: 3px 7px; border-radius: 7px; gap: 4px; }
+    .bar-widget-icon   { font-size: 12px; }
+    .bar-widget-main   { font-size: 10px; }
+    .bar-widget-sub    { display: none; }
 
     /* Modal traffico */
-    .traffic-modal { border-radius: 14px; }
-    .traffic-zona-card { padding: 12px 14px; }
+    .traffic-modal     { border-radius: 16px 16px 0 0; width: 100%; max-width: 100%; margin: 0; align-self: flex-end; }
+    .traffic-modal-overlay { align-items: flex-end; padding: 0; }
+    .traffic-zona-card { padding: 11px 14px; }
     .traffic-zona-nome { font-size: 13px; }
+    .traffic-zona-vel  { font-size: 12px; }
+
+    /* Header buttons */
+    .btn-new-chat .btn-label { display: none; }
+    .btn-new-chat { padding: 5px 8px; }
+    .btn-dark { width: 28px; height: 28px; }
+    .header-right { gap: 6px; }
+  }
+
+  /* Extra small — telefoni molto stretti */
+  @media (max-width: 380px) {
+    .hero-title   { font-size: 30px; }
+    .chip         { font-size: 10px; padding: 4px 7px; }
+    .btn-enhance  { display: none; } /* nasconde enhance su schermi strettissimi */
+    .traffic-seg  { display: none; } /* nasconde zone traffico, lascia solo label */
+    .traffic-seg:first-child { display: flex; } /* mostra solo la prima */
   }
 
 </style>
@@ -1743,7 +1793,7 @@ function _renderPannelloTraffco(tentativo) {
   }
 
   const mapHtml = `<div class="traffic-map-iframe-wrap">
-    <a href="https://www.google.com/maps/@36.8570,14.7640,14z/data=!5m1!1e1"
+    <a href="https://maps.google.com/?q=Modica,Sicily&layer=c&cbll=36.8570,14.7640"
        target="_blank" rel="noopener"
        style="display:flex;align-items:center;justify-content:space-between;
               padding:16px 18px;background:var(--bg);border-radius:12px;
@@ -2075,7 +2125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pulisce cache SW obsoleta (v3) se presente
   if ('caches' in window) {
     caches.keys().then(keys => {
-      keys.filter(k => k.includes('v1') || k.includes('v2') || k.includes('v3') || k.includes('v4') || k.includes('v5'))
+      keys.filter(k => k.includes('v1') || k.includes('v2') || k.includes('v3') || k.includes('v4') || k.includes('v5') || k.includes('v6'))
           .forEach(k => caches.delete(k));
     });
   }
