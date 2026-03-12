@@ -1,6 +1,6 @@
 // ModicaAI Service Worker v4 — network-first per API live, cache-first per assets
-const CACHE_STATIC = 'modicaai-static-v5';
-const CACHE_API    = 'modicaai-api-v5';
+const CACHE_STATIC = 'modicaai-static-v6';
+const CACHE_API    = 'modicaai-api-v6';
 
 const STATIC_ASSETS = [
   '/',

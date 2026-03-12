@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 
 <!-- SEO Primary -->
 <title>ModicaAI — Assistente AI per Modica, Sicilia</title>
@@ -1671,14 +1674,37 @@ function _renderPannelloTraffco(tentativo) {
     return;
   }
 
-  const GOOGLE_MAPS_KEY = 'AIzaSyA9enL1x0SeVDZrVqFI-kJ3PYrrdHy8qPE';
   const mapHtml = `<div class="traffic-map-iframe-wrap">
-    <iframe
-      src="https://www.google.com/maps/embed/v1/view?key=${GOOGLE_MAPS_KEY}&center=36.8570,14.7640&zoom=14&maptype=roadmap&layer=traffic"
-      width="100%" height="220" style="border:0;border-radius:12px;display:block"
-      allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-      title="Traffico Modica live">
-    </iframe>
+    <a href="https://www.google.com/maps/@36.8570,14.7640,14z/data=!5m1!1e1"
+       target="_blank" rel="noopener"
+       style="display:flex;align-items:center;justify-content:space-between;
+              padding:16px 18px;background:var(--bg);border-radius:12px;
+              text-decoration:none;border:1px solid var(--border);
+              transition:border-color 0.18s;gap:12px;"
+       onmouseover="this.style.borderColor='var(--sky)'"
+       onmouseout="this.style.borderColor='var(--border)'">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--sky);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--ink)">
+            Apri mappa traffico live
+          </div>
+          <div style="font-family:'Outfit',sans-serif;font-size:11px;color:var(--ink-soft);margin-top:2px">
+            Google Maps · strade colorate in tempo reale
+          </div>
+        </div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="2">
+        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+        <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+    </a>
   </div>
   <div class="traffic-cards-label">Dettaglio zone</div>`;
 
@@ -1785,7 +1811,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pulisce cache SW obsoleta (v3) se presente
   if ('caches' in window) {
     caches.keys().then(keys => {
-      keys.filter(k => k.includes('v1') || k.includes('v2') || k.includes('v3') || k.includes('v4'))
+      keys.filter(k => k.includes('v1') || k.includes('v2') || k.includes('v3') || k.includes('v4') || k.includes('v5'))
           .forEach(k => caches.delete(k));
     });
   }
