@@ -1495,8 +1495,9 @@ async function caricaTraffco() {
   try {
     const res = await fetch(API_URL + '/traffico');
     const dati = await res.json();
-    console.log('[TRAFFICO]', JSON.stringify(dati)); // debug visibile in console
+    console.log('[TRAFFICO]', JSON.stringify(dati));
     if (dati.segmenti && dati.segmenti.length) {
+      console.log('[TRAFFICO] aggiornaBarra con', dati.segmenti.map(s => s.stato));
       aggiornaBarra(dati.segmenti);
       window._trafficoDati = dati;
     } else {
@@ -1557,11 +1558,21 @@ function _renderPannelloTraffco(tentativo) {
   }
 
   const GOOGLE_MAPS_KEY = 'AIzaSyA9enL1x0SeVDZrVqFI-kJ3PYrrdHy8qPE';
+  // Usa Google Maps link diretto — non embed API (richiede Maps Embed API separata)
+  // Il pulsante apre Google Maps con layer traffico nel browser
   const mapHtml = `<div class="traffic-map-iframe-wrap">
-    <iframe
-      src="https://www.google.com/maps/embed/v1/view?key=${GOOGLE_MAPS_KEY}&center=36.8570,14.7640&zoom=14&maptype=roadmap&layer=traffic"
-      allowfullscreen loading="lazy" title="Traffico Modica live">
-    </iframe>
+    <a href="https://www.google.com/maps/@36.8570,14.7640,14z/data=!5m1!1e1" 
+       target="_blank" rel="noopener"
+       style="display:flex;align-items:center;justify-content:center;gap:10px;
+              padding:18px;background:var(--bg);border-radius:14px;
+              text-decoration:none;color:var(--sky);font-family:'Outfit',sans-serif;
+              font-size:13px;font-weight:600;border:1px solid var(--border);
+              transition:all 0.18s;"
+       onmouseover="this.style.borderColor='var(--sky)'"
+       onmouseout="this.style.borderColor='var(--border)'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+      Apri mappa traffico live su Google Maps →
+    </a>
   </div>
   <div class="traffic-cards-label">Dettaglio zone</div>`;
 
@@ -1601,12 +1612,37 @@ function chiudiMappaTraffco(e) {
 // ── Service Worker ───────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      // Forza aggiornamento SW se c'è una nuova versione in attesa
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        if (newSW) {
+          newSW.addEventListener('statechange', () => {
+            if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+              newSW.postMessage('skipWaiting');
+            }
+          });
+        }
+      });
+      // Controlla subito se c'è un aggiornamento disponibile
+      reg.update().catch(() => {});
+    }).catch(() => {});
+  });
+  // Ricarica la pagina se il SW si aggiorna (prende il controllo)
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   applicaUI();
+  // Pulisce cache SW obsoleta (v3) se presente
+  if ('caches' in window) {
+    caches.keys().then(keys => {
+      keys.filter(k => k.includes('v3') || k.includes('v2') || k.includes('v1'))
+          .forEach(k => caches.delete(k));
+    });
+  }
   caricaNotizie();
   caricaTraffco();
   caricaCarburantiFuel();
