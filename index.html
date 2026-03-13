@@ -686,6 +686,7 @@
     box-shadow: var(--shadow-sm);
     pointer-events: none;
   }
+  #clockWidget { pointer-events: auto; cursor: default; }
   .bar-widget-icon { font-size: 16px; line-height: 1; }
   .bar-widget-main { font-size: 12px; font-weight: 600; color: var(--ink); }
   .bar-widget-sub  { font-size: 10px; color: var(--ink-soft); margin-left: 2px; }
@@ -2415,6 +2416,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Carica stato farmacia PDF
   aggiornaStatoFarmacia();
+
+  // Apri pannello admin via URL: modicaai.it/?admin
+  if (window.location.search.includes('admin')) {
+    setTimeout(() => apriAdmin(), 500);
+  }
 });
 
 // ── MODAL CONTATTI AZIENDE ─────────────────────────────────────────
