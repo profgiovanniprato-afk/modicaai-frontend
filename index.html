@@ -2484,9 +2484,9 @@ let _adminClickCount = 0;
 let _adminClickTimer = null;
 let _pdfFile = null;
 
-// Apri pannello admin con Ctrl+Shift+A (Windows) o Cmd+Shift+A (Mac)
+// Apri pannello admin con Ctrl+Shift+F (Windows) o Cmd+Shift+F (Mac)
 document.addEventListener('keydown', function(e) {
-  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'F') {
     e.preventDefault();
     apriAdmin();
   }
