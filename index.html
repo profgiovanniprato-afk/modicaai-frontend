@@ -1088,8 +1088,7 @@
     <button class="footer-contact-btn" onclick="apriContatti()">
       🤝 Collabora con noi
     </button>
-    <!-- Admin link nascosto (triplo click sul copyright) -->
-    <span id="adminTrigger" onclick="adminClick()" style="cursor:default;user-select:none;opacity:0;font-size:8px;">·</span>
+    <!-- Admin: Ctrl+Shift+A -->
   </div>
 </div>
 
@@ -2485,15 +2484,13 @@ let _adminClickCount = 0;
 let _adminClickTimer = null;
 let _pdfFile = null;
 
-function adminClick() {
-  _adminClickCount++;
-  clearTimeout(_adminClickTimer);
-  _adminClickTimer = setTimeout(() => { _adminClickCount = 0; }, 800);
-  if (_adminClickCount >= 5) {
-    _adminClickCount = 0;
+// Apri pannello admin con Ctrl+Shift+A (Windows) o Cmd+Shift+A (Mac)
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+    e.preventDefault();
     apriAdmin();
   }
-}
+});
 
 function apriAdmin() {
   document.getElementById('adminOverlay').classList.add('open');
