@@ -1021,7 +1021,7 @@
     <div class="bar-widget-main" id="meteoTemp">--°</div>
     <div class="bar-widget-sub" id="meteoDesc">Modica</div>
   </div>
-  <div class="bar-widget" id="clockWidget">
+  <div class="bar-widget" id="clockWidget" onclick="logoClick()" style="cursor:default;">
     <div class="bar-widget-icon">🕐</div>
     <div class="bar-widget-main" id="clockTime">--:--</div>
     <div class="bar-widget-sub" id="clockDate">...</div>
@@ -2484,13 +2484,19 @@ let _adminClickCount = 0;
 let _adminClickTimer = null;
 let _pdfFile = null;
 
-// Apri pannello admin con Ctrl+B (Windows) o Cmd+B (Mac)
-document.addEventListener('keydown', function(e) {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-    e.preventDefault();
+// Widget orologio: 3 click rapidi = pannello admin
+let _logoClickCount = 0;
+let _logoClickTimer = null;
+function logoClick() {
+  _logoClickCount++;
+  clearTimeout(_logoClickTimer);
+  _logoClickTimer = setTimeout(() => { _logoClickCount = 0; }, 600);
+  if (_logoClickCount >= 3) {
+    clearTimeout(_logoClickTimer);
+    _logoClickCount = 0;
     apriAdmin();
   }
-});
+}
 
 function apriAdmin() {
   document.getElementById('adminOverlay').classList.add('open');
