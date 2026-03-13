@@ -454,19 +454,174 @@
   .site-footer {
     position: fixed; bottom: 0; left: 0; right: 0;
     background: #0a0c10;
-    text-align: center; font-size: 11px;
+    font-size: 11px;
     color: var(--gold);
-    padding: 7px 20px;
+    padding: 5px 16px;
     z-index: 999;
     border-top: 1px solid rgba(194,157,82,0.2);
     font-family: 'Outfit', sans-serif;
     letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    min-height: 32px;
   }
+  .footer-left  { display:flex; align-items:center; gap:8px; }
+  .footer-right { display:flex; align-items:center; gap:10px; margin-left:auto; }
   .site-footer a { color: var(--gold); text-decoration: none; }
-  .site-footer a:hover { text-decoration: underline; }
-  .footer-info a { color:var(--ink-soft); text-decoration:none; }
-  .footer-info a[href^="mailto"] { color:var(--gold); }
-  .footer-info a:hover { color:var(--gold); }
+  .site-footer a:hover { text-decoration: underline; color: #e8c96a; }
+  .footer-sep { color: rgba(194,157,82,0.4); margin: 0 5px; }
+  .footer-fb {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: rgba(255,255,255,0.6) !important; font-size:10px; font-weight:500;
+    transition: color 0.15s;
+  }
+  .footer-fb:hover { color: #4267B2 !important; text-decoration: none !important; }
+  .footer-fb svg { flex-shrink:0; }
+  .footer-contact-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(184,134,11,0.15);
+    border: 1px solid rgba(184,134,11,0.35);
+    color: var(--gold) !important;
+    padding: 2px 9px; border-radius: 10px;
+    font-size: 10px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .footer-contact-btn:hover { background: rgba(184,134,11,0.28); text-decoration:none !important; }
+
+  /* ── Modal Contatti Aziende ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 3000;
+    background: rgba(0,0,0,0.65); backdrop-filter: blur(5px);
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--white); border-radius: 20px;
+    width: min(94vw, 460px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    animation: fadeUp 0.22s ease;
+    overflow: hidden;
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-title { font-size: 16px; font-weight: 700; color: var(--ink); display:flex; align-items:center; gap:8px; }
+  .modal-title span { font-size: 11px; font-weight:400; color:var(--ink-soft); }
+  .modal-close {
+    width: 28px; height: 28px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--bg);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--ink-mid); font-size: 15px; transition: all 0.15s;
+  }
+  .modal-close:hover { border-color: var(--terra); color: var(--terra); }
+  .modal-body { padding: 18px 20px 20px; }
+  .modal-sub { font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; line-height: 1.5; }
+  .form-group { margin-bottom: 12px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 600; color: var(--ink-mid); margin-bottom: 5px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 9px 12px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--ink);
+    background: var(--bg); outline: none; transition: border-color 0.15s;
+    resize: none;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--sky); background: var(--white); }
+  .form-group textarea { height: 90px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn-form-submit {
+    width: 100%; padding: 11px;
+    background: linear-gradient(135deg, var(--sky), #2a5a8c);
+    border: none; border-radius: 12px;
+    color: white; font-family: 'Outfit', sans-serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s;
+    margin-top: 4px;
+  }
+  .btn-form-submit:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,58,92,0.25); }
+  .btn-form-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .form-success { text-align: center; padding: 24px 0 8px; }
+  .form-success .success-icon { font-size: 40px; margin-bottom: 12px; }
+  .form-success p { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
+  body.dark .modal-box { background: #1e2330; }
+  body.dark .form-group input, body.dark .form-group textarea { background: #151820; border-color: var(--border); color: var(--ink); }
+  body.dark .form-group input:focus, body.dark .form-group textarea:focus { background: #1e2330; }
+
+  /* ── Pannello Admin Upload Farmacia ── */
+  .admin-overlay {
+    display: none; position: fixed; inset: 0; z-index: 4000;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .admin-overlay.open { display: flex; }
+  .admin-box {
+    background: var(--white); border-radius: 20px;
+    width: min(94vw, 420px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    animation: fadeUp 0.22s ease; overflow: hidden;
+  }
+  .admin-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px 12px;
+    background: #0a0c10;
+    border-bottom: 1px solid rgba(194,157,82,0.3);
+  }
+  .admin-title { font-size: 13px; font-weight: 700; color: var(--gold); display:flex; align-items:center; gap:7px; }
+  .admin-close {
+    width: 26px; height: 26px; border-radius: 6px;
+    border: 1px solid rgba(194,157,82,0.3); background: transparent;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 14px; transition: all 0.15s;
+  }
+  .admin-close:hover { border-color: var(--terra); color: var(--terra); }
+  .admin-body { padding: 18px; }
+  .admin-status {
+    background: var(--bg); border-radius: 10px; padding: 10px 14px;
+    margin-bottom: 14px; font-size: 12px; color: var(--ink-mid);
+    border: 1px solid var(--border);
+  }
+  .admin-status strong { color: var(--sky); }
+  .upload-area {
+    border: 2px dashed var(--border); border-radius: 12px;
+    padding: 24px 16px; text-align: center;
+    cursor: pointer; transition: all 0.18s; margin-bottom: 12px;
+  }
+  .upload-area:hover, .upload-area.drag { border-color: var(--gold); background: rgba(184,134,11,0.04); }
+  .upload-area .upload-icon { font-size: 32px; margin-bottom: 8px; }
+  .upload-area p { font-size: 13px; color: var(--ink-mid); margin-bottom: 4px; }
+  .upload-area small { font-size: 11px; color: var(--ink-soft); }
+  .upload-area input[type=file] { display: none; }
+  .upload-filename {
+    font-size: 12px; font-weight: 600; color: var(--sky);
+    margin-bottom: 12px; display: none; text-align:center;
+  }
+  .admin-pwd { display: flex; gap: 8px; margin-bottom: 12px; }
+  .admin-pwd input {
+    flex: 1; padding: 8px 12px; border: 1.5px solid var(--border);
+    border-radius: 10px; font-family: 'Outfit', sans-serif;
+    font-size: 13px; color: var(--ink); background: var(--bg); outline: none;
+  }
+  .admin-pwd input:focus { border-color: var(--gold); }
+  .btn-admin-upload {
+    width: 100%; padding: 10px;
+    background: linear-gradient(135deg, #0a0c10, #1a2a3a);
+    border: 1px solid rgba(194,157,82,0.4); border-radius: 10px;
+    color: var(--gold); font-family: 'Outfit', sans-serif;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: all 0.18s; letter-spacing: 0.5px;
+  }
+  .btn-admin-upload:hover { background: #1a1e28; border-color: var(--gold); }
+  .btn-admin-upload:disabled { opacity: 0.5; cursor: not-allowed; }
+  .admin-msg { font-size: 12px; margin-top: 10px; text-align: center; min-height: 18px; }
+  .admin-msg.ok  { color: #16a34a; }
+  .admin-msg.err { color: var(--terra); }
+  @media(max-width:480px){ .form-row { grid-template-columns:1fr; } }
+
 
   /* ── Upload file ── */
   .btn-upload {
@@ -914,9 +1069,101 @@
   </div>
 </div>
 <div class="site-footer">
-  <a href="https://modicaai.it">modicaai.it</a> &nbsp;·&nbsp; Modica, Sicilia &nbsp;·&nbsp;
-  © 2026 ModicaAI &nbsp;·&nbsp; <span id="sitemail"></span>
+  <div class="footer-left">
+    <a href="https://modicaai.it">modicaai.it</a>
+    <span class="footer-sep">·</span>
+    Modica, Sicilia
+    <span class="footer-sep">·</span>
+    © 2026 ModicaAI
+    <span class="footer-sep">·</span>
+    <span id="sitemail"></span>
+  </div>
+  <div class="footer-right">
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" class="footer-fb" title="Seguici su Facebook">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Facebook
+    </a>
+    <!-- Contatti Aziende -->
+    <button class="footer-contact-btn" onclick="apriContatti()">
+      🤝 Collabora con noi
+    </button>
+    <!-- Admin link nascosto (triplo click sul copyright) -->
+    <span id="adminTrigger" onclick="adminClick()" style="cursor:default;user-select:none;opacity:0;font-size:8px;">·</span>
+  </div>
 </div>
+
+<!-- Modal Contatti Aziende -->
+<div class="modal-overlay" id="modalContatti" onclick="chiudiContatti(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">
+        🤝 Collabora con ModicaAI
+        <span>per aziende e attività locali</span>
+      </div>
+      <button class="modal-close" onclick="chiudiContatti(null)">✕</button>
+    </div>
+    <div class="modal-body" id="modalContattiBody">
+      <p class="modal-sub">Vuoi che la tua attività venga suggerita dall'AI agli utenti di ModicaAI? Scrivici, ti risponderemo entro 24 ore.</p>
+      <form id="formContatti" onsubmit="inviaContatti(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" name="nome" placeholder="Mario Rossi" required>
+          </div>
+          <div class="form-group">
+            <label>Azienda / Attività</label>
+            <input type="text" name="azienda" placeholder="Es. Ristorante XY" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="mario@esempio.it" required>
+        </div>
+        <div class="form-group">
+          <label>Telefono (opzionale)</label>
+          <input type="tel" name="telefono" placeholder="Es. 0932 123456">
+        </div>
+        <div class="form-group">
+          <label>Messaggio</label>
+          <textarea name="messaggio" placeholder="Descrivi brevemente la tua attività e come vorresti collaborare..." required></textarea>
+        </div>
+        <button type="submit" class="btn-form-submit" id="btnFormSubmit">Invia richiesta</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Pannello Admin Upload Farmacia -->
+<div class="admin-overlay" id="adminOverlay" onclick="chiudiAdmin(event)">
+  <div class="admin-box">
+    <div class="admin-header">
+      <div class="admin-title">🔐 Admin — Turni Farmacia</div>
+      <button class="admin-close" onclick="chiudiAdmin(null)">✕</button>
+    </div>
+    <div class="admin-body">
+      <div class="admin-status" id="adminStatus">Caricamento stato...</div>
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('pdfInput').click()"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <div class="upload-icon">📄</div>
+        <p>Clicca o trascina il PDF qui</p>
+        <small>PDF turni farmacia mensile del Comune di Modica</small>
+        <input type="file" id="pdfInput" accept=".pdf" onchange="pdfSelezionato(this)">
+      </div>
+      <div class="upload-filename" id="uploadFilename"></div>
+      <div class="admin-pwd">
+        <input type="password" id="adminPwd" placeholder="Password admin" autocomplete="off">
+      </div>
+      <button class="btn-admin-upload" id="btnAdminUpload" onclick="caricaPdf()" disabled>
+        ⬆️ Carica PDF
+      </button>
+      <div class="admin-msg" id="adminMsg"></div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 const API_URL = "https://modicaai-api.onrender.com";
@@ -2166,7 +2413,179 @@ document.addEventListener('DOMContentLoaded', () => {
     const u = 'infomodicaai'; const d = 'gmail.com';
     m.innerHTML = `<a href="mailto:${u}@${d}" style="color:var(--gold);text-decoration:none">${u}@${d}</a>`;
   }
+
+  // Carica stato farmacia PDF
+  aggiornaStatoFarmacia();
 });
+
+// ── MODAL CONTATTI AZIENDE ─────────────────────────────────────────
+function apriContatti() {
+  document.getElementById('modalContatti').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function chiudiContatti(event) {
+  if (event && event.target !== document.getElementById('modalContatti')) return;
+  document.getElementById('modalContatti').classList.remove('open');
+  document.body.style.overflow = '';
+  // Reset form
+  const body = document.getElementById('modalContattiBody');
+  if (body.querySelector('.form-success')) {
+    body.innerHTML = `<p class="modal-sub">Vuoi che la tua attività venga suggerita dall'AI agli utenti di ModicaAI? Scrivici, ti risponderemo entro 24 ore.</p>
+      <form id="formContatti" onsubmit="inviaContatti(event)">
+        <div class="form-row">
+          <div class="form-group"><label>Nome</label><input type="text" name="nome" placeholder="Mario Rossi" required></div>
+          <div class="form-group"><label>Azienda / Attività</label><input type="text" name="azienda" placeholder="Es. Ristorante XY" required></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="mario@esempio.it" required></div>
+        <div class="form-group"><label>Telefono (opzionale)</label><input type="tel" name="telefono" placeholder="Es. 0932 123456"></div>
+        <div class="form-group"><label>Messaggio</label><textarea name="messaggio" placeholder="Descrivi brevemente la tua attività e come vorresti collaborare..." required></textarea></div>
+        <button type="submit" class="btn-form-submit" id="btnFormSubmit">Invia richiesta</button>
+      </form>`;
+  }
+}
+
+async function inviaContatti(event) {
+  event.preventDefault();
+  const form = event.target;
+  const btn  = document.getElementById('btnFormSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Invio in corso...';
+
+  const data = new FormData(form);
+  data.append('_subject', '🤝 Nuova richiesta collaborazione ModicaAI');
+  data.append('_replyto', data.get('email'));
+  data.append('_template', 'table');
+
+  try {
+    const res = await fetch('https://formspree.io/f/modicaai', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      document.getElementById('modalContattiBody').innerHTML = `
+        <div class="form-success">
+          <div class="success-icon">✅</div>
+          <p><strong>Messaggio inviato!</strong><br>Ti risponderemo a <strong>${data.get('email')}</strong> entro 24 ore.<br><br>Grazie per l'interesse in ModicaAI!</p>
+        </div>`;
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Invia richiesta';
+      alert('Errore nell\'invio. Scrivi direttamente a infomodicaai@gmail.com');
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Invia richiesta';
+    alert('Errore di rete. Scrivi direttamente a infomodicaai@gmail.com');
+  }
+}
+
+// ── ADMIN UPLOAD FARMACIA ──────────────────────────────────────────
+let _adminClickCount = 0;
+let _adminClickTimer = null;
+let _pdfFile = null;
+
+function adminClick() {
+  _adminClickCount++;
+  clearTimeout(_adminClickTimer);
+  _adminClickTimer = setTimeout(() => { _adminClickCount = 0; }, 800);
+  if (_adminClickCount >= 5) {
+    _adminClickCount = 0;
+    apriAdmin();
+  }
+}
+
+function apriAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  aggiornaStatoFarmacia();
+}
+function chiudiAdmin(event) {
+  if (event && event.target !== document.getElementById('adminOverlay')) return;
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  _pdfFile = null;
+  document.getElementById('uploadFilename').style.display = 'none';
+  document.getElementById('btnAdminUpload').disabled = true;
+  document.getElementById('adminMsg').textContent = '';
+  document.getElementById('adminMsg').className = 'admin-msg';
+}
+
+function pdfSelezionato(input) {
+  if (input.files && input.files[0]) {
+    _pdfFile = input.files[0];
+    const fn = document.getElementById('uploadFilename');
+    fn.textContent = '📄 ' + _pdfFile.name;
+    fn.style.display = 'block';
+    document.getElementById('btnAdminUpload').disabled = false;
+    document.getElementById('adminMsg').textContent = '';
+  }
+}
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('uploadArea').classList.remove('drag');
+  const file = event.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') {
+    _pdfFile = file;
+    const fn = document.getElementById('uploadFilename');
+    fn.textContent = '📄 ' + file.name;
+    fn.style.display = 'block';
+    document.getElementById('btnAdminUpload').disabled = false;
+  }
+}
+
+async function caricaPdf() {
+  if (!_pdfFile) return;
+  const pwd = document.getElementById('adminPwd').value.trim();
+  if (!pwd) { document.getElementById('adminMsg').textContent = 'Inserisci la password'; document.getElementById('adminMsg').className = 'admin-msg err'; return; }
+
+  const btn = document.getElementById('btnAdminUpload');
+  btn.disabled = true; btn.textContent = '⏳ Caricamento...';
+  document.getElementById('adminMsg').textContent = '';
+
+  const fd = new FormData();
+  fd.append('pdf', _pdfFile);
+  fd.append('password', pwd);
+
+  try {
+    const res = await fetch(API_URL + '/farmacia-upload', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      const msg = document.getElementById('adminMsg');
+      msg.className = 'admin-msg ok';
+      msg.textContent = `✅ PDF caricato! Mese ${data.mese}/${data.anno} — ${data.turni_pomeridiani} giorni pomeridiani, ${data.turni_festivi} domeniche festive.`;
+      btn.textContent = '✅ Caricato';
+      aggiornaStatoFarmacia();
+    } else {
+      const msg = document.getElementById('adminMsg');
+      msg.className = 'admin-msg err';
+      msg.textContent = '❌ ' + (data.error || 'Errore sconosciuto');
+      btn.disabled = false; btn.textContent = '⬆️ Carica PDF';
+    }
+  } catch(e) {
+    const msg = document.getElementById('adminMsg');
+    msg.className = 'admin-msg err';
+    msg.textContent = '❌ Errore di rete: ' + e.message;
+    btn.disabled = false; btn.textContent = '⬆️ Carica PDF';
+  }
+}
+
+async function aggiornaStatoFarmacia() {
+  const el = document.getElementById('adminStatus');
+  if (!el) return;
+  try {
+    const res = await fetch(API_URL + '/farmacia-status');
+    const data = await res.json();
+    if (data.caricato) {
+      const mesi = ['','Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+      el.innerHTML = `<strong>PDF attivo:</strong> ${mesi[data.mese] || data.mese} ${data.anno} &nbsp;·&nbsp; ${data.turni_pomeridiani} giorni &nbsp;·&nbsp; ${data.turni_festivi} domeniche<br><small style="color:var(--ink-soft)">${data.filename || ''} — caricato ${data.data_caricamento ? new Date(data.data_caricamento).toLocaleString('it-IT') : ''}</small>`;
+    } else {
+      el.innerHTML = '<span style="color:var(--ink-soft)">Nessun PDF caricato — in uso scraping radiortm.it</span>';
+    }
+  } catch(e) {
+    if (el) el.innerHTML = '<span style="color:var(--ink-soft)">Stato non disponibile</span>';
+  }
+}
 </script>
 
 <!-- SEO Content — visibile ai crawler, nascosto nell'UI -->
