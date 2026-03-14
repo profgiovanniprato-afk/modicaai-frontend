@@ -319,26 +319,24 @@
 
   /* ── Chip suggerimenti — sopra l'input ── */
   .chips-grid {
-    display: flex; flex-wrap: wrap; gap: 7px;
+    display: flex; flex-wrap: wrap; gap: 8px;
     justify-content: center;
-    max-width: 660px; width: 100%;
-    margin: 0 auto 10px;
-    animation: fadeUp 0.4s ease both;
+    max-width: 600px; width: 100%;
+    margin: 0 auto;
   }
   .chip {
-    padding: 6px 13px; border-radius: 20px;
+    padding: 8px 18px; border-radius: 22px;
     border: 1px solid var(--border);
     background: var(--white); color: var(--ink-mid);
-    font-size: 12px; font-weight: 400;
+    font-size: 13px; font-weight: 400;
     cursor: pointer; transition: all 0.18s;
     font-family: 'Outfit', sans-serif;
-    white-space: nowrap;
-    letter-spacing: 0.1px;
+    white-space: nowrap; letter-spacing: 0.1px;
   }
   .chip:hover { border-color: var(--sky); color: var(--sky); background: rgba(26,58,92,0.04); }
   body.dark .chip { background: var(--white); border-color: var(--border); color: var(--ink-mid); }
   body.dark .chip:hover { border-color: var(--sky); color: var(--sky); background: rgba(74,143,191,0.08); }
-  @media(max-width:480px) { .chips-grid { gap:5px; } .chip { font-size:11px; padding:5px 10px; } }
+  @media(max-width:480px) { .chips-grid { gap:6px; } .chip { font-size:11px; padding:6px 12px; } }
 
   /* ── Griglia immagini ricerca ── */
   .img-search-grid {
@@ -414,8 +412,22 @@
 
   /* Main */
   .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:176px 20px 200px; }
-  /* Quando non c'è chat: hero + chips centrati verticalmente */
-  .main.empty { justify-content: center; padding-top: 120px; padding-bottom: 180px; }
+  .main.empty { justify-content: center; padding-top: 110px; padding-bottom: 40px; }
+
+  /* Input bar fissa — nascosta nella home, visibile durante la chat */
+  .main.empty ~ .input-bar { display: none !important; }
+  .main:not(.empty) ~ .input-bar { display: flex; }
+
+  /* Hero input area — visibile solo nella home */
+  .hero-input-area {
+    width: 100%; max-width: 660px;
+    margin: 24px auto 0;
+    display: flex; flex-direction: column; align-items: center;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+  .hero-input-area .input-wrap {
+    margin-bottom: 14px;
+  }
 
   /* Hero — stile Claude/ChatGPT: minimalista, centrato */
   .hero.hidden { display:none; }
@@ -785,9 +797,12 @@
     .top-stripe   { top: 74px; }
     .header       { top: 77px; height: 50px; padding: 0 12px; }
 
-    /* Main — padding adattato + safe-area per iOS */
+    /* Main — padding adattato */
     .main         { padding: 155px 10px 200px; }
-    .main.empty   { padding-top: 95px; padding-bottom: 200px; }
+    .main.empty   { padding-top: 90px; padding-bottom: 30px; }
+
+    /* Hero-input-area su mobile */
+    .hero-input-area { margin: 16px auto 0; }
 
     /* Hero — compatto */
     .hero         { padding: 14px 10px 4px; }
@@ -1010,6 +1025,32 @@
     </div>
     <div class="hero-divider"></div>
     <div class="hero-sub">Il tuo assistente locale per Modica</div>
+
+    <!-- Input centrata nella hero -->
+    <div class="hero-input-area" id="heroInputArea">
+      <div class="input-wrap">
+        <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.txt"
+               style="display:none" onchange="gestisciFile(this)">
+        <button class="btn-upload" id="btnUpload" onclick="document.getElementById('fileInput').click()"
+                title="Carica un file (PDF, Word, TXT)">📎</button>
+        <input type="text" id="searchInput" placeholder="Chiedimi qualcosa..." autocomplete="off" oninput="syncInputs(this)">
+        <button class="btn-enhance" id="btnEnhance" onclick="enhancePrompt()" title="✨ Ottimizza prompt con AI">✨</button>
+        <button class="btn-send" onclick="ask(document.getElementById('searchInput').value)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Chips 4+2 sotto l'input -->
+      <div class="chips-grid" id="chipsGrid">
+        <button class="chip" onclick="askChip(this,'Dove conviene fare benzina oggi?')">⛽ Benzina più economica</button>
+        <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Ultime notizie</button>
+        <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo oggi</button>
+        <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
+        <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
+        <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico Live</button>
+      </div>
+    </div>
   </div>
 
   <div class="chat-area" id="chatArea"></div>
@@ -1030,7 +1071,7 @@
 </div>
 
 <div class="input-bar">
-  <!-- Preview file caricato — visibile quando c'è un file attivo -->
+  <!-- Preview file caricato -->
   <div class="file-preview" id="filePreview">
     <div class="file-preview-icon" id="filePreviewIcon">📄</div>
     <div class="file-preview-info">
@@ -1039,30 +1080,15 @@
     </div>
     <button class="file-preview-remove" onclick="rimuoviFile()" title="Rimuovi file">✕</button>
   </div>
-
-  <!-- Chip suggerimenti — sopra l'input, spariscono con la chat -->
-  <div class="chips-grid" id="chipsGrid">
-    <button class="chip" onclick="askChip(this,'Dove conviene fare benzina oggi?')">⛽ Benzina</button>
-    <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Notizie</button>
-    <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo</button>
-    <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia</button>
-    <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Immagine</button>
-    <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico</button>
-  </div>
+  <!-- Input nella chat (identica a quella nella hero) -->
   <div class="input-wrap">
-    <!-- Input file nascosto -->
-    <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.txt"
-           style="display:none" onchange="gestisciFile(this)">
-    <!-- Pulsante upload -->
-    <button class="btn-upload" id="btnUpload" onclick="document.getElementById('fileInput').click()"
-            title="Carica un file (PDF, Word, TXT)">
-      📎
-    </button>
-    <input type="text" id="searchInput" placeholder="Chiedimi qualcosa..." autocomplete="off">
-    <button class="btn-enhance" id="btnEnhance" onclick="enhancePrompt()" title="✨ Ottimizza prompt con AI">
-      ✨
-    </button>
-    <button class="btn-send" onclick="ask(document.getElementById('searchInput').value)">
+    <button class="btn-upload" id="btnUploadChat" onclick="document.getElementById('fileInput').click()"
+            title="Carica un file (PDF, Word, TXT)">📎</button>
+    <input type="text" id="searchInputChat" placeholder="Chiedimi qualcosa..." autocomplete="off"
+           oninput="syncInputs(this)"
+           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();ask(this.value);}">
+    <button class="btn-enhance" id="btnEnhanceChat" onclick="enhancePrompt()" title="✨ Ottimizza prompt con AI">✨</button>
+    <button class="btn-send" onclick="ask(document.getElementById('searchInputChat').value)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
       </svg>
@@ -1168,6 +1194,23 @@
 <script>
 const API_URL = "https://modicaai-api.onrender.com";
 let lang = 'it';
+
+// ── Helper: restituisce l'input attivo (hero o chat) ─────────────
+function getActiveInput() {
+  const main = document.getElementById('main');
+  if (main && main.classList.contains('empty')) {
+    return document.getElementById('searchInput');
+  }
+  return document.getElementById('searchInputChat');
+}
+
+// Sincronizza i due input quando si scrive
+function syncInputs(src) {
+  const other = src.id === 'searchInput'
+    ? document.getElementById('searchInputChat')
+    : document.getElementById('searchInput');
+  if (other) other.value = src.value;
+}
 const TTS_LANG = { it:'it-IT', en:'en-US', de:'de-DE', fr:'fr-FR', es:'es-ES' };
 
 // ── Dizionario UI multilingua ─────────────────────────────────────
@@ -1343,9 +1386,11 @@ document.addEventListener('click', e => {
 });
 
 function applicaUI() {
-  // Placeholder input
+  // Placeholder input — entrambi
   const inp = document.getElementById('searchInput');
   if (inp) inp.placeholder = t('placeholder');
+  const inpChat = document.getElementById('searchInputChat');
+  if (inpChat) inpChat.placeholder = t('placeholder');
   // Hero subtitle
   const sub = document.querySelector('.hero-sub');
   if (sub) sub.textContent = t('heroSub');
@@ -1423,7 +1468,6 @@ function nuovaChat() {
   const btnUpload = document.getElementById('btnUpload');
   if (btnUpload) btnUpload.classList.remove('active');
   if (speechSynth) speechSynth.cancel();
-  // Rigenera session_id per nuova conversazione
   fetch(API_URL + '/session/new').then(r => r.json()).then(d => { SESSION_ID = d.session_id; }).catch(() => {});
   document.getElementById('chatArea').innerHTML = '';
   document.getElementById('hero').classList.remove('hidden');
@@ -1431,11 +1475,16 @@ function nuovaChat() {
   if (heroWidgets) heroWidgets.classList.remove('hidden');
   const main = document.getElementById('main');
   if (main) main.classList.add('empty');
+  // Mostra hero-input-area
+  const hia = document.getElementById('heroInputArea');
+  if (hia) hia.style.display = '';
   applicaUI();
   const grid = document.getElementById('chipsGrid');
-  if (grid) { grid.style.display = 'flex'; }
-  document.getElementById('searchInput').value = '';
-  document.getElementById('searchInput').placeholder = t('placeholder');
+  if (grid) grid.style.display = 'flex';
+  const si = document.getElementById('searchInput');
+  const sc = document.getElementById('searchInputChat');
+  if (si) { si.value = ''; si.placeholder = t('placeholder'); }
+  if (sc) { sc.value = ''; sc.placeholder = t('placeholder'); }
 }
 
 function formatText(t) {
@@ -1629,7 +1678,11 @@ const ATTESA_MSGS = {
 async function ask(q) {
   q = q.trim();
   if (!q) return;
-  document.getElementById('searchInput').value = '';
+  // Svuota entrambi gli input
+  const si = document.getElementById('searchInput');
+  const sc = document.getElementById('searchInputChat');
+  if (si) si.value = '';
+  if (sc) sc.value = '';
 
   if (isRichiestaImmagine(q)) { generaImmagine(q); return; }
 
@@ -1828,8 +1881,8 @@ async function caricaCarburantiFuel() {
 
 // ── Ottimizza Prompt ─────────────────────────────────────────────
 async function enhancePrompt() {
-  const input = document.getElementById('searchInput');
-  const btn = document.getElementById('btnEnhance');
+  const input = getActiveInput();
+  const btn = document.getElementById('btnEnhance') || document.getElementById('btnEnhanceChat');
   const testo = input.value.trim();
 
   if (!testo) {
@@ -1839,8 +1892,7 @@ async function enhancePrompt() {
     return;
   }
 
-  btn.classList.add('loading');
-  btn.textContent = '⏳';
+  if (btn) { btn.classList.add('loading'); btn.textContent = '⏳'; }
 
   try {
     const res = await fetch(API_URL + '/ottimizza-prompt', {
@@ -1863,14 +1915,12 @@ async function enhancePrompt() {
         }
       }, 18);
     } else {
-      // In caso di risposta anomala lascia il testo originale
       input.value = testo;
     }
   } catch (e) {
-    input.value = testo; // Ripristina testo originale in caso di errore
+    input.value = testo;
   } finally {
-    btn.classList.remove('loading');
-    btn.textContent = '✨';
+    if (btn) { btn.classList.remove('loading'); btn.textContent = '✨'; }
   }
 }
 
@@ -2176,8 +2226,8 @@ async function gestisciFile(input) {
 
     // Messaggio in chat con riassunto automatico
     const domandaRiassunto = `Ho caricato il file "${file.name}". Fanne un riassunto conciso.`;
-    const inputEl = document.getElementById('searchInput');
-    inputEl.value = '';
+    const inputEl = getActiveInput();
+    if (inputEl) inputEl.value = '';
     await askConFile(domandaRiassunto);
 
   } catch(e) {
@@ -2211,7 +2261,9 @@ async function askConFile(domanda) {
   if (!domanda) return;
 
   const inputEl = document.getElementById('searchInput');
+  const inputElChat = document.getElementById('searchInputChat');
   if (inputEl) inputEl.value = '';
+  if (inputElChat) inputElChat.value = '';
 
   addMessage('user', domanda, '');
   showTyping(t('wait'));
@@ -2394,13 +2446,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dark mode — gestita dall'IIFE sopra (chiave 'modicaai-dark'), nessuna duplicazione
 
-  // Enter per inviare
+  // Enter per inviare — su entrambi gli input
   const input = document.getElementById('searchInput');
   if (input) {
     input.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(input.value); }
     });
   }
+  // searchInputChat ha già onkeydown inline nell'HTML
 
   // Sveglia il backend Render subito (evita cold start al primo messaggio)
   fetch(API_URL + '/health', { method: 'GET' }).catch(() => {});
