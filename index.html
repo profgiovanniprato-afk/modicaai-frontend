@@ -905,8 +905,6 @@
   /* Fine media queries mobile */
 
 </style>
-<!-- jsPDF — generazione PDF lato client, zero server -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -1412,7 +1410,7 @@ function applicaUI() {
     meteo: t('waitMeteo'), carburanti: t('waitCarb'), notizie: t('waitNews'),
     ristoranti: t('waitRist'), farmacia: t('waitFarm'), hotel: t('waitHotel'),
     bar: t('waitBar'), turismo: t('waitTur'), storia: t('waitStor'),
-    eventi: t('waitEv'), pdf: '📄 Creo il documento...', generale: t('wait'),
+    eventi: t('waitEv'), generale: t('wait'),
   };
 }
 
@@ -1434,121 +1432,6 @@ const copyIcon  = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" s
 const voiceIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
 const shareIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
 const stopIcon  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>`;
-const pdfIcon   = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
-
-// ── Genera e scarica PDF dalla risposta del modello ────────────────
-function scaricaPDF(testo, titoloProposto) {
-  if (!window.jspdf || !window.jspdf.jsPDF) {
-    alert('Libreria PDF non ancora caricata. Riprova tra qualche secondo.');
-    return;
-  }
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
-  const margineX = 20;
-  const margineY = 20;
-  const largMax  = 170; // larghezza utile A4 con margini
-  let curY = margineY;
-
-  // ── Header con brand ──
-  doc.setFillColor(26, 58, 92);   // navy #1A3A5C
-  doc.rect(0, 0, 210, 18, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text('ModicaAI — modicaai.it', margineX, 12);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  const dataOra = new Date().toLocaleDateString('it-IT', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
-  doc.text(dataOra, 210 - margineX, 12, { align: 'right' });
-
-  curY = 28;
-
-  // ── Parsing del testo markdown-like ──
-  const righe = testo.split('
-');
-  for (let i = 0; i < righe.length; i++) {
-    const riga = righe[i];
-
-    // Pagina nuova se necessario
-    if (curY > 270) {
-      doc.addPage();
-      curY = margineY;
-    }
-
-    if (riga.startsWith('# ')) {
-      // Titolo principale H1
-      const titolo = riga.slice(2).trim();
-      doc.setFontSize(18);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(26, 58, 92);
-      const splitTitle = doc.splitTextToSize(titolo, largMax);
-      doc.text(splitTitle, margineX, curY);
-      curY += splitTitle.length * 9 + 4;
-      // Linea sotto il titolo
-      doc.setDrawColor(184, 134, 11);  // oro #B8860B
-      doc.setLineWidth(0.5);
-      doc.line(margineX, curY, 210 - margineX, curY);
-      curY += 6;
-
-    } else if (riga.startsWith('## ')) {
-      // Titolo sezione H2
-      const titolo = riga.slice(3).trim();
-      doc.setFontSize(13);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(26, 58, 92);
-      const splitH2 = doc.splitTextToSize(titolo, largMax);
-      doc.text(splitH2, margineX, curY);
-      curY += splitH2.length * 7 + 3;
-
-    } else if (riga.startsWith('• ') || riga.startsWith('- ') || riga.startsWith('* ')) {
-      // Elemento lista
-      const voce = riga.slice(2).trim();
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(51, 51, 51);
-      doc.text('•', margineX + 2, curY);
-      const splitVoce = doc.splitTextToSize(voce, largMax - 8);
-      doc.text(splitVoce, margineX + 8, curY);
-      curY += splitVoce.length * 5.5 + 1;
-
-    } else if (riga.trim() === '') {
-      // Riga vuota = spazio
-      curY += 3;
-
-    } else {
-      // Testo normale — rimuovi grassetti markdown **...**
-      const pulito = riga.replace(/\*\*(.+?)\*\*/g, '$1').trim();
-      if (!pulito) { curY += 2; continue; }
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(51, 51, 51);
-      const splitTesto = doc.splitTextToSize(pulito, largMax);
-      doc.text(splitTesto, margineX, curY);
-      curY += splitTesto.length * 5.5 + 1;
-    }
-  }
-
-  // ── Footer su ogni pagina ──
-  const totalPagine = doc.getNumberOfPages();
-  for (let p = 1; p <= totalPagine; p++) {
-    doc.setPage(p);
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Generato da ModicaAI — modicaai.it', margineX, 292);
-    doc.text(`Pagina ${p} di ${totalPagine}`, 210 - margineX, 292, { align: 'right' });
-  }
-
-  // ── Nome file dal titolo H1 o proposto ──
-  let nomeFile = titoloProposto || 'ModicaAI';
-  const h1Match = testo.match(/^# (.+)/m);
-  if (h1Match) nomeFile = h1Match[1].trim();
-  nomeFile = nomeFile.replace(/[^a-zA-Z0-9àèéìòùÀÈÉÌÒÙ\s_-]/g, '').replace(/\s+/g, '_');
-  nomeFile = 'ModicaAI_' + nomeFile.slice(0, 40) + '.pdf';
-
-  doc.save(nomeFile);
-}
 
 // ── Init sessione server-side ─────────────────────────────────────
 (async () => {
@@ -1811,7 +1694,7 @@ async function ask(q) {
   showTyping();
   cronologia.push({ role: 'user', content: q });
 
-  let fullText = '', msgDiv = null, typingRemoved = false, metaEvt = null;
+  let fullText = '', msgDiv = null, typingRemoved = false;
 
   try {
     const res = await fetch(API_URL + '/ask-stream', {
@@ -1833,7 +1716,6 @@ async function ask(q) {
         try {
           const evt = JSON.parse(line.slice(6));
           if (evt.type === 'meta') {
-            metaEvt = evt;  // salva per uso nel blocco 'done'
             const lbl = document.querySelector('.typing-label');
             const _am = window.ATTESA_MSGS_ACTIVE || ATTESA_MSGS;
             if (lbl) lbl.textContent = _am[evt.intento] || _am.generale;
@@ -1857,29 +1739,17 @@ async function ask(q) {
               msgDiv.innerHTML = formatText(fullText);
               const ft = document.getElementById('ft-' + msgDiv.id);
               if (ft) {
-                const c2='c2'+Date.now(), v2='v2'+Date.now(), s2='s2'+Date.now(), p2='p2'+Date.now();
-                const isPdf = metaEvt && metaEvt.is_pdf;
+                const c2='c2'+Date.now(), v2='v2'+Date.now(), s2='s2'+Date.now();
                 ft.innerHTML = `<span class="source-badge">ModicaAI</span>
                   <button class="btn-copy-msg" id="${c2}" onclick="copiaMsg(this)">${copyIcon} Copia</button>
                   ${speechSynth?`<button class="btn-copy-msg btn-voice" id="${v2}" onclick="leggiAdAlta(this)">${voiceIcon} Ascolta</button>`:''}
-                  ${(navigator.share||navigator.clipboard)?`<button class="btn-copy-msg btn-share" id="${s2}" onclick="condividiRisposta(this)">${shareIcon} Condividi</button>`:''}
-                  ${isPdf?`<button class="btn-copy-msg btn-pdf" id="${p2}" onclick="scaricaPDF(this.dataset.t,'')" style="color:#B8860B;border-color:#B8860B">${pdfIcon} Scarica PDF</button>`:''}`;
+                  ${(navigator.share||navigator.clipboard)?`<button class="btn-copy-msg btn-share" id="${s2}" onclick="condividiRisposta(this)">${shareIcon} Condividi</button>`:''}`;
                 ft.style.display = '';
                 document.getElementById(c2).dataset.t = fullText;
                 if (speechSynth) document.getElementById(v2).dataset.t = fullText;
                 if (navigator.share || navigator.clipboard) {
                   const shareEl = document.getElementById(s2);
                   if (shareEl) shareEl.dataset.t = fullText;
-                }
-                if (isPdf) {
-                  const pdfEl = document.getElementById(p2);
-                  if (pdfEl) pdfEl.dataset.t = fullText;
-                  // Notifica visiva che il PDF è pronto
-                  setTimeout(() => {
-                    const badge = ft.querySelector('.source-badge');
-                    if (badge) badge.textContent = '📄 PDF pronto — clicca Scarica';
-                    setTimeout(() => { if (badge) badge.textContent = 'ModicaAI'; }, 4000);
-                  }, 300);
                 }
                 if (voiceEnabled && fullText) setTimeout(()=>leggiTesto(fullText),200);
               }
@@ -2405,7 +2275,7 @@ async function askConFile(domanda) {
 
   const domandaArricchita = domanda + contestoFile;
 
-  let fullText = '', msgDiv = null, typingRemoved = false, metaEvt = null;
+  let fullText = '', msgDiv = null, typingRemoved = false;
 
   try {
     const res = await fetch(API_URL + '/ask-stream', {
