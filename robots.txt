@@ -1,11 +1,27 @@
+# ModicaAI — robots.txt
+# https://www.modicaai.it
+
+# ── Crawler generali ──────────────────────────────────────────────
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://www.modicaai.it/sitemap.xml
+# ── Googlebot ─────────────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
 
-# Blocca file tecnici inutili per i crawler
-Disallow: /sw.js
-Disallow: /manifest.json
-Disallow: /icon-192.png
-Disallow: /icon-512.png
+# ── Bingbot ───────────────────────────────────────────────────────
+User-agent: Bingbot
+Allow: /
+
+# ── Bot AI — permettiamo l'indicizzazione ─────────────────────────
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# ── Sitemap ───────────────────────────────────────────────────────
+Sitemap: https://www.modicaai.it/sitemap.xml
