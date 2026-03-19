@@ -7,9 +7,18 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 
+<!-- Preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://modicaai-api.onrender.com">
+
+<!-- Hreflang -->
+<link rel="alternate" hreflang="it" href="https://www.modicaai.it/" />
+<link rel="alternate" hreflang="x-default" href="https://www.modicaai.it/" />
+
 <!-- SEO Primary -->
 <title>ModicaAI — Assistente AI Gratuito per Modica, Sicilia</title>
-<meta name="description" content="ModicaAI è un'AI gratuita, senza registrazione, disponibile 24/7. Prezzi carburanti live, notizie locali, meteo, farmacie di turno, traffico in tempo reale. Usala anche come assistente AI generale — gratis, subito, dal tuo smartphone.">
+<meta name="description" content="ModicaAI: assistente AI gratuito per Modica, Sicilia. Meteo, farmacie di turno, prezzi benzina, notizie e traffico in tempo reale. Senza registrazione, disponibile 24/7.">
 
 <!-- Open Graph / WhatsApp / Telegram — unico blocco canonico -->
 <meta property="og:type" content="website">
@@ -17,6 +26,9 @@
 <meta property="og:title" content="ModicaAI — Assistente AI Gratuito per Modica, Sicilia">
 <meta property="og:description" content="AI gratuita senza registrazione. Prezzi carburanti, notizie, meteo, farmacie di turno, traffico live. Usala per tutto — gratis, dal tuo smartphone.">
 <meta property="og:image" content="https://www.modicaai.it/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="ModicaAI — Assistente AI per Modica, Sicilia">
 <meta property="og:locale" content="it_IT">
 <meta property="og:site_name" content="ModicaAI">
 
@@ -31,20 +43,22 @@
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
-    {"@type":"WebApplication","name":"ModicaAI","url":"https://www.modicaai.it","description":"Assistente AI per Modica, Sicilia. Ristoranti, meteo, farmacie, prezzi carburanti, news locali e turismo.","applicationCategory":"TravelApplication","operatingSystem":"Web, Android, iOS","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":["it","en"]},
-    {"@type":"LocalBusiness","name":"ModicaAI","url":"https://www.modicaai.it","description":"Assistente AI per la città di Modica. Scopri cosa fare a Modica, ristoranti, farmacie, meteo e news locali.","areaServed":{"@type":"City","name":"Modica","addressRegion":"Ragusa","addressCountry":"IT"},"geo":{"@type":"GeoCoordinates","latitude":"36.8604","longitude":"14.7742"},"contactPoint":{"@type":"ContactPoint","email":"infomodicaai@gmail.com","contactType":"customer support"}},
-    {"@type":"FAQPage","mainEntity":[
-      {"@type":"Question","name":"Cosa fare a Modica?","acceptedAnswer":{"@type":"Answer","text":"Modica offre il Duomo di San Giorgio, il cioccolato IGP, il centro barocco UNESCO, musei, grotte e ottima gastronomia. ModicaAI ti guida tra ristoranti, eventi e attrazioni locali."}},
-      {"@type":"Question","name":"Cos'è ModicaAI?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI è l'assistente AI gratuito dedicato a Modica, Sicilia. Risponde su ristoranti, farmacie di turno, meteo, prezzi carburanti, notizie locali e turismo. Disponibile 24/7 senza registrazione."}},
-      {"@type":"Question","name":"Qual è la farmacia di turno a Modica oggi?","acceptedAnswer":{"@type":"Answer","text":"Chiedi a ModicaAI 'farmacia di turno Modica oggi' per ricevere in tempo reale la farmacia aperta."}},
-      {"@type":"Question","name":"Qual è il meteo a Modica?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI fornisce meteo aggiornato di Modica in tempo reale: temperatura, condizioni e previsioni."}},
-      {"@type":"Question","name":"Dove mangiare a Modica?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI suggerisce i migliori ristoranti di Modica, trattorie tipiche e locali gourmet. Chiedi 'ristoranti Modica' o 'dove mangiare cioccolato di Modica'."}}
+    {"@type":"WebApplication","@id":"https://www.modicaai.it/#app","name":"ModicaAI","alternateName":"Modica AI","url":"https://www.modicaai.it","description":"ModicaAI è l'assistente AI gratuito per Modica, Sicilia. Meteo, prezzi carburanti, farmacie di turno, notizie e traffico in tempo reale. Senza registrazione, 24/7.","applicationCategory":"TravelApplication","operatingSystem":"Web, Android, iOS","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR","availability":"https://schema.org/InStock"},"inLanguage":["it","en","de","fr","es"]},
+    {"@type":"LocalBusiness","@id":"https://www.modicaai.it/#business","name":"ModicaAI","url":"https://www.modicaai.it","email":"infomodicaai@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Modica","addressRegion":"RG","postalCode":"97015","addressCountry":"IT"},"geo":{"@type":"GeoCoordinates","latitude":"36.8604","longitude":"14.7742"},"openingHours":"Mo-Su 00:00-24:00","priceRange":"Gratuito","sameAs":["https://www.facebook.com/modicaai"]},
+    {"@type":"WebSite","@id":"https://www.modicaai.it/#website","name":"ModicaAI","url":"https://www.modicaai.it","inLanguage":"it","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.modicaai.it/?q={search_term_string}"},"query-input":"required name=search_term_string"}},
+    {"@type":"FAQPage","@id":"https://www.modicaai.it/#faq","mainEntity":[
+      {"@type":"Question","name":"Cos'è ModicaAI?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI è il primo assistente AI gratuito per Modica, Sicilia. Risponde su farmacie di turno, meteo, prezzi carburanti, notizie e traffico. Disponibile 24/7 senza registrazione."}},
+      {"@type":"Question","name":"ModicaAI è gratuito?","acceptedAnswer":{"@type":"Answer","text":"Sì, ModicaAI è completamente gratuito. Non serve registrarsi né inserire una carta di credito."}},
+      {"@type":"Question","name":"Cosa vedere a Modica?","acceptedAnswer":{"@type":"Answer","text":"Modica è Patrimonio UNESCO dal 2002. Da visitare: il Duomo di San Giorgio, il Duomo di San Pietro, il Castello dei Conti, il Museo del Cioccolato e Cava Ispica."}},
+      {"@type":"Question","name":"Come trovare la farmacia di turno a Modica?","acceptedAnswer":{"@type":"Answer","text":"Chiedi a ModicaAI 'farmacia di turno Modica oggi' per ricevere nome, indirizzo e orario della farmacia aperta in tempo reale."}},
+      {"@type":"Question","name":"Qual è il meteo a Modica?","acceptedAnswer":{"@type":"Answer","text":"ModicaAI fornisce meteo in tempo reale per Modica: temperatura, cielo, vento e previsioni 3 giorni."}},
+      {"@type":"Question","name":"Il cioccolato di Modica è famoso?","acceptedAnswer":{"@type":"Answer","text":"Il cioccolato di Modica IGP è lavorato a freddo secondo una ricetta azteca del XVI secolo. Granuloso, senza grassi aggiunti, disponibile in gusti come cannella, peperoncino e agrumi."}}
     ]}
   ]}
   </script>
-<meta name="keywords" content="AI gratuita italiana, assistente AI gratuito, chatbot gratuito senza registrazione, intelligenza artificiale gratis, Modica AI, assistente virtuale Modica, ChatGPT gratis, prezzi benzina Modica, farmacia di turno Modica, meteo Modica, notizie Modica, cosa fare a Modica, ristoranti Modica, turismo Modica, Modica Sicilia, cioccolato di Modica, ModicaAI">
+
 <meta name="author" content="ModicaAI">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 
 <!-- Geo tag (segnala a Google la posizione geografica) -->
 <meta name="geo.region" content="IT-RG">
@@ -52,35 +66,6 @@
 <meta name="geo.position" content="36.8604;14.7742">
 <meta name="ICBM" content="36.8604, 14.7742">
 
-<!-- Schema.org JSON-LD (dati strutturati per Google) -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "ModicaAI",
-  "url": "https://www.modicaai.it",
-  "description": "Assistente virtuale AI per Modica, Sicilia. Informazioni su ristoranti, meteo, farmacie di turno, storia e turismo locale.",
-  "applicationCategory": "TravelApplication",
-  "operatingSystem": "Web, Android, iOS",
-  "inLanguage": "it",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "EUR"
-  },
-  "areaServed": {
-    "@type": "City",
-    "name": "Modica",
-    "addressRegion": "Ragusa",
-    "addressCountry": "IT"
-  },
-  "creator": {
-    "@type": "Organization",
-    "name": "ModicaAI",
-    "url": "https://www.modicaai.it"
-  }
-}
-</script>
 
 <meta name="theme-color" content="#1A3A5C">
 
