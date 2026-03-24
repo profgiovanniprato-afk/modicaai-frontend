@@ -922,9 +922,53 @@
     transition: color 0.15s;
   }
   .snb-social a:hover { color: #fff; }
+  /* Dropdown "Guide" nella navbar */
+  .snb-dropdown { position: relative; }
+  .snb-dropdown-btn {
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    padding: 3px 9px; border-radius: 6px;
+    transition: all 0.15s;
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; display: flex; align-items: center; gap: 4px;
+    letter-spacing: 0.3px;
+  }
+  .snb-dropdown-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .snb-dropdown-btn svg { opacity: 0.5; transition: transform 0.2s; }
+  .snb-dropdown:hover .snb-dropdown-btn svg { transform: rotate(180deg); }
+  .snb-dropdown-menu {
+    display: none;
+    position: absolute; top: calc(100% + 6px); left: 0;
+    background: rgba(10,12,16,0.98);
+    border: 1px solid rgba(184,134,11,0.2);
+    border-radius: 10px;
+    padding: 6px;
+    min-width: 170px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    z-index: 600;
+    backdrop-filter: blur(12px);
+  }
+  .snb-dropdown:hover .snb-dropdown-menu { display: block; }
+  .snb-dropdown-menu a {
+    display: block;
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    padding: 7px 12px;
+    border-radius: 6px;
+    transition: all 0.12s;
+    white-space: nowrap;
+  }
+  .snb-dropdown-menu a:hover { background: rgba(184,134,11,0.15); color: #D4A017; }
+  .snb-dropdown-menu .snb-drop-sep {
+    height: 1px; background: rgba(184,134,11,0.12);
+    margin: 4px 8px;
+  }
   @media (max-width: 640px) {
     .site-nav-bar { height: 30px; padding: 0 10px; }
     .snb-link { padding: 2px 6px; font-size: 10px; }
+    .snb-dropdown-btn { padding: 2px 6px; font-size: 10px; }
+    .snb-dropdown-menu { left: auto; right: 0; min-width: 160px; }
   }
 
 </style>
@@ -937,6 +981,23 @@
   <div class="snb-links">
     <a href="/" class="snb-link">Home</a>
     <a href="/mission.html" class="snb-link active">Mission</a>
+    <div class="snb-dropdown">
+      <button class="snb-dropdown-btn">
+        Guide
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="snb-dropdown-menu">
+        <a href="/cioccolato.html">Cioccolato IGP</a>
+        <a href="/cosa-vedere.html">Cosa vedere</a>
+        <a href="/come-arrivare.html">Come arrivare</a>
+        <a href="/gastronomia.html">Gastronomia</a>
+        <div class="snb-drop-sep"></div>
+        <a href="/storia.html">Storia</a>
+        <a href="/dintorni.html">Dintorni</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/guida-pratica.html">Guida pratica</a>
+      </div>
+    </div>
     <a href="/contatti.html" class="snb-link">Contatti</a>
   </div>
   <div class="snb-social">
