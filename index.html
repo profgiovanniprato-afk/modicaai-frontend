@@ -688,7 +688,7 @@
   .bar-widget-main { font-size: 12px; font-weight: 600; color: var(--ink); }
   .bar-widget-sub  { font-size: 10px; color: var(--ink-soft); margin-left: 2px; }
   body.dark .bar-widget { background: rgba(30,35,48,0.85); border-color: var(--border); }
-  .hero-widgets.hidden { display: none; }
+  .hero-widgets.hidden { display: none !important; }
   .input-wrap { width:100%; max-width:660px; display:flex; align-items:center; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:0 6px 0 20px; height:52px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
   .input-wrap:focus-within { border-color:var(--sky); box-shadow:0 4px 20px rgba(26,58,92,0.12); }
   .input-wrap input { flex:1; border:none; outline:none; font-family:'Outfit',sans-serif; font-size:16px; color:var(--ink); background:transparent; }
@@ -872,6 +872,7 @@
     .bar-widget-icon   { font-size: 12px; }
     .bar-widget-main   { font-size: 10px; }
     .bar-widget-sub    { display: none; }
+    #sunWidget         { display: none !important; } /* troppo stretto su mobile — nascosto */
 
     /* Modal traffico */
     .traffic-modal     { border-radius: 16px 16px 0 0; width: 100%; max-width: 100%; margin: 0; align-self: flex-end; }
