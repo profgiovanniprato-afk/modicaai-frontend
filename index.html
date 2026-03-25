@@ -178,6 +178,23 @@
     0%,100% { opacity:1; transform:scale(1); }
     50% { opacity:0.5; transform:scale(1.3); }
   }
+
+  /* ── Sintesi contestuale traffico ── */
+  .traffic-sintesi-bar {
+    padding: 8px 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.2px;
+  }
+  .traffic-sintesi-rosso  { background: rgba(239,68,68,0.08);  color: #b91c1c; }
+  .traffic-sintesi-giallo { background: rgba(251,191,36,0.10); color: #b45309; }
+  .traffic-sintesi-verde  { background: rgba(34,197,94,0.08);  color: #15803d; }
+  .traffic-sintesi-neutra { background: var(--bg);             color: var(--ink-mid); }
+  body.dark .traffic-sintesi-rosso  { background: rgba(239,68,68,0.15);  color: #fca5a5; }
+  body.dark .traffic-sintesi-giallo { background: rgba(251,191,36,0.12); color: #fcd34d; }
+  body.dark .traffic-sintesi-verde  { background: rgba(34,197,94,0.12);  color: #86efac; }
   .traffic-map-hint {
     margin-left: auto; padding: 0 14px;
     font-size: 9px; font-weight: 600;
@@ -2136,17 +2153,29 @@ async function caricaTraffco() {
     } else {
       // Nessun dato — mostra grigio
       aggiornaBarra([
-        { label: 'Modica Alta',  stato: 'sconosciuto' },
-        { label: 'Modica Sorda', stato: 'sconosciuto' },
-        { label: 'Modica Bassa', stato: 'sconosciuto' },
+        { nome: 'Alta',         label: 'Modica Alta',              stato: 'sconosciuto' },
+        { nome: 'Corso',        label: 'Corso Umberto I',           stato: 'sconosciuto' },
+        { nome: 'Medaglie',     label: "Via Medaglie d'Oro",        stato: 'sconosciuto' },
+        { nome: 'Nazionale',    label: 'Via Nazionale',             stato: 'sconosciuto' },
+        { nome: 'Risorgimento', label: 'Via Risorgimento',          stato: 'sconosciuto' },
+        { nome: 'SacroCuore',   label: 'Via Sacro Cuore',           stato: 'sconosciuto' },
+        { nome: 'Resistenza',   label: 'Via Resistenza Partigiana', stato: 'sconosciuto' },
+        { nome: 'SS115',        label: 'SS115 Polo Commerciale',    stato: 'sconosciuto' },
+        { nome: 'Monserrato',   label: 'Via Monserrato',            stato: 'sconosciuto' },
       ]);
     }
   } catch(e) {
     console.error('[TRAFFICO] Errore:', e);
     aggiornaBarra([
-      { label: 'Modica Alta',  stato: 'sconosciuto' },
-      { label: 'Modica Sorda', stato: 'sconosciuto' },
-      { label: 'Modica Bassa', stato: 'sconosciuto' },
+      { nome: 'Alta',         label: 'Modica Alta',              stato: 'sconosciuto' },
+      { nome: 'Corso',        label: 'Corso Umberto I',           stato: 'sconosciuto' },
+      { nome: 'Medaglie',     label: "Via Medaglie d'Oro",        stato: 'sconosciuto' },
+      { nome: 'Nazionale',    label: 'Via Nazionale',             stato: 'sconosciuto' },
+      { nome: 'Risorgimento', label: 'Via Risorgimento',          stato: 'sconosciuto' },
+      { nome: 'SacroCuore',   label: 'Via Sacro Cuore',           stato: 'sconosciuto' },
+      { nome: 'Resistenza',   label: 'Via Resistenza Partigiana', stato: 'sconosciuto' },
+      { nome: 'SS115',        label: 'SS115 Polo Commerciale',    stato: 'sconosciuto' },
+      { nome: 'Monserrato',   label: 'Via Monserrato',            stato: 'sconosciuto' },
     ]);
   }
 }
@@ -2156,7 +2185,8 @@ function aggiornaBarra(segmenti) {
   if (!container) return;
   const html = segmenti.map(s => {
     const cls = s.stato || 'sconosciuto';
-    return '<div class="traffic-seg ' + cls + '"><div class="traffic-dot"></div>' + s.label + '</div>';
+    const nomeBreve = s.nome || s.label.replace('Via ','').replace('Modica ','').replace('SS115 Polo Commerciale','SS115').split(' — ')[0];
+    return '<div class="traffic-seg ' + cls + '"><div class="traffic-dot"></div>' + nomeBreve + '</div>';
   }).join('');
   container.innerHTML = html;
   // Se il pannello dettaglio è aperto, aggiornalo in tempo reale
@@ -2227,7 +2257,16 @@ function _renderPannelloTraffco(tentativo) {
   const desc = { verde:'Scorrevole', giallo:'Rallentato', rosso:'Congestionato', sconosciuto:'N/D' };
   const icon = { verde:'🟢', giallo:'🟡', rosso:'🔴', sconosciuto:'⚪' };
 
-  container.innerHTML = mapHtml + dati.segmenti.map(function(s) {
+  var sintesiHtml = '';
+  if (dati.sintesi) {
+    var sc = 'traffic-sintesi-neutra';
+    if (dati.sintesi.includes('congestionato')) sc = 'traffic-sintesi-rosso';
+    else if (dati.sintesi.includes('rallentato') || dati.sintesi.includes('misto')) sc = 'traffic-sintesi-giallo';
+    else if (dati.sintesi.includes('scorrevole')) sc = 'traffic-sintesi-verde';
+    sintesiHtml = '<div class="traffic-sintesi-bar ' + sc + '">' + dati.sintesi + '</div>';
+  }
+
+  container.innerHTML = mapHtml + sintesiHtml + dati.segmenti.map(function(s) {
     var vel = s.velocita_attuale > 0
       ? '<div class="traffic-zona-vel">' + s.velocita_attuale + ' km/h<span>velocità attuale</span></div>'
       : '';
