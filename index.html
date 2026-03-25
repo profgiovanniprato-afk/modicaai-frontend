@@ -183,10 +183,10 @@
   .traffic-sintesi-bar {
     padding: 8px 18px;
     font-family: 'Outfit', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 11px; font-weight: 600;
     border-bottom: 1px solid var(--border);
     letter-spacing: 0.2px;
+    flex-shrink: 0;
   }
   .traffic-sintesi-rosso  { background: rgba(239,68,68,0.08);  color: #b91c1c; }
   .traffic-sintesi-giallo { background: rgba(251,191,36,0.10); color: #b45309; }
@@ -214,6 +214,7 @@
   .traffic-modal {
     background: var(--white); border-radius:20px;
     width: min(92vw, 480px);
+    max-height: 85vh;
     display: flex; flex-direction:column;
     overflow: hidden;
     box-shadow: 0 24px 60px rgba(0,0,0,0.35);
@@ -237,7 +238,7 @@
     color:var(--ink-mid); font-size:16px; transition:all 0.15s;
   }
   .traffic-modal-close:hover { border-color:var(--terra); color:var(--terra); }
-  #trafficMapContainer { padding: 14px 18px 18px; display:flex; flex-direction:column; gap:12px; }
+  #trafficMapContainer { padding: 14px 18px 18px; display:flex; flex-direction:column; gap:12px; overflow-y: auto; flex: 1; }
   .traffic-map-iframe-wrap {
     border-radius: 14px; overflow: hidden;
     border: 1px solid var(--border);
@@ -892,7 +893,7 @@
     #sunWidget         { display: none !important; } /* troppo stretto su mobile — nascosto */
 
     /* Modal traffico */
-    .traffic-modal     { border-radius: 16px 16px 0 0; width: 100%; max-width: 100%; margin: 0; align-self: flex-end; }
+    .traffic-modal     { border-radius: 16px 16px 0 0; width: 100%; max-width: 100%; margin: 0; align-self: flex-end; max-height: 80vh; }
     .traffic-modal-overlay { align-items: flex-end; padding: 0; }
     .traffic-zona-card { padding: 11px 14px; }
     .traffic-zona-nome { font-size: 13px; }
