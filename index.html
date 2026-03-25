@@ -1181,6 +1181,11 @@
     <div class="bar-widget-main" id="clockTime">--:--</div>
     <div class="bar-widget-sub" id="clockDate">...</div>
   </div>
+  <div class="bar-widget" id="sunWidget" style="display:none;">
+    <div class="bar-widget-icon">🌅</div>
+    <div class="bar-widget-main" id="sunMain">--:-- · --:--</div>
+    <div class="bar-widget-sub" id="sunSub">Alba · Tramonto</div>
+  </div>
 </div>
 
 <div class="input-bar">
@@ -2475,6 +2480,37 @@ const METEO_ICONS = {
   '11d':'⛈️','11n':'⛈️','13d':'❄️','13n':'❄️',
   '50d':'🌫️','50n':'🌫️'
 };
+// ── Sunrise / Sunset widget ──────────────────────────────────────
+async function caricaSunrise() {
+  try {
+    // Sunrise-Sunset API — gratuita, no key, lat/lon Modica
+    const res = await fetch(
+      'https://api.sunrise-sunset.org/json?lat=36.8463&lng=14.7642&formatted=0'
+    );
+    if (!res.ok) return;
+    const d = await res.json();
+    if (d.status !== 'OK') return;
+
+    // I tempi arrivano in UTC — convertiamo in Europe/Rome
+    const toRome = (isoStr) => {
+      const dt = new Date(isoStr);
+      return dt.toLocaleTimeString('it-IT', {
+        timeZone: 'Europe/Rome',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+
+    const alba     = toRome(d.results.sunrise);
+    const tramonto = toRome(d.results.sunset);
+
+    const mainEl = document.getElementById('sunMain');
+    const widget = document.getElementById('sunWidget');
+    if (mainEl) mainEl.textContent = `${alba} · ${tramonto}`;
+    if (widget) widget.style.display = '';
+  } catch(e) { /* silenzioso */ }
+}
+
 async function caricaMeteoWidget() {
   try {
     const res = await fetch(API_URL + '/meteo-widget');
@@ -2527,6 +2563,7 @@ document.addEventListener('DOMContentLoaded', () => {
   caricaTraffco();
   caricaCarburantiFuel();
   caricaMeteoWidget();
+  caricaSunrise();
   setInterval(caricaNotizie,          5 * 60 * 1000);
   setInterval(caricaCarburantiFuel,  15 * 60 * 1000);
   setInterval(caricaTraffco,          2 * 60 * 1000); // ogni 2 minuti
