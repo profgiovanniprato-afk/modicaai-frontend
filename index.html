@@ -1810,6 +1810,10 @@ async function ask(q) {
 
   if (isRichiestaImmagine(q)) { generaImmagine(q); return; }
 
+  // Intercetta richiesta generazione PDF/DOCX
+  const _formatoDoc = _rilevaFormato(q);
+  if (_formatoDoc) { await generaDocumento(_formatoDoc); return; }
+
   // Se c'è un file caricato, usa askConFile che include il contesto
   if (fileContesto) { await askConFile(q); return; }
   if (typeof gtag !== 'undefined') gtag('event', 'domanda', { event_category: 'chat' });
@@ -2367,8 +2371,10 @@ async function gestisciFile(input) {
     // Salva contesto e aggiorna preview
     fileContesto = { nome: file.name, testo: dati.testo, chars: dati.chars, troncato: dati.troncato };
     const kb = Math.round(dati.chars / 100) / 10;
-    const avviso = dati.troncato ? ' (testo troncato — file molto lungo)' : '';
-    previewSub.textContent = `✅ Pronto · ${kb}k caratteri${avviso}`;
+    const pagineStime = Math.max(1, Math.round(dati.chars / 2000));
+    const labelPag = pagineStime === 1 ? '~1 pagina' : `~${pagineStime} pagine`;
+    const avviso = dati.troncato ? ' ⚠️ troncato' : '';
+    previewSub.textContent = `✅ ${labelPag} · ${kb}k car${avviso}`;
 
     // Messaggio in chat con riassunto automatico
     const domandaRiassunto = `Ho caricato il file "${file.name}". Fanne un riassunto conciso.`;
@@ -2377,10 +2383,11 @@ async function gestisciFile(input) {
     await askConFile(domandaRiassunto);
 
   } catch(e) {
-    previewSub.textContent = '❌ Errore di connessione';
+    previewSub.textContent = '❌ Errore — riprova';
     btnUpload.classList.remove('active');
     fileContesto = null;
     console.error('[FILE]', e);
+    addMessage('ai', "⚠️ Errore durante l'elaborazione del file. Controlla la connessione e riprova.", 'ModicaAI', '');
   }
 
   // Reset input file per permettere di ricaricare lo stesso file
@@ -2495,6 +2502,95 @@ async function askConFile(domanda) {
   }
 }
 
+
+
+// ── Generazione PDF/DOCX dalla conversazione ─────────────────────
+
+const PAROLE_GENERA_PDF = [
+  "crea un pdf","crea il pdf","genera un pdf","genera il pdf",
+  "esporta in pdf","salva in pdf","scarica il pdf","metti in pdf",
+  "tutto in pdf","crea pdf","genera pdf"
+];
+const PAROLE_GENERA_DOCX = [
+  "crea un docx","crea il docx","genera un docx","genera il docx",
+  "crea un word","crea il word","esporta in word","salva in word",
+  "crea docx","genera docx","crea un documento word","genera un documento word"
+];
+const PAROLE_GENERA_DOC = [
+  "crea un documento","genera un documento","esporta la conversazione",
+  "salva la conversazione","scarica la conversazione","metti tutto in un pdf",
+  "tutto in un documento"
+];
+
+function _rilevaFormato(testo) {
+  const t = testo.toLowerCase();
+  if (PAROLE_GENERA_PDF.some(k => t.includes(k))) return 'pdf';
+  if (PAROLE_GENERA_DOCX.some(k => t.includes(k))) return 'docx';
+  if (PAROLE_GENERA_DOC.some(k => t.includes(k))) return 'pdf'; // default pdf
+  return null;
+}
+
+async function generaDocumento(formato) {
+  if (!cronologia || cronologia.length === 0) {
+    addMessage('ai', '⚠️ Non c'è ancora nessuna conversazione da esportare. Fai prima qualche domanda!', 'ModicaAI', '');
+    return;
+  }
+
+  const messaggiAI = cronologia.filter(m => m.role === 'assistant' && m.content.trim());
+  if (messaggiAI.length === 0) {
+    addMessage('ai', '⚠️ Nessuna risposta da esportare ancora.', 'ModicaAI', '');
+    return;
+  }
+
+  // Mostra messaggio di attesa
+  showTyping(formato === 'pdf' ? '📄 Creo il PDF...' : '📝 Creo il documento Word...');
+
+  // Titolo automatico dal primo messaggio utente
+  const primaD = cronologia.find(m => m.role === 'user');
+  const titolo = primaD
+    ? primaD.content.slice(0, 60).replace(/[\r\n]+/g, ' ').trim()
+    : 'Conversazione ModicaAI';
+
+  try {
+    const res = await fetch(API_URL + '/genera-documento', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ formato, cronologia, titolo })
+    });
+
+    removeTyping();
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      addMessage('ai', `⚠️ ${err.errore || 'Errore durante la generazione del documento.'}`, 'ModicaAI', '');
+      return;
+    }
+
+    // Scarica il file
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const ext  = formato === 'pdf' ? 'pdf' : 'docx';
+    a.href     = url;
+    a.download = `ModicaAI_${titolo.slice(0, 30).replace(/\s+/g, '_')}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    const nMsg = messaggiAI.length;
+    const label = formato === 'pdf' ? 'PDF' : 'documento Word';
+    addMessage('ai',
+      `✅ ${label} creato con ${nMsg} risposta${nMsg > 1 ? 'e' : ''}. Il download è partito automaticamente.`,
+      'ModicaAI', ''
+    );
+
+  } catch(e) {
+    removeTyping();
+    console.error('[GENERA_DOC]', e);
+    addMessage('ai', '⚠️ Errore di connessione durante la creazione del documento. Riprova.', 'ModicaAI', '');
+  }
+}
 
 function aggiornaOrologio() {
   const now = new Date();
