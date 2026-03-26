@@ -1832,68 +1832,37 @@ function removeTyping() { const t = document.getElementById('typing'); if (t) t.
 function isRichiestaImmagine(q) {
   const d = q.toLowerCase().trim();
 
-  // Parole visive che indicano chiaramente una richiesta di immagine
-  const visivo = /(foto|sfondo|sfondi|wallpaper|immagine|immagini|disegno|disegna|illustrazione|ritratto|paesaggio|dipinto|artwork|picture|poster)/;
+  // Parole visive (IT + EN)
+  const visivo = /(foto|sfondo|sfondi|wallpaper|immagine|immagini|disegno|disegna|illustrazione|ritratto|paesaggio|dipinto|artwork|picture|pictures|photos|photo|poster)/;
 
-  // Regola 0: se inizia con verbo di ricerca → non è generazione,
-  // MA se è seguito da parola visiva (es. "mostrami foto di Modica") → è generazione
+  // Luoghi fisici visitabili (IT + EN)
+  const luogo = /(chiesa|cattedrale|duomo|castello|palazzo|museo|monumento|tempio|basilica|cappella|torre|convento|abbazia|santuario|grotta|rupestre|parco|piazza|corso|teatro|anfiteatro|necropoli|scavi|sito|patrimonio|cathedral|church|castle|museum|palace|tower|monument|ruins)/;
+
+  // Regola 0: verbo di ricerca → true se parola visiva O luogo fisico (non servizi)
   if (/^(cerca|trova|mostra|mostrami|fammi vedere|ricerca|search|find|show)/.test(d)) {
-    return visivo.test(d); // true solo se c'è anche una parola visiva
+    const servizi = /\b(farmaci[ae]|ristoranti?|meteo|traffico|notizie?|carburanti?|benzina|bar|hotel|prezzi?)\b/;
+    return visivo.test(d) || (luogo.test(d) && !servizi.test(d));
   }
 
-  // Regola 1: verbo creativo visivo esplicito (disegna/dipingi/illustra) → sempre generazione
+  // Regola 1: "come appare / com'è [luogo]"
+  if (/(?:come appare|com'è|come si presenta)/.test(d)) return true;
+
+  // Regola 2: verbo creativo → sempre generazione AI
   if (/^(disegna|disegnami|dipingi|dipingimi|illustra|illustrami)/.test(d)) return true;
 
-  // Regola 2: crea/genera/fai SOLO se seguito da parola visiva
+  // Regola 3: crea/genera/fai + parola visiva
   if (/^(crea|genera|fai|costruisci|progetta)/.test(d) && visivo.test(d)) return true;
 
-  // Regola 3: "voglio un/una + oggetto visivo"
+  // Regola 4: "voglio un/una + oggetto visivo"
   if (/^voglio (un|una|uno)\s+(foto|sfondo|wallpaper|immagine|disegno|illustrazione|ritratto|paesaggio)/.test(d)) return true;
 
-  // Regola 4: "fammi un/una + oggetto creativo visivo"
+  // Regola 5: "fammi un/una + oggetto creativo"
   if (/^fammi (un|una|uno)\s+(disegno|illustrazione|ritratto|paesaggio|sfondo|wallpaper)/.test(d)) return true;
 
-  // Regola 5: "foto/sfondo/wallpaper di X" o "foto X" come prima parola → generazione
+  // Regola 6: "foto/sfondo/wallpaper di X" come prima parola
   if (/^(foto|sfondo|sfondi|wallpaper)\s+(di|del|della|dello|dei|degli|delle)?\s*\w/.test(d)) return true;
 
-  // Regola 6: keyword esplicite inglesi
-  const kwEn = ['create an image','generate an image','create a photo','generate a photo',
-    'create background','generate background','create wallpaper','draw me','paint me','make me a',
-    'show me photos','show me images','show me pictures','show me a photo','show me an image'];
-  if (kwEn.some(k => d.includes(k))) return true;
-
-  return false;
-}
-
-// ── Rilevamento richieste immagine ────────────────────────────────
-function isRichiestaImmagine(q) {
-  const d = q.toLowerCase().trim();
-
-  // Parole visive che indicano chiaramente una richiesta di immagine
-  const visivo = /(foto|sfondo|sfondi|wallpaper|immagine|immagini|disegno|disegna|illustrazione|ritratto|paesaggio|dipinto|artwork|picture|poster)/;
-
-  // Regola 0: se inizia con verbo di ricerca → non è generazione,
-  // MA se è seguito da parola visiva (es. "mostrami foto di Modica") → è generazione
-  if (/^(cerca|trova|mostra|mostrami|fammi vedere|ricerca|search|find|show)/.test(d)) {
-    return visivo.test(d); // true solo se c'è anche una parola visiva
-  }
-
-  // Regola 1: verbo creativo visivo esplicito (disegna/dipingi/illustra) → sempre generazione
-  if (/^(disegna|disegnami|dipingi|dipingimi|illustra|illustrami)/.test(d)) return true;
-
-  // Regola 2: crea/genera/fai SOLO se seguito da parola visiva
-  if (/^(crea|genera|fai|costruisci|progetta)/.test(d) && visivo.test(d)) return true;
-
-  // Regola 3: "voglio un/una + oggetto visivo"
-  if (/^voglio (un|una|uno)\s+(foto|sfondo|wallpaper|immagine|disegno|illustrazione|ritratto|paesaggio)/.test(d)) return true;
-
-  // Regola 4: "fammi un/una + oggetto creativo visivo"
-  if (/^fammi (un|una|uno)\s+(disegno|illustrazione|ritratto|paesaggio|sfondo|wallpaper)/.test(d)) return true;
-
-  // Regola 5: "foto/sfondo/wallpaper di X" o "foto X" come prima parola → generazione
-  if (/^(foto|sfondo|sfondi|wallpaper)\s+(di|del|della|dello|dei|degli|delle)?\s*\w/.test(d)) return true;
-
-  // Regola 6: keyword esplicite inglesi
+  // Regola 7: keyword esplicite inglesi
   const kwEn = ['create an image','generate an image','create a photo','generate a photo',
     'create background','generate background','create wallpaper','draw me','paint me','make me a',
     'show me photos','show me images','show me pictures','show me a photo','show me an image'];
@@ -1903,30 +1872,42 @@ function isRichiestaImmagine(q) {
 }
 
 // ── Rilevamento foto luogo reale (→ Wikimedia) vs generazione AI ──
-// Restituisce la query di ricerca se è una richiesta di foto di luogo reale,
-// null se è una richiesta di generazione creativa.
+// Restituisce query Wikimedia se è richiesta di foto reale, null se è generazione AI.
 function _rilevaFotoReale(q) {
   const d = q.toLowerCase().trim();
 
-  // Parole che indicano creatività/fantasia → generazione AI
+  // Parole creative → generazione AI
   const creativo = /\b(genera|crea|disegna|dipingi|illustra|immagina|inventa|fantasy|stilizzato|artistico|astratto|wallpaper|sfondo|poster|dipinto|artwork)\b/;
   if (creativo.test(d)) return null;
 
-  // Pattern: "foto/immagine/mostrami + (di/del/della) + [nome luogo]"
-  const matchLuogo = d.match(/(?:foto|immagine|immagini|mostrami|mostra|fammi vedere|show me)\s+(?:di|del|della|dello|dei|delle|the|of)?\s*(.{4,60}?)(?:\s*$|\s*[,!?])/);
-  if (matchLuogo) {
-    const soggetto = matchLuogo[1].trim();
-    // Normalizza: rimuove prefisso "foto/immagini di" dal soggetto estratto
-    const soggettoNorm = soggetto.replace(/^(?:foto|immagine|immagini)\s+(?:di|del|della|dello|dei|delle)?\s*/i, '').trim();
-    // Scarta soggetti generici o troppo corti (meno di 6 chars dopo normalizzazione)
-    const generici = /^(modica|sicilia|un|una|uno|qualcosa|tutto|quello|questa|foto|immagine|immagini|qui|la città)$/;
-    if (soggettoNorm.length < 6 || generici.test(soggettoNorm)) return null;
-    return soggettoNorm + ' Modica Sicilia';
+  // Pattern 0: "mostrami/mostra/come appare + [luogo]" anche senza keyword visiva
+  const m0 = d.match(/(?:mostrami|mostra|fammi vedere|show me|come appare|com'è)\s+(?:la|il|lo|i|le|gli|the|a|an)?\s*(.{4,60}?)(?:\s*$|\s*[,!?])/);
+  if (m0) {
+    const s0 = m0[1].trim();
+    const servizi = /^(farmaci[ae]|ristoranti?|meteo|traffico|notizie?|carburanti?|benzina|bar|hotel|albergo|prezzi?|orari?)/;
+    const generici0 = /^(modica|sicilia|un|una|uno|qualcosa|tutto|foto|immagine|immagini|qui|la città)$/;
+    if (s0.length >= 5 && !servizi.test(s0) && !generici0.test(s0)) {
+      return s0 + ' Modica Sicilia';
+    }
   }
 
-  // Pattern diretto: "la/il [nome] + (foto/immagine)"
-  const matchDiretto = d.match(/(?:la|il|lo|i|le|gli)\s+(.{4,50}?)\s+(?:foto|immagine|com'è|come appare)/);
-  if (matchDiretto) return matchDiretto[1].trim() + ' Modica Sicilia';
+  // Pattern 1: keyword visiva + (prep/articolo) + soggetto
+  const m = d.match(/(?:foto|immagine|immagini|photos?|pictures?|mostrami|mostra|fammi vedere|show me)\s+(?:di|del|della|dello|dei|delle|the|of|la|il|lo|i|le|gli)?\s*(.{4,60}?)(?:\s*$|\s*[,!?])/);
+  if (m) {
+    const soggetto = m[1].trim();
+    const soggNorm = soggetto.replace(/^(?:foto|immagine|immagini|photos?|pictures?)\s+(?:di|del|della|dello|dei|delle)?\s*/i, '').trim();
+    const generici = /^(modica|sicilia|un|una|uno|qualcosa|tutto|quello|questa|foto|immagine|immagini|qui|la città|ristoranti?|farmaci[ae]|meteo|traffico|notizie?)$/;
+    if (soggNorm.length < 6 || generici.test(soggNorm)) return null;
+    return soggNorm + ' Modica Sicilia';
+  }
+
+  // Pattern 2: "come appare/com'è [luogo]"
+  const m2 = d.match(/(?:come appare|com'è|come si presenta)\s+(?:la|il|lo|i|le|gli|the)?\s*(.{4,50}?)(?:\s*$|\s*[,!?])/);
+  if (m2) return m2[1].trim() + ' Modica Sicilia';
+
+  // Pattern 3: "la/il [nome] + (foto/immagine/com'è/come appare)"
+  const m3 = d.match(/(?:la|il|lo|i|le|gli)\s+(.{4,50}?)\s+(?:foto|immagine|com'è|come appare)/);
+  if (m3) return m3[1].trim() + ' Modica Sicilia';
 
   return null;
 }
@@ -2023,7 +2004,7 @@ async function ask(q) {
   if (isRichiestaImmagine(q)) {
     // Distingue foto luogo reale (Wikimedia) da generazione creativa (FLUX)
     const queryFotoReale = _rilevaFotoReale(q);
-    if (queryFotoReale) {
+    if (queryFotoReale && queryFotoReale.replace(' Modica Sicilia','').trim().length >= 6) {
       cercaFotoLuogo(queryFotoReale, q);
     } else {
       generaImmagine(q);
