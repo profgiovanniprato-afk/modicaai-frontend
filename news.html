@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>News Locali — ModicaAI</title>
+  <meta name="description" content="Ultime notizie da Modica e provincia: RTM, La Sicilia, RagusaNews. Aggiornate in tempo reale."/>
+  <link rel="canonical" href="https://www.modicaai.it/news.html"/>
+  <link rel="icon" href="/icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --navy:     #1A3A5C;
+      --sky:      #2563EB;
+      --gold:     #B8860B;
+      --gold-lt:  #D4A017;
+      --terra:    #C0392B;
+      --bg:       #F8F8F8;
+      --bg-card:  #FFFFFF;
+      --border:   #E5E7EB;
+      --ink:      #1A1A1A;
+      --ink-mid:  #555555;
+      --ink-soft: #999999;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:       #151820;
+        --bg-card:  #1e2330;
+        --border:   #2a2f3d;
+        --ink:      #E8E8E8;
+        --ink-mid:  #AAAAAA;
+        --ink-soft: #777777;
+        --gold:     #D4A017;
+        --gold-lt:  #E8B824;
+      }
+    }
+    body.dark {
+      --bg:       #151820;
+      --bg-card:  #1e2330;
+      --border:   #2a2f3d;
+      --ink:      #E8E8E8;
+      --ink-mid:  #AAAAAA;
+      --ink-soft: #777777;
+      --gold:     #D4A017;
+      --gold-lt:  #E8B824;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; height: 44px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+    }
+    .snb-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 600;
+      color: #fff; text-decoration: none; letter-spacing: 0.3px;
+    }
+    .snb-logo span { color: var(--gold-lt); }
+    .snb-links { display: flex; align-items: center; gap: 2px; }
+    .snb-link {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 12px; font-weight: 500; padding: 5px 10px;
+      border-radius: 6px; transition: background 0.15s;
+    }
+    .snb-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .snb-link.active { color: #fff; background: rgba(255,255,255,0.1); }
+    .snb-right { display: flex; align-items: center; gap: 8px; }
+    .dark-btn {
+      background: none; border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7); border-radius: 6px;
+      padding: 4px 8px; cursor: pointer; font-size: 13px;
+    }
+    .dark-btn:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+    /* ── TESTATA STILE GIORNALE ── */
+    .masthead {
+      border-bottom: 3px double var(--navy);
+      padding: 20px 24px 14px;
+      text-align: center;
+      background: var(--bg-card);
+    }
+    .masthead-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .masthead-title span { color: var(--gold); }
+    .masthead-sub {
+      font-size: 11px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 2.5px;
+      color: var(--ink-soft); margin-top: 4px;
+    }
+    .masthead-rule { 
+      height: 1px; background: var(--border);
+      margin: 10px 0 8px;
+    }
+    .masthead-info {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: var(--ink-soft);
+    }
+
+    /* ── FILTRI FONTE ── */
+    .filters {
+      display: flex; gap: 8px; align-items: center;
+      padding: 12px 24px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .filter-label { font-size: 11px; color: var(--ink-soft); font-weight: 500; margin-right: 4px; }
+    .filter-btn {
+      padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      border: 1.5px solid var(--border); background: transparent;
+      color: var(--ink-mid); cursor: pointer; transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+    .filter-btn.active { color: #fff; border-color: transparent; }
+    .filter-btn[data-fonte="Tutte"].active  { background: var(--navy); }
+    .filter-btn[data-fonte="RTM"].active    { background: #1A3A5C; }
+    .filter-btn[data-fonte="La Sicilia"].active { background: #C0392B; }
+    .filter-btn[data-fonte="RagusaNews"].active  { background: #B8860B; }
+    .refresh-btn {
+      margin-left: auto; padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      border: 1.5px solid var(--border); background: transparent;
+      color: var(--ink-mid); transition: all 0.15s;
+    }
+    .refresh-btn:hover { border-color: var(--sky); color: var(--sky); }
+
+    /* ── LAYOUT GIORNALE ── */
+    .newspaper {
+      max-width: 1100px; margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    /* Notizia principale (hero) */
+    .hero-article {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--navy);
+    }
+    @media (max-width: 680px) {
+      .hero-article { grid-template-columns: 1fr; }
+    }
+    .hero-text { display: flex; flex-direction: column; gap: 10px; }
+    .hero-fonte-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #fff;
+      padding: 3px 8px; border-radius: 4px;
+      width: fit-content;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 3.5vw, 36px);
+      font-weight: 700; line-height: 1.15;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .hero-title:hover { color: var(--navy); }
+    .hero-desc {
+      font-size: 15px; color: var(--ink-mid);
+      line-height: 1.6;
+    }
+    .hero-date { font-size: 11px; color: var(--ink-soft); }
+    .hero-img {
+      border-radius: 8px; overflow: hidden;
+      background: var(--border);
+      aspect-ratio: 16/9;
+    }
+    .hero-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+    }
+    .hero-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; color: var(--border);
+      background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    }
+
+    /* Sezione secondaria — colonne */
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px;
+      color: var(--navy); border-bottom: 2px solid var(--navy);
+      padding-bottom: 4px; margin-bottom: 16px;
+    }
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 720px) { .articles-grid { grid-template-columns: 1fr; } }
+    @media (min-width: 721px) and (max-width: 960px) { .articles-grid { grid-template-columns: 1fr 1fr; } }
+
+    .article-card {
+      background: var(--bg-card);
+      padding: 16px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      display: flex; flex-direction: column; gap: 8px;
+      transition: background 0.15s;
+    }
+    .article-card:hover { background: color-mix(in srgb, var(--bg-card) 90%, var(--navy)); }
+    .article-card:last-child { border-right: none; }
+    .article-fonte {
+      font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #fff;
+      padding: 2px 6px; border-radius: 3px;
+      width: fit-content;
+    }
+    .article-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; font-weight: 700;
+      color: var(--ink); line-height: 1.25;
+    }
+    .article-desc {
+      font-size: 12px; color: var(--ink-soft);
+      line-height: 1.5; flex: 1;
+    }
+    .article-date { font-size: 10px; color: var(--ink-soft); }
+
+    /* Colonne news lista — parte bassa */
+    .columns-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .column-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .column-block-header {
+      padding: 8px 14px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #fff;
+    }
+    .column-news-item {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      transition: background 0.12s;
+    }
+    .column-news-item:last-child { border-bottom: none; }
+    .column-news-item:hover { background: color-mix(in srgb, var(--bg-card) 90%, var(--navy)); }
+    .column-news-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--ink); line-height: 1.35;
+    }
+    .column-news-date { font-size: 10px; color: var(--ink-soft); }
+
+    /* Skeleton loader */
+    .skeleton { animation: shimmer 1.5s infinite; }
+    @keyframes shimmer {
+      0%   { opacity: 0.5; }
+      50%  { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+    .skel-block {
+      background: var(--border); border-radius: 6px;
+      height: 16px; margin-bottom: 8px;
+    }
+
+    /* Stato errore / vuoto */
+    .stato-msg {
+      text-align: center; padding: 60px 20px;
+      color: var(--ink-soft); font-size: 14px;
+    }
+    .stato-msg .icona { font-size: 40px; margin-bottom: 12px; }
+
+    /* Aggiornamento timestamp */
+    .update-bar {
+      text-align: center; font-size: 11px; color: var(--ink-soft);
+      padding: 8px; border-top: 1px solid var(--border);
+      margin-top: 24px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center; padding: 20px;
+      font-size: 11px; color: var(--ink-soft);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="/" class="snb-logo">Modica<span>AI</span></a>
+  <div class="snb-links">
+    <a href="/" class="snb-link">Home</a>
+    <a href="/news.html" class="snb-link active">News</a>
+    <a href="/mission.html" class="snb-link">Mission</a>
+    <a href="/contatti.html" class="snb-link">Contatti</a>
+  </div>
+  <div class="snb-right">
+    <button class="dark-btn" onclick="toggleDark()" title="Tema scuro/chiaro">🌙</button>
+  </div>
+</nav>
+
+<!-- TESTATA GIORNALE -->
+<div class="masthead">
+  <div class="masthead-title">Modica<span>AI</span> News</div>
+  <div class="masthead-sub">Notizie locali in tempo reale</div>
+  <div class="masthead-rule"></div>
+  <div class="masthead-info">
+    <span id="dataOggi"></span>
+    <span>📡 RTM · La Sicilia · RagusaNews</span>
+    <span id="aggiornato">Caricamento...</span>
+  </div>
+</div>
+
+<!-- FILTRI -->
+<div class="filters">
+  <span class="filter-label">Fonte:</span>
+  <button class="filter-btn active" data-fonte="Tutte" onclick="filtra(this)">Tutte</button>
+  <button class="filter-btn" data-fonte="RTM" onclick="filtra(this)" style="--c:#1A3A5C">RTM</button>
+  <button class="filter-btn" data-fonte="La Sicilia" onclick="filtra(this)" style="--c:#C0392B">La Sicilia</button>
+  <button class="filter-btn" data-fonte="RagusaNews" onclick="filtra(this)" style="--c:#B8860B">RagusaNews</button>
+  <button class="refresh-btn" onclick="caricaNotizie(true)">🔄 Aggiorna</button>
+</div>
+
+<!-- CONTENUTO PRINCIPALE -->
+<main class="newspaper" id="newspaper">
+  <!-- Skeleton di caricamento -->
+  <div id="skeleton">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;padding-bottom:24px;border-bottom:2px solid var(--border);">
+      <div class="skeleton">
+        <div class="skel-block" style="height:12px;width:60px;"></div>
+        <div class="skel-block" style="height:32px;width:90%;margin-top:10px;"></div>
+        <div class="skel-block" style="height:32px;width:75%;"></div>
+        <div class="skel-block" style="height:14px;width:80%;margin-top:6px;"></div>
+        <div class="skel-block" style="height:14px;width:65%;"></div>
+        <div class="skel-block" style="height:10px;width:40%;margin-top:6px;"></div>
+      </div>
+      <div class="skel-block skeleton" style="height:200px;border-radius:8px;"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      ${[0,1,2].map(()=>`<div style="padding:16px;border-right:1px solid var(--border);" class="skeleton">
+        <div class="skel-block" style="height:10px;width:50px;"></div>
+        <div class="skel-block" style="height:18px;width:90%;margin-top:8px;"></div>
+        <div class="skel-block" style="height:18px;width:75%;"></div>
+        <div class="skel-block" style="height:11px;width:40%;margin-top:6px;"></div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- Contenuto reale (popolato da JS) -->
+  <div id="news-content" style="display:none;"></div>
+</main>
+
+<footer>
+  <a href="/">← Torna a ModicaAI</a> &nbsp;·&nbsp;
+  Notizie da <a href="https://www.radiortm.it" target="_blank" rel="noopener">RTM</a>,
+  <a href="https://www.lasicilia.it" target="_blank" rel="noopener">La Sicilia</a>,
+  <a href="https://www.ragusanews.com" target="_blank" rel="noopener">RagusaNews</a>
+</footer>
+
+<script>
+const API_URL = 'https://modicaai-api.onrender.com';
+const COLORI = { 'RTM': '#1A3A5C', 'La Sicilia': '#C0392B', 'RagusaNews': '#B8860B' };
+
+let tuttiItems = [];
+let filtroAttivo = 'Tutte';
+
+// ── Dark mode ──
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// ── Data testata ──
+document.getElementById('dataOggi').textContent = new Date().toLocaleDateString('it-IT', {
+  weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+});
+
+// ── Filtro fonte ──
+function filtra(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filtroAttivo = btn.dataset.fonte;
+  renderNotizie(tuttiItems);
+}
+
+// ── Badge fonte ──
+function badgeFonte(fonte, tipo) {
+  const col = COLORI[fonte] || '#666';
+  const cls = tipo === 'hero' ? 'hero-fonte-badge' : (tipo === 'card' ? 'article-fonte' : 'column-news-badge');
+  return `<span class="${cls}" style="background:${col};">${fonte}</span>`;
+}
+
+// ── Immagine placeholder ──
+function imgPlaceholder(fonte) {
+  const emoji = fonte === 'RTM' ? '📻' : fonte === 'La Sicilia' ? '📰' : '🗞';
+  return `<div class="hero-img-placeholder">${emoji}</div>`;
+}
+
+// ── Render layout giornale ──
+function renderNotizie(items) {
+  const filtrati = filtroAttivo === 'Tutte'
+    ? items
+    : items.filter(i => i.fonte === filtroAttivo);
+
+  const content = document.getElementById('news-content');
+
+  if (!filtrati.length) {
+    content.innerHTML = `<div class="stato-msg"><div class="icona">📭</div>Nessuna notizia disponibile al momento.</div>`;
+    content.style.display = '';
+    return;
+  }
+
+  let html = '';
+
+  // ── HERO: prima notizia ──
+  const hero = filtrati[0];
+  const heroCol = COLORI[hero.fonte] || '#1A3A5C';
+  html += `<div class="hero-article">
+    <div class="hero-text">
+      ${badgeFonte(hero.fonte, 'hero')}
+      <a href="${hero.link || '#'}" target="_blank" rel="noopener" class="hero-title">${hero.titolo}</a>
+      ${hero.desc ? `<p class="hero-desc">${hero.desc}</p>` : ''}
+      <span class="hero-date">🕐 ${hero.data}</span>
+    </div>
+    <div class="hero-img">
+      ${hero.img ? `<img src="${hero.img}" alt="${hero.titolo}" loading="lazy" onerror="this.parentNode.innerHTML='${imgPlaceholder(hero.fonte).replace(/'/g,'&apos;')}'"/>` : imgPlaceholder(hero.fonte)}
+    </div>
+  </div>`;
+
+  // ── GRIGLIA SECONDARIA: notizie 2-10 ──
+  const secondarie = filtrati.slice(1, 10);
+  if (secondarie.length) {
+    html += `<div class="section-title">Ultime notizie</div>`;
+    html += `<div class="articles-grid">`;
+    secondarie.forEach(item => {
+      html += `<a href="${item.link || '#'}" target="_blank" rel="noopener" class="article-card">
+        ${badgeFonte(item.fonte, 'card')}
+        <div class="article-title">${item.titolo}</div>
+        ${item.desc ? `<div class="article-desc">${item.desc}</div>` : '<div class="article-desc"></div>'}
+        <div class="article-date">🕐 ${item.data}</div>
+      </a>`;
+    });
+    html += `</div>`;
+  }
+
+  // ── COLONNE PER FONTE: notizie 10+ ──
+  const rimanenti = filtrati.slice(10);
+  if (rimanenti.length) {
+    // Raggruppa per fonte
+    const perFonte = {};
+    rimanenti.forEach(item => {
+      if (!perFonte[item.fonte]) perFonte[item.fonte] = [];
+      perFonte[item.fonte].push(item);
+    });
+
+    html += `<div class="section-title" style="margin-top:8px;">Altre notizie</div>`;
+    html += `<div class="columns-section">`;
+    Object.entries(perFonte).forEach(([fonte, news]) => {
+      const col = COLORI[fonte] || '#666';
+      html += `<div class="column-block">
+        <div class="column-block-header" style="background:${col};">${fonte}</div>`;
+      news.forEach(item => {
+        html += `<a href="${item.link || '#'}" target="_blank" rel="noopener" class="column-news-item">
+          <div class="column-news-title">${item.titolo}</div>
+          <div class="column-news-date">🕐 ${item.data}</div>
+        </a>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<div class="update-bar" id="updateBar">Aggiornato alle <span id="tsOra">--:--</span> · Dati da RSS pubblici</div>`;
+
+  content.innerHTML = html;
+  content.style.display = '';
+}
+
+// ── Carica notizie ──
+async function caricaNotizie(forza) {
+  const skeleton = document.getElementById('skeleton');
+  const content = document.getElementById('news-content');
+
+  if (forza) {
+    content.style.display = 'none';
+    skeleton.style.display = '';
+  }
+
+  try {
+    const url = API_URL + '/news-aggregated' + (forza ? '?t=' + Date.now() : '');
+    const res = await fetch(url);
+    const data = await res.json();
+
+    skeleton.style.display = 'none';
+
+    if (!data.items || !data.items.length) {
+      content.innerHTML = `<div class="stato-msg"><div class="icona">📡</div>Nessuna notizia disponibile. Riprova tra qualche minuto.</div>`;
+      content.style.display = '';
+      return;
+    }
+
+    tuttiItems = data.items;
+    renderNotizie(tuttiItems);
+
+    // Aggiorna header
+    const ora = data.aggiornato || new Date().toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'});
+    document.getElementById('aggiornato').textContent = 'Aggiornato alle ' + ora;
+    const tsEl = document.getElementById('tsOra');
+    if (tsEl) tsEl.textContent = ora;
+
+  } catch(e) {
+    skeleton.style.display = 'none';
+    content.innerHTML = `<div class="stato-msg">
+      <div class="icona">⚠️</div>
+      Errore nel caricamento delle notizie.<br>
+      <button onclick="caricaNotizie(true)" style="margin-top:12px;padding:6px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--ink);cursor:pointer;">Riprova</button>
+    </div>`;
+    content.style.display = '';
+  }
+}
+
+// Avvio
+caricaNotizie(false);
+// Auto-refresh ogni 5 minuti
+setInterval(() => caricaNotizie(false), 300000);
+</script>
+</body>
+</html>
