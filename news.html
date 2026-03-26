@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>News Locali — ModicaAI</title>
-  <meta name="description" content="Ultime notizie da Modica e provincia: RTM, La Sicilia, RagusaNews. Aggiornate in tempo reale."/>
+  <meta name="description" content="Ultime notizie da Modica e provincia: RTM, LiveSicilia, RagusaNews. Aggiornate in tempo reale."/>
   <link rel="canonical" href="https://www.modicaai.it/news.html"/>
   <link rel="icon" href="/icon-192.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -132,7 +132,7 @@
     .filter-btn.active { color: #fff; border-color: transparent; }
     .filter-btn[data-fonte="Tutte"].active  { background: var(--navy); }
     .filter-btn[data-fonte="RTM"].active    { background: #1A3A5C; }
-    .filter-btn[data-fonte="La Sicilia"].active { background: #C0392B; }
+    .filter-btn[data-fonte="LiveSicilia"].active { background: #C0392B; }
     .filter-btn[data-fonte="RagusaNews"].active  { background: #B8860B; }
     .refresh-btn {
       margin-left: auto; padding: 4px 12px; border-radius: 20px;
@@ -337,7 +337,7 @@
   <div class="masthead-rule"></div>
   <div class="masthead-info">
     <span id="dataOggi"></span>
-    <span>📡 RTM · La Sicilia · RagusaNews</span>
+    <span>📡 RTM · LiveSicilia · RagusaNews</span>
     <span id="aggiornato">Caricamento...</span>
   </div>
 </div>
@@ -347,7 +347,7 @@
   <span class="filter-label">Fonte:</span>
   <button class="filter-btn active" data-fonte="Tutte" onclick="filtra(this)">Tutte</button>
   <button class="filter-btn" data-fonte="RTM" onclick="filtra(this)" style="--c:#1A3A5C">RTM</button>
-  <button class="filter-btn" data-fonte="La Sicilia" onclick="filtra(this)" style="--c:#C0392B">La Sicilia</button>
+  <button class="filter-btn" data-fonte="LiveSicilia" onclick="filtra(this)" style="--c:#C0392B">LiveSicilia</button>
   <button class="filter-btn" data-fonte="RagusaNews" onclick="filtra(this)" style="--c:#B8860B">RagusaNews</button>
   <button class="refresh-btn" onclick="caricaNotizie(true)">🔄 Aggiorna</button>
 </div>
@@ -384,13 +384,13 @@
 <footer>
   <a href="/">← Torna a ModicaAI</a> &nbsp;·&nbsp;
   Notizie da <a href="https://www.radiortm.it" target="_blank" rel="noopener">RTM</a>,
-  <a href="https://www.lasicilia.it" target="_blank" rel="noopener">La Sicilia</a>,
+  <a href="https://www.livesicilia.it" target="_blank" rel="noopener">LiveSicilia</a>,
   <a href="https://www.ragusanews.com" target="_blank" rel="noopener">RagusaNews</a>
 </footer>
 
 <script>
 const API_URL = 'https://modicaai-api.onrender.com';
-const COLORI = { 'RTM': '#1A3A5C', 'La Sicilia': '#C0392B', 'RagusaNews': '#B8860B' };
+const COLORI = { 'RTM': '#1A3A5C', 'LiveSicilia': '#C0392B', 'RagusaNews': '#B8860B' };
 
 let tuttiItems = [];
 let filtroAttivo = 'Tutte';
@@ -424,7 +424,7 @@ function badgeFonte(fonte, tipo) {
 
 // ── Immagine placeholder ──
 function imgPlaceholder(fonte) {
-  const emoji = fonte === 'RTM' ? '📻' : fonte === 'La Sicilia' ? '📰' : '🗞';
+  const emoji = fonte === 'RTM' ? '📻' : fonte === 'LiveSicilia' ? '📰' : '🗞';
   return `<div class="hero-img-placeholder">${emoji}</div>`;
 }
 
