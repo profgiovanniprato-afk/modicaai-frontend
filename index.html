@@ -1832,11 +1832,14 @@ function removeTyping() { const t = document.getElementById('typing'); if (t) t.
 function isRichiestaImmagine(q) {
   const d = q.toLowerCase().trim();
 
-  // Regola 0: se inizia con verbo di ricerca → non è generazione
-  if (/^(cerca|trova|mostra|mostrami|fammi vedere|ricerca|search|find|show)/.test(d)) return false;
-
   // Parole visive che indicano chiaramente una richiesta di immagine
   const visivo = /(foto|sfondo|sfondi|wallpaper|immagine|immagini|disegno|disegna|illustrazione|ritratto|paesaggio|dipinto|artwork|picture|poster)/;
+
+  // Regola 0: se inizia con verbo di ricerca → non è generazione,
+  // MA se è seguito da parola visiva (es. "mostrami foto di Modica") → è generazione
+  if (/^(cerca|trova|mostra|mostrami|fammi vedere|ricerca|search|find|show)/.test(d)) {
+    return visivo.test(d); // true solo se c'è anche una parola visiva
+  }
 
   // Regola 1: verbo creativo visivo esplicito (disegna/dipingi/illustra) → sempre generazione
   if (/^(disegna|disegnami|dipingi|dipingimi|illustra|illustrami)/.test(d)) return true;
@@ -1855,10 +1858,141 @@ function isRichiestaImmagine(q) {
 
   // Regola 6: keyword esplicite inglesi
   const kwEn = ['create an image','generate an image','create a photo','generate a photo',
-    'create background','generate background','create wallpaper','draw me','paint me','make me a'];
+    'create background','generate background','create wallpaper','draw me','paint me','make me a',
+    'show me photos','show me images','show me pictures','show me a photo','show me an image'];
   if (kwEn.some(k => d.includes(k))) return true;
 
   return false;
+}
+
+// ── Rilevamento richieste immagine ────────────────────────────────
+function isRichiestaImmagine(q) {
+  const d = q.toLowerCase().trim();
+
+  // Parole visive che indicano chiaramente una richiesta di immagine
+  const visivo = /(foto|sfondo|sfondi|wallpaper|immagine|immagini|disegno|disegna|illustrazione|ritratto|paesaggio|dipinto|artwork|picture|poster)/;
+
+  // Regola 0: se inizia con verbo di ricerca → non è generazione,
+  // MA se è seguito da parola visiva (es. "mostrami foto di Modica") → è generazione
+  if (/^(cerca|trova|mostra|mostrami|fammi vedere|ricerca|search|find|show)/.test(d)) {
+    return visivo.test(d); // true solo se c'è anche una parola visiva
+  }
+
+  // Regola 1: verbo creativo visivo esplicito (disegna/dipingi/illustra) → sempre generazione
+  if (/^(disegna|disegnami|dipingi|dipingimi|illustra|illustrami)/.test(d)) return true;
+
+  // Regola 2: crea/genera/fai SOLO se seguito da parola visiva
+  if (/^(crea|genera|fai|costruisci|progetta)/.test(d) && visivo.test(d)) return true;
+
+  // Regola 3: "voglio un/una + oggetto visivo"
+  if (/^voglio (un|una|uno)\s+(foto|sfondo|wallpaper|immagine|disegno|illustrazione|ritratto|paesaggio)/.test(d)) return true;
+
+  // Regola 4: "fammi un/una + oggetto creativo visivo"
+  if (/^fammi (un|una|uno)\s+(disegno|illustrazione|ritratto|paesaggio|sfondo|wallpaper)/.test(d)) return true;
+
+  // Regola 5: "foto/sfondo/wallpaper di X" o "foto X" come prima parola → generazione
+  if (/^(foto|sfondo|sfondi|wallpaper)\s+(di|del|della|dello|dei|degli|delle)?\s*\w/.test(d)) return true;
+
+  // Regola 6: keyword esplicite inglesi
+  const kwEn = ['create an image','generate an image','create a photo','generate a photo',
+    'create background','generate background','create wallpaper','draw me','paint me','make me a',
+    'show me photos','show me images','show me pictures','show me a photo','show me an image'];
+  if (kwEn.some(k => d.includes(k))) return true;
+
+  return false;
+}
+
+// ── Rilevamento foto luogo reale (→ Wikimedia) vs generazione AI ──
+// Restituisce la query di ricerca se è una richiesta di foto di luogo reale,
+// null se è una richiesta di generazione creativa.
+function _rilevaFotoReale(q) {
+  const d = q.toLowerCase().trim();
+
+  // Parole che indicano creatività/fantasia → generazione AI
+  const creativo = /\b(genera|crea|disegna|dipingi|illustra|immagina|inventa|fantasy|stilizzato|artistico|astratto|wallpaper|sfondo|poster|dipinto|artwork)\b/;
+  if (creativo.test(d)) return null;
+
+  // Pattern: "foto/immagine/mostrami + (di/del/della) + [nome luogo]"
+  const matchLuogo = d.match(/(?:foto|immagine|immagini|mostrami|mostra|fammi vedere|show me)\s+(?:di|del|della|dello|dei|delle|the|of)?\s*(.{4,60}?)(?:\s*$|\s*[,!?])/);
+  if (matchLuogo) {
+    const soggetto = matchLuogo[1].trim();
+    // Normalizza: rimuove prefisso "foto/immagini di" dal soggetto estratto
+    const soggettoNorm = soggetto.replace(/^(?:foto|immagine|immagini)\s+(?:di|del|della|dello|dei|delle)?\s*/i, '').trim();
+    // Scarta soggetti generici o troppo corti (meno di 6 chars dopo normalizzazione)
+    const generici = /^(modica|sicilia|un|una|uno|qualcosa|tutto|quello|questa|foto|immagine|immagini|qui|la città)$/;
+    if (soggettoNorm.length < 6 || generici.test(soggettoNorm)) return null;
+    return soggettoNorm + ' Modica Sicilia';
+  }
+
+  // Pattern diretto: "la/il [nome] + (foto/immagine)"
+  const matchDiretto = d.match(/(?:la|il|lo|i|le|gli)\s+(.{4,50}?)\s+(?:foto|immagine|com'è|come appare)/);
+  if (matchDiretto) return matchDiretto[1].trim() + ' Modica Sicilia';
+
+  return null;
+}
+
+// ── Cerca e mostra foto reale da Wikimedia Commons ────────────────
+async function cercaFotoLuogo(query, domandaOriginale) {
+  addMessage('user', domandaOriginale, '');
+  const cid = 'foto' + Date.now();
+  addMessage('ai', `<div id="${cid}" style="padding:20px;text-align:center;color:var(--ink-soft);font-size:13px;">
+    <div style="font-size:24px;margin-bottom:8px">🔍</div>
+    Cerco foto reali di <em>${query.replace(' Modica Sicilia','')}</em>...
+  </div>`, 'Wikimedia', '');
+
+  try {
+    const res = await fetch(API_URL + '/cerca-foto?q=' + encodeURIComponent(query));
+    const data = await res.json();
+    const el = document.getElementById(cid);
+    if (!el) return;
+
+    if (!data.risultati || data.risultati.length === 0) {
+      // Nessuna foto trovata → fallback a generazione AI
+      el.innerHTML = `<div style="color:var(--ink-soft);font-size:13px;padding:8px 0;">
+        📷 Nessuna foto trovata su Wikimedia Commons.<br>
+        <span style="font-size:11px;opacity:.7">Provo a generare un'immagine con AI...</span>
+      </div>`;
+      setTimeout(() => generaImmagine(domandaOriginale), 800);
+      return;
+    }
+
+    // Mostra griglia foto reali
+    const foto = data.risultati;
+    let html = `<div style="margin-bottom:8px;font-size:12px;color:var(--ink-soft);">
+      📷 Foto reali da Wikimedia Commons — CC BY-SA
+    </div>`;
+
+    if (foto.length === 1) {
+      // Una sola foto → grande
+      html += `<a href="${foto[0].pagina}" target="_blank" rel="noopener" title="Vedi su Wikimedia Commons">
+        <img src="${foto[0].url}" alt="${foto[0].titolo}"
+          style="max-width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);display:block;"
+          onerror="this.parentNode.style.display='none'">
+      </a>`;
+      if (foto[0].desc) html += `<div style="font-size:11px;color:var(--ink-soft);margin-top:6px;line-height:1.4;">${foto[0].desc}</div>`;
+      if (foto[0].autore) html += `<div style="font-size:10px;color:var(--ink-soft);margin-top:3px;">© ${foto[0].autore}</div>`;
+    } else {
+      // Più foto → griglia 2 colonne
+      html += `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">`;
+      foto.forEach(f => {
+        html += `<a href="${f.pagina}" target="_blank" rel="noopener" style="display:block;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.12);">
+          <img src="${f.url}" alt="${f.titolo}"
+            style="width:100%;height:140px;object-fit:cover;display:block;"
+            onerror="this.parentNode.style.display='none'">
+        </a>`;
+      });
+      html += `</div>`;
+      html += `<div style="font-size:10px;color:var(--ink-soft);margin-top:6px;">© Wikimedia Commons — CC BY-SA · Clicca per la fonte</div>`;
+    }
+
+    el.innerHTML = html;
+    cronologia.push({ role:'user', content: domandaOriginale });
+    cronologia.push({ role:'assistant', content: `[Foto di: ${query}]` });
+
+  } catch(e) {
+    const el = document.getElementById(cid);
+    if (el) el.innerHTML = `<p style="color:var(--ink-soft);font-size:13px;">⚠️ Errore nel caricamento delle foto. Riprova.</p>`;
+  }
 }
 
 // ── Chat principale ───────────────────────────────────────────────
@@ -1886,7 +2020,16 @@ async function ask(q) {
   if (si) si.value = '';
   if (sc) sc.value = '';
 
-  if (isRichiestaImmagine(q)) { generaImmagine(q); return; }
+  if (isRichiestaImmagine(q)) {
+    // Distingue foto luogo reale (Wikimedia) da generazione creativa (FLUX)
+    const queryFotoReale = _rilevaFotoReale(q);
+    if (queryFotoReale) {
+      cercaFotoLuogo(queryFotoReale, q);
+    } else {
+      generaImmagine(q);
+    }
+    return;
+  }
 
   // Intercetta richiesta generazione PDF/DOCX
   const _formatoDoc = _rilevaFormato(q);
