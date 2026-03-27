@@ -2,7 +2,30 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Viewport ottimizzato PWA (viewport-fit=cover copre il notch iPhone) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Android / Chrome -->
+<meta name="theme-color" content="#1A3A5C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151820" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ModicaAI">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="/icon-167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+<!-- iOS Splash Screen -->
+<link rel="apple-touch-startup-image" media="(device-width:320px) and (device-height:568px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-640x1136.png">
+<link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:667px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-750x1334.png">
+<link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:812px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1125x2436.png">
+<link rel="apple-touch-startup-image" media="(device-width:414px) and (device-height:896px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-828x1792.png">
+<link rel="apple-touch-startup-image" media="(device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1170x2532.png">
+<link rel="apple-touch-startup-image" media="(device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1179x2556.png">
+<link rel="apple-touch-startup-image" media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1290x2796.png">
+
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -104,12 +127,6 @@
 <meta name="geo.position" content="36.8604;14.7742">
 <meta name="ICBM" content="36.8604, 14.7742">
 
-
-<meta name="theme-color" content="#1A3A5C">
-
-<!-- PWA manifest inline -->
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ"></script>
@@ -1718,7 +1735,7 @@ if (navigator.geolocation) {
     pos => {
       userLat = pos.coords.latitude;
       userLon = pos.coords.longitude;
-      console.log('Posizione utente:', userLat, userLon);
+
     },
     () => { /* negata o non disponibile — usiamo Modica default */ },
     { timeout: 5000, maximumAge: 60000 }
@@ -2276,7 +2293,7 @@ async function caricaNotizie() {
       }
       requestAnimationFrame(step);
     });
-  } catch(e) { console.warn('Ticker news error', e); }
+  } catch(e) {  }
 }
 
 // aggiornaTicker() rimossa — era obsoleta e incompatibile con la struttura {stazioni:[]}
@@ -2290,9 +2307,9 @@ async function caricaTraffco() {
   try {
     const res = await fetch(API_URL + '/traffico');
     const dati = await res.json();
-    console.log('[TRAFFICO]', JSON.stringify(dati));
+    );
     if (dati.segmenti && dati.segmenti.length) {
-      console.log('[TRAFFICO] aggiornaBarra con', dati.segmenti.map(s => s.stato));
+      );
       aggiornaBarra(dati.segmenti);
       window._trafficoDati = dati;
     } else {
@@ -2304,7 +2321,7 @@ async function caricaTraffco() {
       ]);
     }
   } catch(e) {
-    console.error('[TRAFFICO] Errore:', e);
+
     aggiornaBarra([
       { label: 'Modica Alta',  stato: 'sconosciuto' },
       { label: 'Modica Sorda', stato: 'sconosciuto' },
@@ -2502,7 +2519,7 @@ async function gestisciFile(input) {
     previewSub.textContent = '❌ Errore di connessione';
     btnUpload.classList.remove('active');
     fileContesto = null;
-    console.error('[FILE]', e);
+
   }
 
   // Reset input file per permettere di ricaricare lo stesso file

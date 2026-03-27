@@ -2,7 +2,30 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!-- Viewport ottimizzato PWA (viewport-fit=cover copre il notch iPhone) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Android / Chrome -->
+<meta name="theme-color" content="#1A3A5C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151820" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ModicaAI">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="/icon-167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+<!-- iOS Splash Screen -->
+<link rel="apple-touch-startup-image" media="(device-width:320px) and (device-height:568px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-640x1136.png">
+<link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:667px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-750x1334.png">
+<link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:812px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1125x2436.png">
+<link rel="apple-touch-startup-image" media="(device-width:414px) and (device-height:896px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-828x1792.png">
+<link rel="apple-touch-startup-image" media="(device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1170x2532.png">
+<link rel="apple-touch-startup-image" media="(device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1179x2556.png">
+<link rel="apple-touch-startup-image" media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1290x2796.png">
+
 <title>Il Patibolo — ModicaAI</title>
 <meta name="description" content="Gioca al Patibolo su ModicaAI. Trova la parola che collega tutte e 5 le coppie. Montepremi da €200.000!"/>
 <link rel="canonical" href="https://www.modicaai.it/gioco.html"/>
@@ -813,6 +836,28 @@ function rmToggle(){
 function rmNext(){_rmI=(_rmI+1)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
 function rmPrev(){_rmI=(_rmI-1+RM_STAZIONI.length)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
 (function(){if(_rmLoad())rmToggle();})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        if (newSW) {
+          newSW.addEventListener('statechange', () => {
+            if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+              newSW.postMessage('skipWaiting');
+            }
+          });
+        }
+      });
+      reg.update().catch(() => {});
+    }).catch(() => {});
+  });
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+}
 </script>
 </body>
 </html>

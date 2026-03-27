@@ -2,7 +2,30 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Viewport ottimizzato PWA (viewport-fit=cover copre il notch iPhone) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Android / Chrome -->
+<meta name="theme-color" content="#1A3A5C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151820" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ModicaAI">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="/icon-167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+<!-- iOS Splash Screen -->
+<link rel="apple-touch-startup-image" media="(device-width:320px) and (device-height:568px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-640x1136.png">
+<link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:667px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-750x1334.png">
+<link rel="apple-touch-startup-image" media="(device-width:375px) and (device-height:812px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1125x2436.png">
+<link rel="apple-touch-startup-image" media="(device-width:414px) and (device-height:896px) and (-webkit-device-pixel-ratio:2)" href="/splash/splash-828x1792.png">
+<link rel="apple-touch-startup-image" media="(device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1170x2532.png">
+<link rel="apple-touch-startup-image" media="(device-width:393px) and (device-height:852px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1179x2556.png">
+<link rel="apple-touch-startup-image" media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1290x2796.png">
+
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -67,12 +90,6 @@
 <meta name="ICBM" content="36.8604, 14.7742">
 
 
-<meta name="theme-color" content="#1A3A5C">
-
-<!-- PWA manifest inline -->
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ"></script>
 <script>
@@ -87,6 +104,7 @@
   :root {
     --white:    #FFFFFF;
     --bg:       #F8F8F8;
+    --bg-card:  #FFFFFF;
     --gold:     #B8860B;
     --gold-lt:  #D4A017;
     --terra:    #C1440E;
@@ -101,6 +119,7 @@
   body.dark {
     --white:    #1E2330;
     --bg:       #151820;
+    --bg-card:  #1E2330;
     --gold:     #D4A017;
     --gold-lt:  #E8B824;
     --sky:      #4A8FBF;
@@ -1157,24 +1176,7 @@
   </div>
 </div>
 
-<!-- ── Modale Mappa Farmacie ── -->
-<div class="farmacia-modal-overlay" id="farmaciaModalOverlay" onclick="chiudiMappaFarmacie(event)">
-  <div class="farmacia-modal">
-    <div class="farmacia-modal-header">
-      <div class="farmacia-modal-title">
-        💊 Farmacie a Modica
-        <span id="farmaciaModalSubtitle">Caricamento...</span>
-      </div>
-      <button class="farmacia-modal-close" onclick="chiudiMappaFarmacie(null)" title="Chiudi">✕</button>
-    </div>
-    <div id="farmaciaMapContainer"></div>
-    <div class="farmacia-list" id="farmaciaList"></div>
-    <div class="farmacia-modal-footer">
-      <span id="farmaciaFooterTs">Dati OpenStreetMap</span>
-      <span>🟢 Di turno &nbsp;⚫ Tutte le farmacie</span>
-    </div>
-  </div>
-</div>
+<!-- Modale farmacia rimosso: la mappa appare ora inline nella chat -->
 
 <div class="news-ticker" id="newsTicker">
   <div class="ticker-label">📰 News</div>
@@ -2541,40 +2543,66 @@ function chiudiMappaTraffco(e) {
 }
 
 // ── Mappa Farmacie ─────────────────────────────────────────────────
-let _farmaciaMap = null;
-let _farmaciaMarkers = [];
+// ── Mappa Farmacie INLINE in chat ────────────────────────────────
+// La mappa non apre più un modale overlay — appare come messaggio AI nella chat.
+// Una nuova istanza Leaflet viene creata per ogni richiesta (ID univoco).
+
+// Mirror Overpass: prova il principale, poi fallback
+async function _overpassQuery(query) {
+  const endpoints = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.private.coffee/api/interpreter',
+    'https://overpass.openstreetmap.fr/api/interpreter',
+  ];
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: 'data=' + encodeURIComponent(query),
+        signal: AbortSignal.timeout(12000)
+      });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data.elements) return data;
+    } catch(e) { /* prova il prossimo */ }
+  }
+  throw new Error('Tutti i server Overpass non raggiungibili');
+}
 
 async function apriMappaFarmacie(farmaciaDiTurnoNome) {
-  const overlay = document.getElementById('farmaciaModalOverlay');
-  if (!overlay) return;
-  overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  // Crea un div in chat con ID unico per la mappa Leaflet
+  const mapId  = 'fmap' + Date.now();
+  const listId = 'flist' + Date.now();
+  const subId  = 'fsub' + Date.now();
 
-  const subtitle = document.getElementById('farmaciaModalSubtitle');
-  const list = document.getElementById('farmaciaList');
-  const footer = document.getElementById('farmaciaFooterTs');
-  if (subtitle) subtitle.textContent = 'Caricamento mappa...';
-  if (list) list.innerHTML = '<div style="padding:10px;color:#888;font-size:13px;">⏳ Recupero farmacie da OpenStreetMap...</div>';
+  const msgHtml = `
+    <div style="font-size:13px;font-weight:700;color:var(--sky);margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+      💊 Farmacie a Modica
+      <span id="${subId}" style="font-size:11px;font-weight:400;color:var(--ink-soft);">Caricamento mappa...</span>
+    </div>
+    <div id="${mapId}" style="width:100%;height:260px;border-radius:12px;overflow:hidden;border:1px solid var(--border);"></div>
+    <div id="${listId}" style="margin-top:10px;font-size:13px;color:var(--ink-soft);">
+      ⏳ Recupero farmacie da OpenStreetMap...
+    </div>
+    <div style="margin-top:8px;font-size:10px;color:var(--ink-soft);">
+      🟢 Di turno &nbsp;⚫ Tutte le farmacie &nbsp;·&nbsp; Dati © OpenStreetMap
+    </div>`;
 
-  // Inizializza mappa Leaflet (una sola volta)
-  const container = document.getElementById('farmaciaMapContainer');
+  addMessage('ai', msgHtml, 'OpenStreetMap', '');
+
+  // Piccolo delay per lasciare al DOM il tempo di renderizzare il div
+  await new Promise(r => setTimeout(r, 120));
+
+  const container = document.getElementById(mapId);
   if (!container) return;
-  container.style.height = '260px';
 
-  if (!_farmaciaMap) {
-    _farmaciaMap = L.map('farmaciaMapContainer', { zoomControl: true }).setView([36.8463, 14.7642], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap',
-      maxZoom: 19
-    }).addTo(_farmaciaMap);
-  } else {
-    // Rimuovi marker precedenti
-    _farmaciaMarkers.forEach(m => _farmaciaMap.removeLayer(m));
-    _farmaciaMarkers = [];
-    setTimeout(() => _farmaciaMap.invalidateSize(), 100);
-  }
+  // Inizializza mappa Leaflet nell'elemento inline
+  const map = L.map(mapId, { zoomControl: true }).setView([36.8463, 14.7642], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap', maxZoom: 19
+  }).addTo(map);
 
-  // Query Overpass — tutte le farmacie di Modica
+  // Query Overpass con fallback automatico
   const query = `[out:json][timeout:15];
     (
       node["amenity"="pharmacy"](36.80,14.72,36.90,14.82);
@@ -2582,102 +2610,81 @@ async function apriMappaFarmacie(farmaciaDiTurnoNome) {
     );
     out center;`;
 
+  const subEl  = () => document.getElementById(subId);
+  const listEl = () => document.getElementById(listId);
+
   try {
-    const res = await fetch('https://overpass-api.de/api/interpreter', {
-      method: 'POST',
-      body: 'data=' + encodeURIComponent(query)
-    });
-    const data = await res.json();
+    const data = await _overpassQuery(query);
     const elementi = data.elements || [];
 
     if (elementi.length === 0) {
-      if (subtitle) subtitle.textContent = 'Nessuna farmacia trovata';
-      if (list) list.innerHTML = '<div style="padding:10px;color:#888;font-size:13px;">Nessuna farmacia trovata nella zona.</div>';
+      if (subEl()) subEl().textContent = 'Nessuna farmacia trovata';
+      if (listEl()) listEl().innerHTML = '<span style="color:#888;">Nessuna farmacia trovata nella zona.</span>';
       return;
     }
 
-    if (subtitle) subtitle.textContent = elementi.length + ' farmacie trovate';
-    if (footer) footer.textContent = 'Dati OpenStreetMap · ' + new Date().toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'});
+    if (subEl()) subEl().textContent = elementi.length + ' farmacie trovate · ' +
+      new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
 
-    // Normalizza nome per confronto con farmacia di turno
     const normalizza = s => (s||'').toLowerCase().replace(/farmaci[ae]\s*/i,'').trim();
-    const turnoNorm = normalizza(farmaciaDiTurnoNome || '');
-
-    const bounds = [];
-    let listHTML = '';
+    const turnoNorm  = normalizza(farmaciaDiTurnoNome || '');
+    const markers = [];
+    const bounds  = [];
+    let   listHTML = '';
 
     elementi.forEach((el, i) => {
-      const lat = el.lat || el.center?.lat;
-      const lon = el.lon || el.center?.lon;
+      const lat  = el.lat || el.center?.lat;
+      const lon  = el.lon || el.center?.lon;
       if (!lat || !lon) return;
 
-      const nome = el.tags?.name || el.tags?.['name:it'] || 'Farmacia';
-      const addr = [el.tags?.['addr:street'], el.tags?.['addr:housenumber']]
-                    .filter(Boolean).join(' ') || '';
+      const nome  = el.tags?.name || el.tags?.['name:it'] || 'Farmacia';
+      const addr  = [el.tags?.['addr:street'], el.tags?.['addr:housenumber']].filter(Boolean).join(' ') || '';
       const phone = el.tags?.phone || el.tags?.['contact:phone'] || '';
 
-      // Determina se è di turno (confronto fuzzy sul nome)
-      const isTurno = turnoNorm && normalizza(nome).includes(turnoNorm) ||
-                      turnoNorm && turnoNorm.includes(normalizza(nome).split(' ')[0]);
+      const isTurno = turnoNorm && (
+        normalizza(nome).includes(turnoNorm) ||
+        turnoNorm.includes(normalizza(nome).split(' ')[0])
+      );
 
-      // Icona marker
-      const iconHtml = `<div style="
-        background:${isTurno ? '#22c55e' : '#64748b'};
-        width:14px;height:14px;border-radius:50%;
-        border:2px solid white;
-        box-shadow:0 1px 4px rgba(0,0,0,0.4);">
-      </div>`;
-      const icon = L.divIcon({ html: iconHtml, className: '', iconSize: [14,14], iconAnchor: [7,7] });
+      const iconHtml = `<div style="background:${isTurno?'#22c55e':'#64748b'};width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`;
+      const icon = L.divIcon({ html: iconHtml, className: '', iconSize:[14,14], iconAnchor:[7,7] });
 
-      const marker = L.marker([lat, lon], { icon })
-        .bindPopup(`<b>${nome}</b>${addr ? '<br><small>'+addr+'</small>' : ''}${phone ? '<br>📞 '+phone : ''}${isTurno ? '<br><span style="color:#16a34a;font-weight:700;">✅ Di turno</span>' : ''}`)
-        .addTo(_farmaciaMap);
+      const marker = L.marker([lat,lon],{icon})
+        .bindPopup(`<b>${nome}</b>${addr?'<br><small>'+addr+'</small>':''}${phone?'<br>📞 '+phone:''}${isTurno?'<br><span style="color:#16a34a;font-weight:700">✅ Di turno</span>':''}`)
+        .addTo(map);
 
-      _farmaciaMarkers.push(marker);
+      markers.push(marker);
       bounds.push([lat, lon]);
 
-      // Lista sotto la mappa
-      listHTML += `<div class="farmacia-item ${isTurno ? 'turno-attivo' : ''}" onclick="_farmaciaZoom(${i})">
-        <div class="farmacia-item-dot ${isTurno ? 'turno' : 'normale'}"></div>
+      listHTML += `<div class="farmacia-item ${isTurno?'turno-attivo':''}"
+        onclick="(function(){const m=window._fmapMarkers_${mapId}[${markers.length-1}];if(m){window._fmapInst_${mapId}.setView(m.getLatLng(),17);m.openPopup();}})()"
+        style="cursor:pointer;">
+        <div class="farmacia-item-dot ${isTurno?'turno':'normale'}"></div>
         <div>
-          <div class="farmacia-item-name">${nome}${isTurno ? ' ✅' : ''}</div>
-          ${addr ? '<div class="farmacia-item-addr">'+addr+'</div>' : ''}
+          <div class="farmacia-item-name">${nome}${isTurno?' ✅':''}</div>
+          ${addr?'<div class="farmacia-item-addr">'+addr+'</div>':''}
         </div>
       </div>`;
     });
 
-    if (list) list.innerHTML = listHTML || '<div style="padding:10px;color:#888;font-size:13px;">Nessuna farmacia con coordinate trovata.</div>';
+    // Salva riferimenti su window per i click della lista
+    window[`_fmapInst_${mapId}`]    = map;
+    window[`_fmapMarkers_${mapId}`] = markers;
 
-    // Adatta la mappa ai marker
+    if (listEl()) listEl().innerHTML = listHTML || '<span style="color:#888;">Nessuna farmacia con coordinate trovata.</span>';
+
     if (bounds.length > 0) {
       setTimeout(() => {
-        _farmaciaMap.invalidateSize();
-        _farmaciaMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 15 });
-      }, 150);
+        map.invalidateSize();
+        map.fitBounds(bounds, { padding:[24,24], maxZoom:15 });
+      }, 200);
     }
 
   } catch(err) {
-    if (subtitle) subtitle.textContent = 'Errore caricamento';
-    if (list) list.innerHTML = '<div style="padding:10px;color:#c0392b;font-size:13px;">⚠️ Impossibile caricare le farmacie. Controlla la connessione.</div>';
-    console.error('Overpass error:', err);
+    if (subEl()) subEl().textContent = 'Errore caricamento';
+    if (listEl()) listEl().innerHTML = `<span style="color:#c0392b;">⚠️ Impossibile caricare le farmacie (${err.message}). Riprova tra qualche secondo.</span>`;
+    console.error('Farmacia map error:', err);
   }
-}
-
-function _farmaciaZoom(idx) {
-  const m = _farmaciaMarkers[idx];
-  if (m && _farmaciaMap) {
-    _farmaciaMap.setView(m.getLatLng(), 17);
-    m.openPopup();
-  }
-}
-
-function chiudiMappaFarmacie(e) {
-  if (e && e.target !== document.getElementById('farmaciaModalOverlay')) return;
-  const overlay = document.getElementById('farmaciaModalOverlay');
-  if (overlay) overlay.classList.remove('open');
-  document.body.style.overflow = '';
-  // Invalida dimensioni mappa per il prossimo apertura
-  if (_farmaciaMap) setTimeout(() => _farmaciaMap.invalidateSize(), 50);
 }
 
 // setInterval traffico spostato dentro DOMContentLoaded
