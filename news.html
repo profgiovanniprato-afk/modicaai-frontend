@@ -107,6 +107,7 @@
     .masthead {
       border-bottom: 3px double var(--navy);
       padding: 20px 24px 14px;
+      padding-top: 138px;
       text-align: center;
       background: var(--bg-card);
     }
@@ -695,6 +696,58 @@ function rmToggle(){
 function rmNext(){_rmI=(_rmI+1)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
 function rmPrev(){_rmI=(_rmI-1+RM_STAZIONI.length)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
 (function(){if(_rmLoad())rmToggle();})();
+</script>
+<script>
+// ── Ticker carburanti, traffico, news ──────────────────────────
+const _TAPI = 'https://modicaai-api.onrender.com';
+async function _loadFuel(){
+  try{
+    const d=await(await fetch(_TAPI+'/carburanti')).json();
+    if(!d.stazioni?.length)return;
+    const t=document.getElementById('fuelTrack');
+    let h='';
+    d.stazioni.forEach(s=>['Benzina_self','Gasolio_self'].map(k=>s.prezzi[k]).filter(Boolean).forEach(p=>{
+      h+=`<span class="ticker-item"><strong>${s.nome}</strong> ${p.carburante}: <strong>${p.prezzo.toFixed(3)} €/L</strong></span>`;
+    }));
+    if(!h)return;
+    t.innerHTML=h+h;
+    let pos=0,tw=t.scrollWidth/2;
+    setInterval(()=>{pos-=0.3;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
+  }catch(e){}
+}
+async function _loadTraffic(){
+  try{
+    const d=await(await fetch(_TAPI+'/traffico')).json();
+    if(!d.segmenti?.length)return;
+    document.getElementById('trafficSegments').innerHTML=d.segmenti.map(s=>
+      `<div class="traffic-seg ${s.stato||'sconosciuto'}"><div class="traffic-dot"></div>${s.nome||''}</div>`
+    ).join('');
+  }catch(e){}
+}
+async function _loadTickerNews(){
+  try{
+    const d=await(await fetch(_TAPI+'/news')).json();
+    if(!d.items?.length)return;
+    const t=document.getElementById('tickerTrack');
+    t.innerHTML='';
+    [...d.items,...d.items].forEach(it=>{
+      const a=document.createElement('a');
+      a.className='ticker-item';
+      a.textContent=it.title;
+      a.href=it.link||'#';
+      a.target='_blank';
+      a.rel='noopener';
+      t.appendChild(a);
+    });
+    let pos=0,tw=t.scrollWidth/2;
+    setInterval(()=>{pos-=0.4;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
+  }catch(e){}
+}
+_loadFuel();
+_loadTraffic();
+_loadTickerNews();
+setInterval(_loadTraffic, 3*60*1000);
+setInterval(_loadTickerNews, 5*60*1000);
 </script>
 </body>
 </html>
