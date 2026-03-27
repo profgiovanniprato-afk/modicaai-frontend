@@ -480,6 +480,13 @@ async function iniziaPartita(){
     const data=await res.json();
     if(!data.partita)throw new Error();
     partita=data.partita;
+    // Sanitizza tutte le parole: trim + prima lettera maiuscola
+    partita.coppie=partita.coppie.map(c=>({
+      ...c,
+      a: capitalizza(c.a),
+      b: capitalizza(c.b)
+    }));
+    partita.soluzione=capitalizza(partita.soluzione);
     avviaGioco();
   }catch(e){
     document.getElementById('loadingScreen').classList.remove('show');
@@ -487,6 +494,13 @@ async function iniziaPartita(){
     document.getElementById('temaBar').style.display='flex';
     alert('Errore di connessione. Riprova tra qualche secondo.');
   }
+}
+
+// Sanitizza una parola: trim, prima lettera maiuscola, rimuove spazi multipli
+function capitalizza(s){
+  if(!s)return s;
+  s=s.trim().replace(/\s+/g,' ');
+  return s.charAt(0).toUpperCase()+s.slice(1);
 }
 
 function avviaGioco(){
@@ -712,19 +726,25 @@ function fermaFuochi(){
 }
 
 // TICKER NEWS
+let _tickerNewsInterval = null;
 async function caricaNotizie(){
   try{
     const d=await(await fetch(API_URL+'/news')).json();
     if(!d.items?.length)return;
     const t=document.getElementById('tickerTrack');t.innerHTML='';
     [...d.items,...d.items].forEach(item=>{const a=document.createElement('a');a.className='ticker-item';a.textContent=item.title;a.href=item.link||'#';a.target='_blank';a.rel='noopener';t.appendChild(a);});
+    // Ferma interval precedente prima di crearne uno nuovo
+    if(_tickerNewsInterval)clearInterval(_tickerNewsInterval);
     const tw=t.scrollWidth/2;let pos=0;
-    setInterval(()=>{pos-=0.4;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
+    _tickerNewsInterval=setInterval(()=>{pos-=0.4;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
   }catch(e){}
 }
 
 // TICKER CARBURANTI
+let _tickerFuelLoaded = false;
 async function caricaCarburanti(){
+  // I prezzi carburante cambiano raramente — carica una volta sola
+  if(_tickerFuelLoaded)return;
   try{
     const d=await(await fetch(API_URL+'/carburanti')).json();
     if(!d.stazioni?.length)return;
@@ -733,6 +753,7 @@ async function caricaCarburanti(){
     d.stazioni.forEach(s=>['Benzina_self','Gasolio_self','GPL_self'].map(k=>s.prezzi[k]).filter(Boolean).forEach(p=>{items+=`<span class="ticker-item"><strong>${s.nome}</strong> ${p.carburante} ${p.tipo}: <strong>${p.prezzo.toFixed(3)} €/L</strong></span>`;}));
     if(!items)return;
     t.innerHTML=items+items;
+    _tickerFuelLoaded=true;
     const tw=t.scrollWidth/2;let pos=0;
     setInterval(()=>{pos-=0.3;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
   }catch(e){}
