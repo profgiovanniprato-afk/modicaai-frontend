@@ -1067,6 +1067,7 @@
   <div class="snb-links">
     <a href="/" class="snb-link active">Home</a>
     <a href="/news.html" class="snb-link">News</a>
+    <a href="/gioco.html" class="snb-link">🎮 Giochi</a>
     <a href="/mission.html" class="snb-link">Mission</a>
     <div class="snb-dropdown">
       <button class="snb-dropdown-btn">
@@ -1844,8 +1845,13 @@ function isRichiestaImmagine(q) {
     return visivo.test(d) || (luogo.test(d) && !servizi.test(d));
   }
 
-  // Regola 1: "come appare / com'è [luogo]"
-  if (/(?:come appare|com'è|come si presenta)/.test(d)) return true;
+  // Regola 1: "come appare / com'è [luogo fisico]" — solo se accompagnato da luogo reale
+  if (/(?:come appare|com'è|come si presenta)/.test(d)) {
+    // Deve contenere un luogo fisico visitabile, NON meteo/mare/servizi
+    const luogoOk = /(chiesa|cattedrale|duomo|castello|palazzo|museo|monumento|tempio|basilica|cappella|torre|convento|abbazia|santuario|grotta|rupestre|parco|piazza|teatro|patrimonio|cathedral|church|castle|museum|palace|tower|monument)/.test(d);
+    const nonLuogo = /\b(mare|meteo|tempo|traffico|benzina|carburante|farmaci[ae]|notizie?|prezzi?|ristoranti?|pioggia|sole|caldo|freddo|vento)\b/.test(d);
+    return luogoOk && !nonLuogo;
+  }
 
   // Regola 2: verbo creativo → sempre generazione AI
   if (/^(disegna|disegnami|dipingi|dipingimi|illustra|illustrami)/.test(d)) return true;
@@ -2029,7 +2035,7 @@ async function ask(q) {
   try {
     const res = await fetch(API_URL + '/ask-stream', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domanda: q, session_id: SESSION_ID, cronologia: cronologia.slice(0,-1), lat: userLat, lon: userLon })
+      body: JSON.stringify({ domanda: q, session_id: SESSION_ID, cronologia: cronologia.slice(0,-1), lat: userLat, lon: userLon, lang: lang })
     });
     if (!res.ok || !res.body) throw new Error('no stream');
     const reader = res.body.getReader();
@@ -2107,7 +2113,7 @@ async function ask(q) {
     // Fallback /ask classico (se streaming non disponibile)
     try {
       const r2 = await fetch(API_URL+'/ask', { method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ domanda:q, session_id:SESSION_ID, cronologia:cronologia.slice(0,-1), lat:userLat, lon:userLon }) });
+        body: JSON.stringify({ domanda:q, session_id:SESSION_ID, cronologia:cronologia.slice(0,-1), lat:userLat, lon:userLon, lang:lang }) });
       const d2 = await r2.json();
       if (d2.lingua) aggiorna_lingua(d2.lingua);
       removeTyping();
@@ -2789,7 +2795,7 @@ async function askConFile(domanda) {
         domanda: domandaArricchita,
         session_id: SESSION_ID,
         cronologia: cronologia.slice(0, -1),
-        lat: userLat, lon: userLon
+        lat: userLat, lon: userLon, lang: lang
       })
     });
 
