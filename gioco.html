@@ -78,7 +78,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 @keyframes stripe{0%{background-position:0%}100%{background-position:300%}}
 
 /* MAIN */
-.main-content{padding-top:138px;padding-bottom:60px;min-height:100vh;}
+.main-content{padding-top:185px;padding-bottom:60px;min-height:100vh;}
 .gioco-wrap{max-width:680px;margin:0 auto;padding:24px 16px;}
 
 /* HEADER */
@@ -235,6 +235,24 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
     .rm-btn{width:24px;height:24px;}
     .radio-mini{gap:3px;margin-right:4px;padding-right:5px;}
   }
+
+  /* ── Barra header (logo + radio + dark + lang) per gioco e news ── */
+  .page-header-bar{position:fixed;top:118px;left:0;right:0;z-index:300;height:44px;background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border,#EBEBEB);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  body.dark .page-header-bar{background:rgba(21,24,32,0.97);}
+  .phb-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .phb-mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#1A3A5C,#2a5a8c);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-shrink:0;}
+  .phb-mark::after{content:"";position:absolute;bottom:-3px;right:-3px;width:10px;height:10px;background:#B8860B;border-radius:50%;opacity:0.7;}
+  .phb-mark svg{position:relative;z-index:1;}
+  .phb-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ink,#1A1A1A);}
+  .phb-name span{color:#B8860B;}
+  .phb-right{display:flex;align-items:center;gap:8px;}
+  .phb-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border,#EBEBEB);background:var(--white,#fff);color:var(--ink-mid,#555);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.18s;flex-shrink:0;}
+  .phb-btn:hover{border-color:#1A3A5C;color:#1A3A5C;}
+  .phb-lang{display:flex;gap:2px;background:var(--bg,#F8F8F8);border-radius:8px;padding:2px;border:1px solid var(--border,#EBEBEB);}
+  .phb-lang-btn{padding:3px 7px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--ink-soft,#999);font-family:inherit;}
+  .phb-lang-btn.active{background:var(--white,#fff);color:#1A3A5C;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+  @media(max-width:640px){.page-header-bar{top:104px;height:40px;padding:0 12px;}.phb-name{font-size:14px;}}
+
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Giochi","item":"https://www.modicaai.it/gioco.html"}]}
@@ -269,16 +287,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
     <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" title="Facebook"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
     <a href="https://www.instagram.com/modicaai.it" target="_blank" rel="noopener" title="Instagram"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
     <a href="https://www.tiktok.com/@modicaai" target="_blank" rel="noopener" title="TikTok"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V7.0a4.85 4.85 0 01-1.01-.31z"/></svg></a>
-  </div>
-<div class="radio-mini" id="radioMini" style="margin-left:8px;border-left:1px solid rgba(255,255,255,0.15);padding-left:8px;">
-    <span class="radio-mini-label" style="color:rgba(255,255,255,0.7);">📻 Radio</span>
-    <span class="radio-mini-dot" id="rmDot" style="display:none;background:#ef4444;"></span>
-    <span class="radio-mini-name" id="rmName" style="display:none;color:#D4A017;font-size:10px;font-weight:600;"></span>
-    <button class="rm-btn" onclick="rmPrev()" title="Precedente" style="border-color:rgba(255,255,255,0.3);background:transparent;color:rgba(255,255,255,0.7);">&#9664;</button>
-    <button class="rm-btn rm-play" id="rmPlay" onclick="rmToggle()" title="Play/Pausa" style="border-color:#D4A017;color:#D4A017;background:transparent;">&#9654;</button>
-    <button class="rm-btn" onclick="rmNext()" title="Successiva" style="border-color:rgba(255,255,255,0.3);background:transparent;color:rgba(255,255,255,0.7);">&#9654;&#9654;</button>
-  </div>
-</nav>
+  </div></nav>
 
 <div class="news-ticker" id="newsTicker">
   <div class="ticker-label">📰 News</div>
@@ -297,6 +306,31 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 </div>
 
 <div class="top-stripe"></div>
+
+<!-- Barra header: logo + radio + dark + lingue -->
+<div class="page-header-bar" id="pageHeaderBar">
+  <a href="/" class="phb-logo" aria-label="ModicaAI Home">
+    <div class="phb-mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z" fill="white" opacity="0.9"/><circle cx="12" cy="10" r="3" fill="white" opacity="0.6"/></svg></div>
+    <span class="phb-name">Modica<span>AI</span></span>
+  </a>
+  <div class="phb-right">
+    <div class="radio-mini" id="radioMini">
+      <span class="radio-mini-label">📻 Radio</span>
+      <span class="radio-mini-dot" id="rmDot" style="display:none"></span>
+      <span class="radio-mini-name" id="rmName" style="display:none"></span>
+      <button class="rm-btn" onclick="rmPrev()" title="Precedente">&#9664;</button>
+      <button class="rm-btn rm-play" id="rmPlay" onclick="rmToggle()" title="Play/Pausa">&#9654;</button>
+      <button class="rm-btn" onclick="rmNext()" title="Successiva">&#9654;&#9654;</button>
+    </div>
+    <button class="phb-btn" onclick="document.body.classList.toggle('dark')" title="Dark mode">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    </button>
+    <div class="phb-lang">
+      <button class="phb-lang-btn active" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">IT</button>
+      <button class="phb-lang-btn" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">EN</button>
+    </div>
+  </div>
+</div>
 <canvas id="fireworks-canvas"></canvas>
 
 <div class="main-content">
@@ -725,13 +759,13 @@ setInterval(caricaTraffico,3*60*1000);
 // ── RADIO ──────────────────────────────────────────────────────
 const RM_STAZIONI=[
   {n:'Radio RTM',        u:'https://stream.zeno.fm/0r0xa792kwzuv'},
-  {n:'Radio Cuore',      u:'https://stream.zeno.fm/mjk7cqzvk4zuv'},
-  {n:'Radio Italia',     u:'https://radioitalia.leanstream.co/radioitalia'},
-  {n:'RDS',              u:'https://stream.rds.it/rds128.mp3'},
+  {n:'Radio Cuore',      u:'https://stream.zeno.fm/cjdb0n4aaajuv'},
+  {n:'Radio Italia',     u:'https://radioitalia.leanstream.co/radioitaliaHD'},
+  {n:'RDS',              u:'https://stream.rds.radio/audio/rds.stream_mp3_128/stream'},
   {n:'RTL 102.5',        u:'https://streamingv2.shoutcast.com/rtl-1025'},
-  {n:'Radio DeeJay',     u:'https://radiodeejay.leanstream.co/RadioDeeJay_128'},
+  {n:'Radio DeeJay',     u:'https://stream.deejay.it/RadioDeeJay.mp3'},
   {n:'Radio 105',        u:'https://icecast.unitedradio.it/Radio105.mp3'},
-  {n:'Virgin Radio',     u:'https://icecast.unitedradio.it/VirginRadio.mp3'},
+  {n:'Virgin Radio',     u:'https://icecast.unitedradio.it/Virgin.mp3'},
   {n:'Rai Radio 1',      u:'https://icestreaming.rai.it/1.mp3'},
   {n:'Rai Radio 2',      u:'https://icestreaming.rai.it/2.mp3'},
   {n:'Rai Radio 3',      u:'https://icestreaming.rai.it/3.mp3'},
