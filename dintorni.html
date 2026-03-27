@@ -35,7 +35,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ModicaAI — Assistente AI Gratuito per Modica, Sicilia">
-<meta name="twitter:description" content="AI gratuita senza registrazione. Carburanti, notizie, meteo, farmacie, traffico live. Gratis, dal tuo smartphone.">
+<meta name="twitter:description" content="I dintorni di Modica: Ragusa Ibla (15 km), Scicli (20 km), Noto (55 km), Cava d'Ispica (18 km), Siracusa (80 km) e le spiagge. Distanze e cosa vedere.">
 <meta name="twitter:image" content="https://www.modicaai.it/icon-512.png">
   <!-- JSON-LD Schema.org -->
   <!-- Canonical univoco -->
@@ -968,6 +968,28 @@
     .snb-dropdown-menu { left: auto; right: 0; min-width: 160px; }
   }
 
+
+  /* ── Radio mini-player nella barra ── */
+  .radio-mini{display:flex;align-items:center;gap:5px;margin-right:6px;padding-right:8px;border-right:1px solid var(--border);}
+  .radio-mini-label{font-size:10px;font-weight:700;color:var(--ink-soft);letter-spacing:0.3px;white-space:nowrap;}
+  .radio-mini-name{font-size:10px;font-weight:600;color:var(--sky);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;display:none;}
+  .radio-mini-dot{width:5px;height:5px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:rm-pulse 1.1s infinite;display:none;}
+  @keyframes rm-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(1.5)}}
+  .rm-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);background:var(--white);color:var(--ink-mid);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all 0.17s;flex-shrink:0;}
+  .rm-btn:hover{border-color:var(--sky);color:var(--sky);transform:scale(1.1);}
+  .rm-btn.rm-play{border-color:var(--gold);color:var(--gold);background:rgba(184,134,11,0.06);}
+  .rm-btn.rm-play.playing{background:rgba(184,134,11,0.2);box-shadow:0 0 0 2px rgba(184,134,11,0.15);}
+  body.dark .rm-btn{background:var(--white);border-color:var(--border);color:var(--ink-mid);}
+  body.dark .rm-btn.rm-play{border-color:var(--gold);color:var(--gold);}
+  body.dark .radio-mini-label{color:var(--ink-soft);}
+  body.dark .radio-mini-name{color:var(--gold-lt);}
+  @media(max-width:640px){
+    .radio-mini-label{display:none;}
+    .radio-mini-name{display:none!important;}
+    .radio-mini-dot{display:none!important;}
+    .rm-btn{width:24px;height:24px;}
+    .radio-mini{gap:3px;margin-right:4px;padding-right:5px;}
+  }
 </style>
 
 <style>
@@ -1032,21 +1054,23 @@
 }
 </style>
 <script>function pgFaq(b){b.closest('.pg-faq-item').classList.toggle('open');}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Dintorni","item":"https://www.modicaai.it/dintorni.html"}]}
+</script>
 </head>
 <body>
 <body>
 
 <!-- ── Barra navigazione ── -->
-<nav class="site-nav-bar" role="navigation" aria-label="Navigazione">
+<nav class="site-nav-bar" role="navigation" aria-label="Navigazione principale">
   <a href="/" class="snb-logo">Modica<span>AI</span></a>
   <div class="snb-links">
     <a href="/" class="snb-link">Home</a>
+    <a href="/news.html" class="snb-link">News</a>
+    <a href="/gioco.html" class="snb-link">🎮 Giochi</a>
     <a href="/mission.html" class="snb-link">Mission</a>
     <div class="snb-dropdown">
-      <button class="snb-dropdown-btn">
-        Guide
-        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
+      <button class="snb-dropdown-btn" style="color:#fff">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
       <div class="snb-dropdown-menu">
         <a href="/cioccolato.html">Cioccolato IGP</a>
         <a href="/cosa-vedere.html">Cosa vedere</a>
@@ -1062,15 +1086,9 @@
     <a href="/contatti.html" class="snb-link">Contatti</a>
   </div>
   <div class="snb-social">
-    <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-    </a>
-    <a href="https://www.instagram.com/modicaai.it?igsh=Y3Q4ZzZhanhqcDE0&utm_source=qr" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-    </a>
-    <a href="https://www.tiktok.com/@modicaai" target="_blank" rel="noopener" title="TikTok" aria-label="TikTok">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V7.0a4.85 4.85 0 01-1.01-.31z"/></svg>
-    </a>
+    <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" title="Facebook"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+    <a href="https://www.instagram.com/modicaai.it" target="_blank" rel="noopener" title="Instagram"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+    <a href="https://www.tiktok.com/@modicaai" target="_blank" rel="noopener" title="TikTok"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V7.0a4.85 4.85 0 01-1.01-.31z"/></svg></a>
   </div>
 </nav>
 
@@ -1139,6 +1157,14 @@
     </div>
   </div>
   <div class="header-right">
+    <div class="radio-mini" id="radioMini">
+      <span class="radio-mini-label">📻 Radio</span>
+      <span class="radio-mini-dot" id="rmDot"></span>
+      <span class="radio-mini-name" id="rmName">Radio RTM</span>
+      <button class="rm-btn" onclick="rmPrev()" title="Stazione precedente">&#9664;</button>
+      <button class="rm-btn rm-play" id="rmPlay" onclick="rmToggle()" title="Play / Pausa">&#9654;</button>
+      <button class="rm-btn" onclick="rmNext()" title="Stazione successiva">&#9654;&#9654;</button>
+    </div>
     <button class="btn-new-chat" onclick="nuovaChat()" title="Nuova conversazione">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       <span class="btn-label">Nuova chat</span>
@@ -2850,33 +2876,45 @@ async function aggiornaStatoFarmacia() {
 </script>
 
 <!-- SEO Content — visibile ai crawler, nascosto nell'UI -->
-<section id="seo-content" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
-  <h1>ModicaAI — Assistente AI Gratuito per Modica, Sicilia</h1>
-  <h2>AI gratuita senza registrazione</h2>
-  <p>ModicaAI è un assistente AI completamente gratuito, senza registrazione e senza abbonamento. Funziona come ChatGPT ma è gratis e disponibile 24/7 direttamente dal browser, ottimizzato per smartphone. Puoi usarlo per fare domande, analizzare documenti PDF, generare immagini e molto altro — tutto senza creare un account.</p>
-  <h2>Assistente AI locale per Modica, Sicilia</h2>
-  <p>ModicaAI è il primo assistente intelligente dedicato a Modica, la città del cioccolato in Sicilia. Integra dati in tempo reale su prezzi carburanti, notizie locali, meteo, farmacie di turno e traffico viario.</p>
-  <h2>Servizi disponibili</h2>
-  <ul>
-    <li>AI gratuita senza registrazione — come ChatGPT ma gratis</li>
-    <li>Analisi documenti PDF, Word e testo con intelligenza artificiale</li>
-    <li>Generazione immagini con AI</li>
-    <li>Prezzi carburanti a Modica in tempo reale</li>
-    <li>Farmacia di turno a Modica oggi</li>
-    <li>Meteo Modica in tempo reale</li>
-    <li>Notizie locali di Modica aggiornate</li>
-    <li>Traffico live Modica</li>
-    <li>Ristoranti e dove mangiare a Modica</li>
-    <li>Cosa vedere a Modica: Duomo di San Giorgio, centro barocco UNESCO</li>
-    <li>Cioccolato di Modica IGP</li>
-    <li>Informazioni turistiche su Modica, Ragusa e dintorni</li>
-  </ul>
-  <h2>Domande frequenti</h2>
-  <h3>ModicaAI è davvero gratuito?</h3>
-  <p>Sì, ModicaAI è completamente gratuito. Non serve registrarsi, non ci sono abbonamenti e non viene richiesta alcuna carta di credito. Basta aprire il sito e iniziare a usarlo.</p>
-  <h3>Cosa vedere a Modica?</h3>
-  <p>Il Duomo di San Giorgio, il Duomo di San Pietro, il Museo del Cioccolato, il Castello dei Conti, le Grotte di S. Nicola e il vivace corso principale sono le attrazioni principali di Modica.</p>
-  <h3>Il cioccolato di Modica</h3>
-  <p>Il cioccolato di Modica è un prodotto IGP lavorato a freddo, senza grassi aggiunti, con una texture granulosa unica al mondo. ModicaAI ti indica i migliori cioccolatieri locali.</p>
-  <h3>Come raggiungere Modica</h3>
-  <p>Modica si raggiunge in treno da Catania, Siracusa e Ragusa, o in auto dall'autostrada A18. L'aeroporto 
+<script>
+// ── RADIO ──────────────────────────────────────────────────────
+const RM_STAZIONI=[
+  {n:'Radio RTM',        u:'https://stream.zeno.fm/0r0xa792kwzuv'},
+  {n:'Radio Cuore',      u:'https://stream.zeno.fm/mjk7cqzvk4zuv'},
+  {n:'Radio Italia',     u:'https://radioitalia.leanstream.co/radioitalia'},
+  {n:'RDS',              u:'https://stream.rds.it/rds128.mp3'},
+  {n:'RTL 102.5',        u:'https://streamingv2.shoutcast.com/rtl-1025'},
+  {n:'Radio DeeJay',     u:'https://radiodeejay.leanstream.co/RadioDeeJay_128'},
+  {n:'Radio 105',        u:'https://icecast.unitedradio.it/Radio105.mp3'},
+  {n:'Virgin Radio',     u:'https://icecast.unitedradio.it/VirginRadio.mp3'},
+  {n:'Rai Radio 1',      u:'https://icestreaming.rai.it/1.mp3'},
+  {n:'Rai Radio 2',      u:'https://icestreaming.rai.it/2.mp3'},
+  {n:'Rai Radio 3',      u:'https://icestreaming.rai.it/3.mp3'},
+];
+let _rmI=0,_rmA=null,_rmP=false;
+function _rmSave(){try{localStorage.setItem('rm',JSON.stringify({i:_rmI,p:_rmP}));}catch(e){}}
+function _rmLoad(){try{const s=JSON.parse(localStorage.getItem('rm')||'{}');if(s.i!=null)_rmI=s.i;return s.p===true;}catch(e){return false;}}
+function _rmRefresh(){
+  const nm=document.getElementById('rmName'),dt=document.getElementById('rmDot'),btn=document.getElementById('rmPlay');
+  if(!btn)return;
+  if(_rmP){
+    btn.classList.add('playing');btn.innerHTML='&#9646;&#9646;';
+    if(nm){nm.textContent=RM_STAZIONI[_rmI].n;nm.style.display='inline';}
+    if(dt)dt.style.display='inline-block';
+  }else{
+    btn.classList.remove('playing');btn.innerHTML='&#9654;';
+    if(nm)nm.style.display='none';
+    if(dt)dt.style.display='none';
+  }
+}
+function rmToggle(){
+  if(_rmP){if(_rmA){_rmA.pause();_rmA.src='';}_rmP=false;}
+  else{if(!_rmA)_rmA=new Audio();_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});_rmP=true;}
+  _rmSave();_rmRefresh();
+}
+function rmNext(){_rmI=(_rmI+1)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
+function rmPrev(){_rmI=(_rmI-1+RM_STAZIONI.length)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
+(function(){if(_rmLoad())rmToggle();})();
+</script>
+</body>
+</html>
