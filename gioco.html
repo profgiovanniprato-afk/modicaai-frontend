@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Il Patibolo — ModicaAI</title>
+<meta name="description" content="Gioca al Patibolo su ModicaAI. Trova la parola che collega tutte e 5 le coppie. Montepremi da €200.000!"/>
+<link rel="canonical" href="https://www.modicaai.it/gioco.html"/>
+<link rel="icon" href="/icon-192.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://modicaai-api.onrender.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --white:#FFFFFF; --bg:#F8F8F8; --gold:#B8860B; --gold-lt:#D4A017;
+  --terra:#C1440E; --sky:#1A3A5C; --ink:#1A1A1A; --ink-mid:#555555;
+  --ink-soft:#999999; --border:#EBEBEB; --shadow-sm:0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.08); --bg-card:#FFFFFF;
+}
+body.dark {
+  --white:#1E2330; --bg:#151820; --gold:#D4A017; --gold-lt:#E8B824;
+  --sky:#4A8FBF; --ink:#E8E8E8; --ink-mid:#AAAAAA; --ink-soft:#777777;
+  --border:#2E3448; --bg-card:#1e2330;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* NAVBAR */
+.site-nav-bar{position:fixed;top:0;left:0;right:0;z-index:502;background:rgba(26,58,92,0.97);backdrop-filter:blur(10px);height:34px;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.snb-logo{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:#fff;text-decoration:none;margin-right:auto;}
+.snb-logo span{color:#D4A017;}
+.snb-links{display:flex;align-items:center;gap:2px;}
+.snb-link{font-size:11px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:3px 9px;border-radius:6px;transition:all 0.15s;}
+.snb-link:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.snb-link.active{color:#fff;background:rgba(255,255,255,0.1);}
+.snb-dropdown{position:relative;}
+.snb-dropdown-btn{font-size:11px;font-weight:500;color:rgba(255,255,255,0.6);padding:3px 9px;border-radius:6px;background:none;border:none;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;}
+.snb-dropdown-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.snb-dropdown-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;background:rgba(10,12,16,0.98);border:1px solid rgba(184,134,11,0.2);border-radius:10px;padding:6px;min-width:170px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:600;}
+.snb-dropdown:hover .snb-dropdown-menu{display:block;}
+.snb-dropdown-menu a{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,0.65);text-decoration:none;padding:7px 12px;border-radius:6px;transition:all 0.12s;white-space:nowrap;}
+.snb-dropdown-menu a:hover{background:rgba(184,134,11,0.15);color:#D4A017;}
+.snb-drop-sep{height:1px;background:rgba(184,134,11,0.12);margin:4px 8px;}
+.snb-social{display:flex;align-items:center;gap:8px;margin-left:10px;padding-left:10px;border-left:1px solid rgba(255,255,255,0.1);}
+.snb-social a{color:rgba(255,255,255,0.5);display:flex;align-items:center;transition:color 0.15s;}
+.snb-social a:hover{color:#fff;}
+@media(max-width:640px){.snb-link{padding:2px 6px;font-size:10px;}.snb-social{display:none;}}
+
+/* NEWS TICKER */
+.news-ticker{position:fixed;top:34px;left:0;right:0;z-index:500;height:28px;background:var(--sky);display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.1);}
+.ticker-label{flex-shrink:0;background:var(--gold);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 12px;height:100%;display:flex;align-items:center;}
+.ticker-track-wrap{flex:1;overflow:hidden;position:relative;}
+.ticker-track{display:flex;white-space:nowrap;}
+.ticker-item{display:inline-flex;align-items:center;font-size:11px;color:rgba(255,255,255,0.9);padding:0 28px;text-decoration:none;transition:color 0.18s;}
+.ticker-item:hover{color:#ffd166;}
+.ticker-item::after{content:'·';margin-left:28px;opacity:0.4;}
+.ticker-item strong{color:#ffd166;font-weight:700;}
+
+/* CARBURANTI */
+.fuel-ticker{position:fixed;top:62px;left:0;right:0;z-index:499;height:28px;background:#1a1a2e;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.08);}
+.fuel-ticker .ticker-label{background:#e63946;}
+.fuel-ticker .ticker-item{color:rgba(255,255,255,0.85);}
+
+/* TRAFFICO */
+.traffic-bar{position:fixed;top:90px;left:0;right:0;z-index:498;height:28px;background:#1a1a2e;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.08);}
+.traffic-bar .traffic-label{background:#1a3a5c;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 12px;height:100%;display:flex;align-items:center;flex-shrink:0;color:#fff;gap:5px;white-space:nowrap;}
+.traffic-segments{display:flex;align-items:center;gap:6px;padding:0 14px;overflow:hidden;flex:1;}
+.traffic-seg{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.8);white-space:nowrap;padding:2px 8px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);}
+.traffic-seg .traffic-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.traffic-seg.verde .traffic-dot{background:#22c55e;}
+.traffic-seg.giallo .traffic-dot{background:#fbbf24;}
+.traffic-seg.rosso .traffic-dot{background:#ef4444;}
+.traffic-seg.sconosciuto .traffic-dot{background:#6b7280;}
+.traffic-map-hint{margin-left:auto;padding:0 14px;font-size:9px;color:rgba(255,255,255,0.4);white-space:nowrap;flex-shrink:0;}
+
+/* TOP STRIPE */
+.top-stripe{position:fixed;top:118px;left:0;right:0;height:3px;z-index:400;background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky));background-size:300% 100%;animation:stripe 6s linear infinite;}
+@keyframes stripe{0%{background-position:0%}100%{background-position:300%}}
+
+/* MAIN */
+.main-content{padding-top:138px;padding-bottom:60px;min-height:100vh;}
+.gioco-wrap{max-width:680px;margin:0 auto;padding:24px 16px;}
+
+/* HEADER */
+.gioco-header{text-align:center;margin-bottom:24px;}
+.gioco-eyebrow{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:0.85;margin-bottom:8px;}
+.gioco-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,6vw,52px);font-weight:700;color:var(--ink);line-height:1.1;}
+.gioco-title em{font-style:italic;color:var(--gold);}
+.gioco-subtitle{font-size:14px;color:var(--ink-soft);margin-top:6px;font-weight:300;}
+
+/* TEMA */
+.tema-bar{display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.tema-btn{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--border);background:transparent;color:var(--ink-mid);cursor:pointer;transition:all 0.2s;font-family:'Outfit',sans-serif;}
+.tema-btn:hover{border-color:var(--sky);color:var(--sky);}
+.tema-btn.active{background:var(--sky);border-color:var(--sky);color:#fff;font-weight:600;}
+
+/* START */
+.start-screen{text-align:center;}
+.start-screen.hidden{display:none;}
+.start-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 24px;}
+@media(max-width:480px){.start-rules{grid-template-columns:1fr;}}
+.rule-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;box-shadow:var(--shadow-sm);}
+.rule-icon{font-size:22px;margin-bottom:6px;}
+.rule-text{font-size:12px;color:var(--ink-mid);line-height:1.5;}
+.score-bar{display:flex;gap:16px;justify-content:center;margin-bottom:16px;font-size:12px;color:var(--ink-soft);flex-wrap:wrap;}
+.score-bar span{color:var(--gold);font-weight:700;}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;border-radius:14px;background:linear-gradient(135deg,var(--sky),#2a5a8c);border:none;color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(26,58,92,0.25);}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(26,58,92,0.35);}
+
+/* LOADING */
+.loading-screen{display:none;text-align:center;padding:60px 20px;}
+.loading-screen.show{display:block;}
+.loading-spinner{width:36px;height:36px;margin:0 auto 16px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-style:italic;}
+
+/* GAME AREA */
+.game-area{display:none;}
+.game-area.show{display:block;}
+
+/* MONTEPREMI */
+.montepremi-bar{display:flex;align-items:center;justify-content:space-between;background:var(--sky);border-radius:14px;padding:14px 20px;margin-bottom:18px;box-shadow:0 4px 16px rgba(26,58,92,0.2);}
+.mp-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.65);}
+.mp-value{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,4vw,32px);font-weight:700;color:#fff;letter-spacing:1px;transition:all 0.5s;}
+.mp-value.dimezza{color:#ef4444;animation:shk 0.4s ease;}
+.mp-value.vinto{color:#ffd166;}
+@keyframes shk{0%,100%{transform:scale(1)}30%{transform:scale(1.12)}60%{transform:scale(0.94)}}
+.mp-fase{font-size:11px;color:rgba(255,255,255,0.7);text-align:right;}
+.mp-fase strong{color:#ffd166;}
+
+/* ROUND DOTS */
+.round-indicator{display:flex;gap:6px;justify-content:center;margin-bottom:16px;}
+.round-dot{width:32px;height:6px;border-radius:3px;background:var(--border);transition:all 0.3s;}
+.round-dot.done{background:var(--sky);}
+.round-dot.current{background:var(--gold);}
+.round-dot.wrong{background:var(--terra);}
+
+/* COPPIA */
+.coppia-container{margin-bottom:16px;}
+.coppia-domanda{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-bottom:12px;}
+.coppia-scelta{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:400px){.coppia-scelta{grid-template-columns:1fr;}}
+.parola-btn{padding:22px 16px;border-radius:16px;background:var(--bg-card);border:2px solid var(--border);font-family:'Cormorant Garamond',serif;font-size:clamp(18px,3.5vw,26px);font-weight:700;color:var(--ink);cursor:pointer;transition:all 0.25s;text-align:center;letter-spacing:1px;box-shadow:var(--shadow-sm);}
+.parola-btn:hover{border-color:var(--sky);color:var(--sky);transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.parola-btn.sel-right{border-color:var(--gold);background:rgba(184,134,11,0.08);color:var(--sky);pointer-events:none;}
+.parola-btn.sel-wrong{border-color:var(--terra);background:rgba(193,68,14,0.06);color:var(--terra);pointer-events:none;opacity:0.6;}
+.parola-btn.rev-right{border-color:var(--gold);background:rgba(212,160,23,0.1);color:var(--sky);pointer-events:none;}
+.parola-btn:disabled{pointer-events:none;}
+
+/* FEEDBACK */
+.scelta-feedback{text-align:center;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;min-height:40px;margin-bottom:14px;transition:all 0.3s;}
+.scelta-feedback.giusto{background:rgba(184,134,11,0.1);color:var(--gold);border:1px solid rgba(184,134,11,0.3);}
+.scelta-feedback.sbagliato{background:rgba(193,68,14,0.08);color:var(--terra);border:1px solid rgba(193,68,14,0.2);}
+
+/* INDIZI */
+.indizi-section{margin-bottom:16px;}
+.indizi-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;text-align:center;}
+.indizi-grid{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.indizio-chip{padding:8px 16px;border-radius:10px;background:var(--bg-card);border:1.5px solid var(--border);font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--ink);letter-spacing:1px;transition:all 0.3s;}
+.indizio-chip.attivo{border-color:var(--gold);color:var(--sky);background:rgba(184,134,11,0.07);}
+.indizio-chip.placeholder{color:var(--ink-soft);font-size:13px;font-family:'Outfit',sans-serif;font-style:italic;}
+
+/* BTN AVANTI */
+.btn-avanti{display:block;width:100%;padding:13px;border-radius:14px;background:linear-gradient(135deg,var(--sky),#2a5a8c);border:none;color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:6px;}
+.btn-avanti:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(26,58,92,0.3);}
+.btn-avanti:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
+
+/* FASE FINALE */
+.fase-finale{display:none;margin-top:4px;}
+.fase-finale.show{display:block;}
+.finale-title{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,3vw,22px);font-weight:700;color:var(--sky);text-align:center;margin-bottom:14px;}
+.finale-indizi{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px;}
+.finale-chip{padding:10px 18px;border-radius:10px;background:var(--sky);color:#fff;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;letter-spacing:1px;}
+.finale-input-wrap{display:flex;gap:10px;align-items:stretch;}
+@media(max-width:480px){.finale-input-wrap{flex-direction:column;}}
+.finale-input{flex:1;background:var(--bg-card);border:2px solid var(--border);border-radius:14px;padding:16px 20px;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--ink);text-transform:uppercase;text-align:center;letter-spacing:4px;outline:none;transition:border-color 0.2s;}
+.finale-input:focus{border-color:var(--sky);}
+.finale-input.wrong{border-color:var(--terra);animation:shkinp 0.4s ease;}
+.finale-input.correct{border-color:var(--gold);}
+@keyframes shkinp{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.btn-finale{padding:16px 24px;border-radius:14px;background:linear-gradient(135deg,var(--gold),#8B6914);border:none;color:#000;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-finale:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(184,134,11,0.35);}
+.finale-feedback{text-align:center;padding:10px;font-size:13px;font-weight:500;min-height:34px;margin-top:12px;border-radius:10px;}
+.finale-feedback.wrong-fb{color:var(--terra);background:rgba(193,68,14,0.08);}
+
+/* RISULTATO */
+.result-screen{display:none;text-align:center;animation:fadeUp 0.4s ease;}
+.result-screen.show{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.result-icon{font-size:52px;margin-bottom:12px;}
+.result-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,5vw,40px);font-weight:700;margin-bottom:8px;}
+.result-title.win{color:var(--gold);}
+.result-title.lose{color:var(--terra);}
+.result-label{font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
+.result-mp{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,36px);font-weight:700;color:var(--sky);margin:8px auto 14px;padding:14px 24px;background:var(--bg-card);border:2px solid var(--gold);border-radius:14px;display:inline-block;letter-spacing:1px;}
+.result-sol-box{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,44px);font-weight:700;color:var(--ink);letter-spacing:6px;padding:16px 24px;background:var(--bg-card);border:2px solid var(--sky);border-radius:14px;margin:8px auto 16px;display:inline-block;}
+.result-spieg{font-size:13px;color:var(--ink-mid);line-height:1.7;max-width:480px;margin:0 auto 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-align:left;}
+.result-spieg strong{color:var(--sky);}
+.result-stats{font-size:12px;color:var(--ink-soft);margin-bottom:20px;}
+.result-stats span{color:var(--gold);font-weight:700;}
+.action-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{padding:12px 24px;border-radius:12px;background:linear-gradient(135deg,var(--sky),#2a5a8c);border:none;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(26,58,92,0.3);}
+.btn-fb{padding:12px 20px;border-radius:12px;background:#1877F2;border:none;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-fb:hover{background:#1466d1;transform:translateY(-2px);}
+.btn-secondary{padding:12px 20px;border-radius:12px;background:transparent;border:1.5px solid var(--border);color:var(--ink-mid);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.btn-secondary:hover{border-color:var(--sky);color:var(--sky);}
+
+/* FUOCHI */
+#fireworks-canvas{position:fixed;inset:0;z-index:9999;pointer-events:none;display:none;}
+</style>
+</head>
+<body>
+
+<nav class="site-nav-bar">
+  <a href="/" class="snb-logo">Modica<span>AI</span></a>
+  <div class="snb-links">
+    <a href="/" class="snb-link">Home</a>
+    <a href="/news.html" class="snb-link">News</a>
+    <a href="/gioco.html" class="snb-link active">🎮 Giochi</a>
+    <a href="/mission.html" class="snb-link">Mission</a>
+    <div class="snb-dropdown">
+      <button class="snb-dropdown-btn">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="snb-dropdown-menu">
+        <a href="/cioccolato.html">Cioccolato IGP</a><a href="/cosa-vedere.html">Cosa vedere</a>
+        <a href="/come-arrivare.html">Come arrivare</a><a href="/gastronomia.html">Gastronomia</a>
+        <div class="snb-drop-sep"></div>
+        <a href="/storia.html">Storia</a><a href="/dintorni.html">Dintorni</a>
+        <a href="/faq.html">FAQ</a><a href="/guida-pratica.html">Guida pratica</a>
+      </div>
+    </div>
+    <a href="/contatti.html" class="snb-link">Contatti</a>
+  </div>
+  <div class="snb-social">
+    <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+  </div>
+</nav>
+
+<div class="news-ticker" id="newsTicker">
+  <div class="ticker-label">📰 News</div>
+  <div class="ticker-track-wrap"><div class="ticker-track" id="tickerTrack"><span class="ticker-item">Caricamento notizie...</span></div></div>
+</div>
+
+<div class="fuel-ticker" id="fuelTicker">
+  <div class="ticker-label">⛽ Carburanti</div>
+  <div class="ticker-track-wrap"><div class="ticker-track" id="fuelTrack"><span class="ticker-item">Caricamento prezzi...</span></div></div>
+</div>
+
+<div class="traffic-bar" id="trafficBar">
+  <div class="traffic-label"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z"/><circle cx="12" cy="10" r="3"/></svg>Traffico Live</div>
+  <div class="traffic-segments" id="trafficSegments"><div class="traffic-seg sconosciuto"><div class="traffic-dot"></div>Caricamento...</div></div>
+  <div class="traffic-map-hint">🗺 Mappa live ›</div>
+</div>
+
+<div class="top-stripe"></div>
+<canvas id="fireworks-canvas"></canvas>
+
+<div class="main-content">
+<div class="gioco-wrap">
+
+  <div class="gioco-header">
+    <div class="gioco-eyebrow">ModicaAI · Giochi</div>
+    <h1 class="gioco-title">Il <em>Patibolo</em></h1>
+    <p class="gioco-subtitle">Trova la parola che collega tutte e 5 le coppie</p>
+  </div>
+
+  <div class="tema-bar" id="temaBar">
+    <button class="tema-btn active" data-tema="misto" onclick="setTema(this)">🎲 Misto</button>
+    <button class="tema-btn" data-tema="generale" onclick="setTema(this)">🌍 Generale</button>
+    <button class="tema-btn" data-tema="sicilia" onclick="setTema(this)">🍋 Sicilia & Modica</button>
+  </div>
+
+  <!-- START -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-rules">
+      <div class="rule-card"><div class="rule-text">Montepremi da <strong>€200.000</strong> — si dimezza ad ogni scelta sbagliata</div></div>
+      <div class="rule-card"><div class="rule-text">5 round: scegli la parola giusta dalla coppia — diventa il tuo indizio</div></div>
+      <div class="rule-card"><div class="rule-text">Usa i 5 indizi per trovare la parola segreta e portare a casa il premio</div></div>
+    </div>
+    <div class="score-bar" id="scoreBar" style="display:none;">
+      Partite: <span id="scoreGiocate">0</span> &nbsp;·&nbsp; Vinte: <span id="scoreVinte">0</span> &nbsp;·&nbsp; Striscia: <span id="scoreStriscia">0</span> 🔥
+    </div>
+    <button class="btn-start" onclick="iniziaPartita()">▶ Inizia Partita</button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">L'AI prepara la sfida...</div>
+  </div>
+
+  <!-- GAME AREA -->
+  <div class="game-area" id="gameArea">
+
+    <div class="montepremi-bar">
+      <div>
+        <div class="mp-label">Montepremi</div>
+        <div class="mp-value" id="mpValue">€200.000</div>
+      </div>
+      <div style="text-align:right">
+        <div class="mp-fase" id="mpFase">Round <strong>1</strong> di 5</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px" id="diffLabel">Difficoltà: Media</div>
+      </div>
+    </div>
+
+    <div class="round-indicator">
+      <div class="round-dot current" id="rdot-0"></div>
+      <div class="round-dot" id="rdot-1"></div>
+      <div class="round-dot" id="rdot-2"></div>
+      <div class="round-dot" id="rdot-3"></div>
+      <div class="round-dot" id="rdot-4"></div>
+    </div>
+
+    <div class="coppia-container" id="coppiaContainer">
+      <div class="coppia-domanda">Quale delle due si lega alla parola segreta?</div>
+      <div class="coppia-scelta">
+        <button class="parola-btn" id="btnA" onclick="scegliParola('A')">—</button>
+        <button class="parola-btn" id="btnB" onclick="scegliParola('B')">—</button>
+      </div>
+    </div>
+
+    <div class="scelta-feedback" id="sceltaFeedback"></div>
+
+    <div class="indizi-section">
+      <div class="indizi-label">I tuoi indizi</div>
+      <div class="indizi-grid" id="indiziGrid">
+        <span class="indizio-chip placeholder">—</span>
+        <span class="indizio-chip placeholder">—</span>
+        <span class="indizio-chip placeholder">—</span>
+        <span class="indizio-chip placeholder">—</span>
+        <span class="indizio-chip placeholder">—</span>
+      </div>
+    </div>
+
+    <button class="btn-avanti" id="btnAvanti" onclick="prossimoRound()" disabled>Prossima coppia →</button>
+
+    <!-- FASE FINALE -->
+    <div class="fase-finale" id="faseFinale">
+      <div class="finale-title">🎯 Hai i 5 indizi — qual è la parola segreta?</div>
+      <div class="finale-indizi" id="finaleIndizi"></div>
+      <div class="finale-input-wrap">
+        <input type="text" id="finaleInput" class="finale-input" placeholder="La parola..."
+          maxlength="30" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+          onkeydown="if(event.key==='Enter') inviaFinale()"/>
+        <button class="btn-finale" onclick="inviaFinale()">🎯 Rispondo</button>
+      </div>
+      <div class="finale-feedback" id="finaleFeedback"></div>
+    </div>
+
+  </div><!-- /game-area -->
+
+  <!-- RISULTATO -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-label">Montepremi portato a casa</div>
+    <div class="result-mp" id="resultMp"></div>
+    <div class="result-label">La parola era</div>
+    <div class="result-sol-box" id="resultSol"></div>
+    <div class="result-spieg" id="resultSpieg"></div>
+    <div class="result-stats" id="resultStats"></div>
+    <div class="action-btns">
+      <button class="btn-primary" onclick="nuovaPartita()">▶ Nuova partita</button>
+      <button class="btn-primary" style="background:linear-gradient(135deg,var(--gold),#8B6914);color:#000;" onclick="rigioca()">🔄 Rigioca</button>
+      <button class="btn-fb" onclick="condividiSuFacebook()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Condividi su Facebook
+      </button>
+      <button class="btn-secondary" onclick="location.href='/'">💬 Torna alla chat</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const API_URL = 'https://modicaai-api.onrender.com';
+let partita = null, roundCorrente = 0, montepremi = 200000, indizi = [], temaSelezionato = 'misto';
+let difficoltaCorrente = 2; // 1=facile, 2=medio, 3=difficile
+
+// SCORE
+function loadScore(){try{return JSON.parse(localStorage.getItem('ghig_score')||'{"g":0,"v":0,"s":0}');}catch{return{g:0,v:0,s:0};}}
+function saveScore(s){try{localStorage.setItem('ghig_score',JSON.stringify(s));}catch{}}
+function mostraScore(){const s=loadScore();if(s.g===0)return;document.getElementById('scoreBar').style.display='flex';document.getElementById('scoreGiocate').textContent=s.g;document.getElementById('scoreVinte').textContent=s.v;document.getElementById('scoreStriscia').textContent=s.s;}
+
+function setTema(btn){document.querySelectorAll('.tema-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');temaSelezionato=btn.dataset.tema;}
+
+function fmtMp(n){return '€'+n.toLocaleString('it-IT');}
+
+// INIZIA
+async function iniziaPartita(){
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('temaBar').style.display='none';
+  document.getElementById('loadingScreen').classList.add('show');
+  document.getElementById('resultScreen').classList.remove('show');
+  try{
+    const res=await fetch(API_URL+'/ghigliottina',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tema:temaSelezionato,difficolta:difficoltaCorrente})});
+    const data=await res.json();
+    if(!data.partita)throw new Error();
+    partita=data.partita;
+    avviaGioco();
+  }catch(e){
+    document.getElementById('loadingScreen').classList.remove('show');
+    document.getElementById('startScreen').classList.remove('hidden');
+    document.getElementById('temaBar').style.display='flex';
+    alert('Errore di connessione. Riprova tra qualche secondo.');
+  }
+}
+
+function avviaGioco(){
+  document.getElementById('loadingScreen').classList.remove('show');
+  document.getElementById('gameArea').classList.add('show');
+  roundCorrente=0; montepremi=200000; indizi=[];
+  aggMp(); aggDots(); aggIndizi();
+  // Aggiorna label difficoltà
+  const diffLabels = {1:'Facile', 2:'Media', 3:'Difficile'};
+  const dl = document.getElementById('diffLabel');
+  if(dl) dl.textContent = 'Difficoltà: ' + (diffLabels[difficoltaCorrente] || 'Media');
+  document.getElementById('faseFinale').classList.remove('show');
+  document.getElementById('btnAvanti').disabled=true;
+  document.getElementById('btnAvanti').style.display='block';
+  document.getElementById('coppiaContainer').style.display='';
+  document.getElementById('sceltaFeedback').textContent='';
+  document.getElementById('sceltaFeedback').className='scelta-feedback';
+  mostraRound(0);
+}
+
+function mostraRound(idx){
+  const c=partita.coppie[idx];
+  document.getElementById('btnA').textContent=c.a;
+  document.getElementById('btnB').textContent=c.b;
+  document.getElementById('btnA').className='parola-btn';
+  document.getElementById('btnB').className='parola-btn';
+  document.getElementById('btnA').disabled=false;
+  document.getElementById('btnB').disabled=false;
+  document.getElementById('mpFase').innerHTML=`Round <strong>${idx+1}</strong> di 5`;
+  document.getElementById('sceltaFeedback').textContent='';
+  document.getElementById('sceltaFeedback').className='scelta-feedback';
+  document.getElementById('btnAvanti').disabled=true;
+}
+
+function scegliParola(scelta){
+  const c=partita.coppie[roundCorrente];
+  // La posizione corretta è randomizzata dal backend — usa c.risposta
+  const haVinto=(scelta===c.risposta);
+  const parolaGiusta=(c.risposta==='A')?c.a:c.b;
+
+  if(haVinto){
+    document.getElementById('btnA').className='parola-btn sel-right';
+    const fb=document.getElementById('sceltaFeedback');
+    fb.className='scelta-feedback giusto';
+    fb.textContent=`✅ Corretto! "${parolaGiusta}" si lega alla parola segreta.`;
+  }else{
+    document.getElementById('btn'+scelta).className='parola-btn sel-wrong';
+    document.getElementById('btn'+c.risposta).className='parola-btn rev-right';
+    montepremi=Math.floor(montepremi/2);
+    aggMp(true);
+    const fb=document.getElementById('sceltaFeedback');
+    fb.className='scelta-feedback sbagliato';
+    fb.textContent=`❌ Sbagliato! Montepremi dimezzato. "${parolaGiusta}" era la risposta corretta.`;
+  }
+  indizi.push(parolaGiusta);
+  document.getElementById('rdot-'+roundCorrente).className='round-dot '+(haVinto?'done':'wrong');
+  document.getElementById('btnA').disabled=true;
+  document.getElementById('btnB').disabled=true;
+  aggIndizi();
+  document.getElementById('btnAvanti').disabled=false;
+}
+
+function prossimoRound(){
+  roundCorrente++;
+  if(roundCorrente>=5){
+    document.getElementById('coppiaContainer').style.display='none';
+    document.getElementById('sceltaFeedback').textContent='';
+    document.getElementById('btnAvanti').disabled=true;
+    mostraFaseFinale();
+  }else{
+    document.getElementById('rdot-'+roundCorrente).className='round-dot current';
+    mostraRound(roundCorrente);
+  }
+}
+
+function mostraFaseFinale(){
+  const ff=document.getElementById('faseFinale');
+  ff.classList.add('show');
+  document.getElementById('btnAvanti').style.display='none';
+  document.getElementById('mpFase').innerHTML='<strong>Fase finale!</strong>';
+  document.getElementById('finaleIndizi').innerHTML=indizi.map(i=>`<div class="finale-chip">${i}</div>`).join('');
+  document.getElementById('finaleInput').value='';
+  document.getElementById('finaleInput').className='finale-input';
+  document.getElementById('finaleFeedback').textContent='';
+  setTimeout(()=>document.getElementById('finaleInput').focus(),200);
+}
+
+function inviaFinale(){
+  const input=document.getElementById('finaleInput');
+  const risposta=input.value.trim().toUpperCase();
+  if(!risposta)return;
+  if(risposta===partita.soluzione.toUpperCase()){
+    input.className='finale-input correct';
+    setTimeout(()=>finePartita(true),500);
+  }else{
+    input.className='finale-input wrong';
+    const fb=document.getElementById('finaleFeedback');
+    fb.className='finale-feedback wrong-fb';
+    fb.textContent=`❌ "${risposta}" non è corretto. Riprova!`;
+    setTimeout(()=>{input.className='finale-input';input.value='';input.focus();},600);
+  }
+}
+
+function finePartita(vinto){
+  const s=loadScore(); s.g++;
+  if(vinto){s.v++;s.s++;}else{s.s=0;}
+  saveScore(s);
+  // Aumenta difficoltà ogni 2 partite (max 3)
+  if(s.g>0 && s.g%3===0) difficoltaCorrente=Math.min(3,difficoltaCorrente+1);
+  setTimeout(()=>{
+    document.getElementById('gameArea').classList.remove('show');
+    document.getElementById('temaBar').style.display='none';
+    const rs=document.getElementById('resultScreen');
+    rs.classList.add('show');
+    document.getElementById('resultIcon').textContent=vinto?'🏆':'💀';
+    const rt=document.getElementById('resultTitle');
+    rt.textContent=vinto?'Hai vinto!':'Meglio la prossima!';
+    rt.className='result-title '+(vinto?'win':'lose');
+    document.getElementById('resultMp').textContent=fmtMp(montepremi);
+    document.getElementById('resultSol').textContent=partita.soluzione;
+    document.getElementById('resultSpieg').innerHTML=`<strong>Il collegamento:</strong><br>${partita.spiegazione||''}`;
+    const perc=s.g>0?Math.round(s.v/s.g*100):0;
+    const diffNomi=['','Facile','Media','Difficile'];
+    document.getElementById('resultStats').innerHTML=`Partite vinte: <span>${s.v}/${s.g}</span> · ${perc}% · Striscia: <span>${s.s} 🔥</span> · Livello: <span>${diffNomi[difficoltaCorrente]||'Media'}</span>`;
+    if(vinto)avviaFuochi();
+  },600);
+}
+
+function rigioca(){
+  fermaFuochi();
+  document.getElementById('resultScreen').classList.remove('show');
+  iniziaPartita();
+}
+
+function nuovaPartita(){
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('gameArea').classList.remove('show');
+  document.getElementById('btnAvanti').style.display='block';
+  document.getElementById('startScreen').classList.remove('hidden');
+  document.getElementById('temaBar').style.display='flex';
+  fermaFuochi();
+  mostraScore();
+}
+
+// UI helpers
+function aggMp(dimezza){
+  const el=document.getElementById('mpValue');
+  el.textContent=fmtMp(montepremi);
+  if(dimezza){el.className='mp-value dimezza';setTimeout(()=>el.className='mp-value',600);}
+}
+function aggDots(){for(let i=0;i<5;i++)document.getElementById('rdot-'+i).className='round-dot'+(i===0?' current':'');}
+function aggIndizi(){
+  const g=document.getElementById('indiziGrid');
+  g.innerHTML='';
+  for(let i=0;i<5;i++){
+    const c=document.createElement('div');
+    if(i<indizi.length){c.className='indizio-chip attivo';c.textContent=indizi[i];}
+    else{c.className='indizio-chip placeholder';c.textContent='—';}
+    g.appendChild(c);
+  }
+}
+
+// CONDIVIDI FACEBOOK
+function condividiSuFacebook(){
+  const vinto=document.getElementById('resultTitle').classList.contains('win');
+  const mp=fmtMp(montepremi);
+  const sol=partita?partita.soluzione:'';
+  const testo=vinto
+    ?`🏆 Ho vinto ${mp} al Patibolo di ModicaAI! La parola era "${sol}". Riesci a fare meglio?`
+    :`🎮 Ho giocato al Patibolo di ModicaAI! La parola era "${sol}". Portato a casa ${mp}. Ci riprovo!`;
+  const url='https://www.modicaai.it/gioco.html';
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(testo)}`,'_blank','width=600,height=400');
+}
+
+// FUOCHI D'ARTIFICIO
+let fuochiInterval=null, fuochiP=[];
+function avviaFuochi(){
+  const cv=document.getElementById('fireworks-canvas');
+  cv.style.display='block';cv.width=window.innerWidth;cv.height=window.innerHeight;
+  const ctx=cv.getContext('2d');fuochiP=[];
+  const colori=['#D4A017','#ffd166','#ff6b6b','#4ecdc4','#45b7d1','#ffffff','#B8860B'];
+  function boom(x,y){for(let i=0;i<60;i++){const a=(Math.PI*2/60)*i,v=2+Math.random()*6;fuochiP.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,col:colori[Math.floor(Math.random()*colori.length)],vita:1,dec:0.012+Math.random()*0.01,r:2+Math.random()*3});}}
+  let t=0;
+  function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);t++;
+    if(t%25===0)boom(80+Math.random()*(cv.width-160),80+Math.random()*(cv.height*0.6));
+    fuochiP=fuochiP.filter(p=>p.vita>0);
+    fuochiP.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.12;p.vita-=p.dec;ctx.save();ctx.globalAlpha=Math.max(0,p.vita);ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.restore();});
+  }
+  fuochiInterval=setInterval(loop,16);
+  setTimeout(fermaFuochi,5500);
+}
+function fermaFuochi(){
+  clearInterval(fuochiInterval);
+  const cv=document.getElementById('fireworks-canvas');
+  cv.style.display='none';
+  cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
+  fuochiP=[];
+}
+
+// TICKER NEWS
+async function caricaNotizie(){
+  try{
+    const d=await(await fetch(API_URL+'/news')).json();
+    if(!d.items?.length)return;
+    const t=document.getElementById('tickerTrack');t.innerHTML='';
+    [...d.items,...d.items].forEach(item=>{const a=document.createElement('a');a.className='ticker-item';a.textContent=item.title;a.href=item.link||'#';a.target='_blank';a.rel='noopener';t.appendChild(a);});
+    const tw=t.scrollWidth/2;let pos=0;
+    setInterval(()=>{pos-=0.4;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
+  }catch(e){}
+}
+
+// TICKER CARBURANTI
+async function caricaCarburanti(){
+  try{
+    const d=await(await fetch(API_URL+'/carburanti')).json();
+    if(!d.stazioni?.length)return;
+    const t=document.getElementById('fuelTrack');
+    let items='';
+    d.stazioni.forEach(s=>['Benzina_self','Gasolio_self','GPL_self'].map(k=>s.prezzi[k]).filter(Boolean).forEach(p=>{items+=`<span class="ticker-item"><strong>${s.nome}</strong> ${p.carburante} ${p.tipo}: <strong>${p.prezzo.toFixed(3)} €/L</strong></span>`;}));
+    if(!items)return;
+    t.innerHTML=items+items;
+    const tw=t.scrollWidth/2;let pos=0;
+    setInterval(()=>{pos-=0.3;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
+  }catch(e){}
+}
+
+// TICKER TRAFFICO
+async function caricaTraffico(){
+  try{
+    const d=await(await fetch(API_URL+'/traffico')).json();
+    if(!d.segmenti?.length)return;
+    document.getElementById('trafficSegments').innerHTML=d.segmenti.map(s=>`<div class="traffic-seg ${s.stato||'sconosciuto'}"><div class="traffic-dot"></div>${s.nome||''}</div>`).join('');
+  }catch(e){}
+}
+
+// INIT
+mostraScore();
+caricaNotizie();
+caricaCarburanti();
+caricaTraffico();
+setInterval(caricaNotizie,5*60*1000);
+setInterval(caricaTraffico,3*60*1000);
+</script>
+</body>
+</html>
