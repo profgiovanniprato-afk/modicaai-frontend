@@ -182,6 +182,11 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 .btn-finale:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(184,134,11,0.35);}
 .finale-feedback{text-align:center;padding:10px;font-size:13px;font-weight:500;min-height:34px;margin-top:12px;border-radius:10px;}
 .finale-feedback.wrong-fb{color:var(--terra);background:rgba(193,68,14,0.08);}
+.finale-countdown{text-align:center;margin-top:16px;display:none;}
+.countdown-ring{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;position:relative;}
+.countdown-ring.win-ring{background:rgba(184,134,11,0.12);border:3px solid var(--gold);color:var(--gold);}
+.countdown-ring.lose-ring{background:rgba(193,68,14,0.08);border:3px solid var(--terra);color:var(--terra);}
+.countdown-label{font-size:11px;color:var(--ink-soft);margin-top:6px;letter-spacing:1px;text-transform:uppercase;}
 
 /* RISULTATO */
 .result-screen{display:none;text-align:center;animation:fadeUp 0.4s ease;}
@@ -345,6 +350,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
         <button class="btn-finale" onclick="inviaFinale()">🎯 Rispondo</button>
       </div>
       <div class="finale-feedback" id="finaleFeedback"></div>
+      <div class="finale-countdown" id="finaleCountdown">
+        <div class="countdown-ring" id="countdownRing">5</div>
+        <div class="countdown-label" id="countdownLabel">preparazione risultato...</div>
+      </div>
     </div>
 
   </div><!-- /game-area -->
@@ -496,16 +505,40 @@ function inviaFinale(){
   const input=document.getElementById('finaleInput');
   const risposta=input.value.trim().toUpperCase();
   if(!risposta)return;
-  if(risposta===partita.soluzione.toUpperCase()){
+
+  // Blocca input e bottone subito
+  input.disabled=true;
+  document.querySelector('.btn-finale').disabled=true;
+
+  const haVinto=(risposta===partita.soluzione.toUpperCase());
+
+  if(haVinto){
     input.className='finale-input correct';
-    setTimeout(()=>finePartita(true),500);
   }else{
     input.className='finale-input wrong';
-    const fb=document.getElementById('finaleFeedback');
-    fb.className='finale-feedback wrong-fb';
-    fb.textContent=`❌ "${risposta}" non è corretto. Riprova!`;
-    setTimeout(()=>{input.className='finale-input';input.value='';input.focus();},600);
   }
+
+  // Mostra countdown
+  const cd=document.getElementById('finaleCountdown');
+  const ring=document.getElementById('countdownRing');
+  const lbl=document.getElementById('countdownLabel');
+  cd.style.display='block';
+  ring.className='countdown-ring '+(haVinto?'win-ring':'lose-ring');
+  lbl.textContent=haVinto?'Stai vincendo...':'Rivelazione imminente...';
+
+  let sec=5;
+  ring.textContent=sec;
+  const timer=setInterval(()=>{
+    sec--;
+    ring.textContent=sec;
+    if(sec<=0){
+      clearInterval(timer);
+      cd.style.display='none';
+      input.disabled=false;
+      document.querySelector('.btn-finale').disabled=false;
+      finePartita(haVinto);
+    }
+  },1000);
 }
 
 function finePartita(vinto){
