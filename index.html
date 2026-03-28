@@ -1679,7 +1679,7 @@ if (navigator.geolocation) {
     pos => {
       userLat = pos.coords.latitude;
       userLon = pos.coords.longitude;
-      console.log('Posizione utente:', userLat, userLon);
+
     },
     () => { /* negata o non disponibile — usiamo Modica default */ },
     { timeout: 5000, maximumAge: 60000 }
@@ -2468,7 +2468,7 @@ async function caricaNotizie() {
       }
       requestAnimationFrame(step);
     });
-  } catch(e) { console.warn('Ticker news error', e); }
+  } catch(e) {  }
 }
 
 // aggiornaTicker() rimossa — era obsoleta e incompatibile con la struttura {stazioni:[]}
@@ -2482,9 +2482,9 @@ async function caricaTraffco() {
   try {
     const res = await fetch(API_URL + '/traffico');
     const dati = await res.json();
-    console.log('[TRAFFICO]', JSON.stringify(dati));
+    );
     if (dati.segmenti && dati.segmenti.length) {
-      console.log('[TRAFFICO] aggiornaBarra con', dati.segmenti.map(s => s.stato));
+      );
       aggiornaBarra(dati.segmenti);
       window._trafficoDati = dati;
     } else {
@@ -2502,7 +2502,7 @@ async function caricaTraffco() {
       ]);
     }
   } catch(e) {
-    console.error('[TRAFFICO] Errore:', e);
+
     aggiornaBarra([
       { nome: 'Alta',         label: 'Modica Alta',              stato: 'sconosciuto' },
       { nome: 'Corso',        label: 'Corso Umberto I',           stato: 'sconosciuto' },
@@ -2809,7 +2809,7 @@ async function apriMappaFarmacie(farmaciaDiTurnoNome) {
   } catch(err) {
     if (subEl()) subEl().textContent = 'Errore caricamento';
     if (listEl()) listEl().innerHTML = `<span style="color:#c0392b;">⚠️ Impossibile caricare le farmacie (${err.message}). Riprova tra qualche secondo.</span>`;
-    console.error('Farmacia map error:', err);
+
   }
 }
 
@@ -2900,7 +2900,7 @@ async function gestisciFile(input) {
     previewSub.textContent = '❌ Errore — riprova';
     btnUpload.classList.remove('active');
     fileContesto = null;
-    console.error('[FILE]', e);
+
     addMessage('ai', "⚠️ Errore durante l'elaborazione del file. Controlla la connessione e riprova.", 'ModicaAI', '');
   }
 
@@ -3105,7 +3105,7 @@ async function generaDocumento(formato) {
 
   } catch(e) {
     removeTyping();
-    console.error('[GENERA_DOC]', e);
+
     addMessage('ai', '⚠️ Errore di connessione durante la creazione del documento. Riprova.', 'ModicaAI', '');
   }
 }
