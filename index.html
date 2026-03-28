@@ -2121,10 +2121,19 @@ async function ask(q) {
             // ── Trigger mappa farmacie ──
             if (evt.intento === 'farmacia') {
               setTimeout(() => {
-                // Estrai nome farmacia di turno dal testo risposta (prima riga bold o nome)
                 const matchNome = fullText.match(/\*\*([^*]+)\*\*/) || fullText.match(/farmacia\s+([A-Z][^\n,]+)/i);
                 const nomeTurno = matchNome ? matchNome[1] : '';
                 apriMappaFarmacie(nomeTurno);
+              }, 400);
+            }
+            // ── Trigger mappa carburanti ──
+            if (evt.intento === 'carburanti') {
+              setTimeout(async () => {
+                try {
+                  const r = await fetch(API_URL + '/carburanti');
+                  const d = await r.json();
+                  if (d.stazioni?.length) mostraMappaCarburanti(d.stazioni);
+                } catch(e) {}
               }, 400);
             }
           } else if (evt.type === 'error') {
@@ -2306,22 +2315,102 @@ async function mostraCarburanti() {
       addMessage('ai', 'Nessuna stazione trovata nel raggio. ' + (data.error || ''), 'Carburanti', '');
       return;
     }
+
     const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
+
+    // ── Testo prezzi ──────────────────────────────────────────────
     let html = '<strong>⛽ Stazioni carburante vicine a Modica</strong><br><br>';
     data.stazioni.forEach(s => {
-      html += `<strong>${s.nome}</strong> — ${s.comune} (${s.dist} km)<br>`;
+      html += `<strong>${s.nome}</strong> — ${s.indirizzo || s.comune} (${s.dist} km)<br>`;
       const prezziOrdinati = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean);
       prezziOrdinati.forEach(p => {
         html += `&nbsp;&nbsp;• ${p.carburante} <em>${p.tipo}</em>: <strong>${p.prezzo.toFixed(3)} €/L</strong><br>`;
       });
       html += '<br>';
     });
-    html += `<small style="color:var(--ink-soft)">${data.aggiornamento}</small>`;
+    html += `<small style="color:var(--ink-soft)">${data.aggiornamento || ''}</small>`;
     addMessage('ai', html, 'MiMIT', '');
+
+    // ── Mappa inline ──────────────────────────────────────────────
+    mostraMappaCarburanti(data.stazioni);
+
   } catch (e) {
     removeTyping();
     addMessage('ai', 'Errore nel recupero prezzi carburanti.', 'Carburanti', '');
   }
+}
+
+async function mostraMappaCarburanti(stazioni) {
+  // Stazioni con coordinate valide
+  const staz = stazioni.filter(s => s.lat && s.lon);
+  if (!staz.length) return;
+
+  const mapId  = 'cmap' + Date.now();
+  const listId = 'clist' + Date.now();
+
+  // Calcola prezzo benzina self minimo per colorare i marker
+  const prezziB = staz.map(s => s.prezzi['Benzina_self']?.prezzo).filter(Boolean);
+  const minB = prezziB.length ? Math.min(...prezziB) : 0;
+  const maxB = prezziB.length ? Math.max(...prezziB) : 0;
+
+  // Colore marker: verde = più economica, giallo = media, rosso = più cara
+  function coloreMarker(s) {
+    const pb = s.prezzi['Benzina_self']?.prezzo;
+    if (!pb || minB === maxB) return '#64748b';
+    const ratio = (pb - minB) / (maxB - minB);
+    if (ratio <= 0.33) return '#22c55e';   // verde
+    if (ratio <= 0.66) return '#f59e0b';   // giallo
+    return '#ef4444';                       // rosso
+  }
+
+  const msgHtml = `
+    <div style="font-size:13px;font-weight:700;color:var(--sky);margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+      📍 Posizione stazioni
+      <span style="font-size:11px;font-weight:400;color:var(--ink-soft);">${staz.length} stazioni trovate</span>
+    </div>
+    <div id="${mapId}" style="width:100%;height:260px;border-radius:12px;overflow:hidden;border:1px solid var(--border);"></div>
+    <div id="${listId}" style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;font-size:11px;">
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;"></span>Più economica</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>Media</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>Più cara</span>
+    </div>`;
+
+  addMessage('ai', msgHtml, 'MiMIT', '');
+
+  await new Promise(r => setTimeout(r, 120));
+  const container = document.getElementById(mapId);
+  if (!container) return;
+
+  const map = L.map(mapId, { zoomControl: true }).setView([36.8463, 14.7642], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap', maxZoom: 19
+  }).addTo(map);
+
+  const bounds = [];
+
+  staz.forEach(s => {
+    const colore = coloreMarker(s);
+    const iconHtml = `<div style="background:${colore};width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`;
+    const icon = L.divIcon({ html: iconHtml, className:'', iconSize:[16,16], iconAnchor:[8,8] });
+
+    // Popup con prezzi
+    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
+    const prezziHtml = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean)
+      .map(p => `${p.carburante} ${p.tipo}: <b>${p.prezzo.toFixed(3)} €/L</b>`)
+      .join('<br>');
+
+    L.marker([s.lat, s.lon], { icon })
+      .bindPopup(`<b>${s.nome}</b><br><small>${s.indirizzo || ''}</small><br>${prezziHtml}`)
+      .addTo(map);
+
+    bounds.push([s.lat, s.lon]);
+  });
+
+  setTimeout(() => {
+    map.invalidateSize();
+    if (bounds.length > 0)
+      map.fitBounds(bounds, { padding:[32,32], maxZoom:15 });
+  }, 200);
 }
 
 // ── Dark Mode ────────────────────────────────────────────────────
