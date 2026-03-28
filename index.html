@@ -42,6 +42,7 @@
 <!-- SEO Primary -->
 <title>ModicaAI — Assistente AI Gratuito per Modica, Sicilia</title>
 <meta name="description" content="ModicaAI: assistente AI gratuito per Modica, Sicilia. Meteo, farmacie di turno, prezzi benzina, notizie e traffico in tempo reale. Senza registrazione, disponibile 24/7.">
+<meta name="keywords" content="ModicaAI, assistente AI Modica, Modica Sicilia turismo, chatbot Modica, meteo Modica oggi, farmacia di turno Modica, benzina Modica prezzi, guida Modica gratis">
 
 <!-- Open Graph / WhatsApp / Telegram — unico blocco canonico -->
 <meta property="og:type" content="website">
@@ -66,7 +67,7 @@
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
-    {"@type":"WebApplication","@id":"https://www.modicaai.it/#app","name":"ModicaAI","alternateName":"Modica AI","url":"https://www.modicaai.it","description":"ModicaAI è l'assistente AI gratuito per Modica, Sicilia. Meteo, prezzi carburanti, farmacie di turno, notizie e traffico in tempo reale. Senza registrazione, 24/7.","applicationCategory":"TravelApplication","operatingSystem":"Web, Android, iOS","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR","availability":"https://schema.org/InStock"},"inLanguage":["it","en","de","fr","es"]},
+    {"@type":"WebApplication","@id":"https://www.modicaai.it/#app","name":"ModicaAI","alternateName":"Modica AI","url":"https://www.modicaai.it","description":"ModicaAI è l'assistente AI gratuito per Modica, Sicilia. Meteo, prezzi carburanti, farmacie di turno, notizie e traffico in tempo reale. Senza registrazione, 24/7.","applicationCategory":"TravelApplication","operatingSystem":"Web, Android, iOS","datePublished":"2025-01-01","dateModified":"2026-03-28","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR","availability":"https://schema.org/InStock"},"inLanguage":["it","en","de","fr","es"]},
     {"@type":"LocalBusiness","@id":"https://www.modicaai.it/#business","name":"ModicaAI","url":"https://www.modicaai.it","email":"infomodicaai@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Modica","addressRegion":"RG","postalCode":"97015","addressCountry":"IT"},"geo":{"@type":"GeoCoordinates","latitude":"36.8604","longitude":"14.7742"},"openingHours":"Mo-Su 00:00-24:00","priceRange":"Gratuito","sameAs":["https://www.facebook.com/modicaai"]},
     {"@type":"WebSite","@id":"https://www.modicaai.it/#website","name":"ModicaAI","url":"https://www.modicaai.it","inLanguage":"it","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.modicaai.it/?q={search_term_string}"},"query-input":"required name=search_term_string"}},
     {"@type":"FAQPage","@id":"https://www.modicaai.it/#faq","mainEntity":[
@@ -1679,7 +1680,7 @@ if (navigator.geolocation) {
     pos => {
       userLat = pos.coords.latitude;
       userLon = pos.coords.longitude;
-      console.log('Posizione utente:', userLat, userLon);
+      /* posizione acquisita */
     },
     () => { /* negata o non disponibile — usiamo Modica default */ },
     { timeout: 5000, maximumAge: 60000 }
@@ -2121,19 +2122,10 @@ async function ask(q) {
             // ── Trigger mappa farmacie ──
             if (evt.intento === 'farmacia') {
               setTimeout(() => {
+                // Estrai nome farmacia di turno dal testo risposta (prima riga bold o nome)
                 const matchNome = fullText.match(/\*\*([^*]+)\*\*/) || fullText.match(/farmacia\s+([A-Z][^\n,]+)/i);
                 const nomeTurno = matchNome ? matchNome[1] : '';
                 apriMappaFarmacie(nomeTurno);
-              }, 400);
-            }
-            // ── Trigger mappa carburanti ──
-            if (evt.intento === 'carburanti') {
-              setTimeout(async () => {
-                try {
-                  const r = await fetch(API_URL + '/carburanti');
-                  const d = await r.json();
-                  if (d.stazioni?.length) mostraMappaCarburanti(d.stazioni);
-                } catch(e) {}
               }, 400);
             }
           } else if (evt.type === 'error') {
@@ -2315,102 +2307,22 @@ async function mostraCarburanti() {
       addMessage('ai', 'Nessuna stazione trovata nel raggio. ' + (data.error || ''), 'Carburanti', '');
       return;
     }
-
     const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
-
-    // ── Testo prezzi ──────────────────────────────────────────────
     let html = '<strong>⛽ Stazioni carburante vicine a Modica</strong><br><br>';
     data.stazioni.forEach(s => {
-      html += `<strong>${s.nome}</strong> — ${s.indirizzo || s.comune} (${s.dist} km)<br>`;
+      html += `<strong>${s.nome}</strong> — ${s.comune} (${s.dist} km)<br>`;
       const prezziOrdinati = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean);
       prezziOrdinati.forEach(p => {
         html += `&nbsp;&nbsp;• ${p.carburante} <em>${p.tipo}</em>: <strong>${p.prezzo.toFixed(3)} €/L</strong><br>`;
       });
       html += '<br>';
     });
-    html += `<small style="color:var(--ink-soft)">${data.aggiornamento || ''}</small>`;
+    html += `<small style="color:var(--ink-soft)">${data.aggiornamento}</small>`;
     addMessage('ai', html, 'MiMIT', '');
-
-    // ── Mappa inline ──────────────────────────────────────────────
-    mostraMappaCarburanti(data.stazioni);
-
   } catch (e) {
     removeTyping();
     addMessage('ai', 'Errore nel recupero prezzi carburanti.', 'Carburanti', '');
   }
-}
-
-async function mostraMappaCarburanti(stazioni) {
-  // Stazioni con coordinate valide
-  const staz = stazioni.filter(s => s.lat && s.lon);
-  if (!staz.length) return;
-
-  const mapId  = 'cmap' + Date.now();
-  const listId = 'clist' + Date.now();
-
-  // Calcola prezzo benzina self minimo per colorare i marker
-  const prezziB = staz.map(s => s.prezzi['Benzina_self']?.prezzo).filter(Boolean);
-  const minB = prezziB.length ? Math.min(...prezziB) : 0;
-  const maxB = prezziB.length ? Math.max(...prezziB) : 0;
-
-  // Colore marker: verde = più economica, giallo = media, rosso = più cara
-  function coloreMarker(s) {
-    const pb = s.prezzi['Benzina_self']?.prezzo;
-    if (!pb || minB === maxB) return '#64748b';
-    const ratio = (pb - minB) / (maxB - minB);
-    if (ratio <= 0.33) return '#22c55e';   // verde
-    if (ratio <= 0.66) return '#f59e0b';   // giallo
-    return '#ef4444';                       // rosso
-  }
-
-  const msgHtml = `
-    <div style="font-size:13px;font-weight:700;color:var(--sky);margin-bottom:10px;display:flex;align-items:center;gap:7px;">
-      📍 Posizione stazioni
-      <span style="font-size:11px;font-weight:400;color:var(--ink-soft);">${staz.length} stazioni trovate</span>
-    </div>
-    <div id="${mapId}" style="width:100%;height:260px;border-radius:12px;overflow:hidden;border:1px solid var(--border);"></div>
-    <div id="${listId}" style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;font-size:11px;">
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;"></span>Più economica</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>Media</span>
-      <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>Più cara</span>
-    </div>`;
-
-  addMessage('ai', msgHtml, 'MiMIT', '');
-
-  // Aspetta che il div sia effettivamente nel DOM con dimensioni reali
-  _aspettaElemento(mapId, 3000).then(container => {
-    if (!container) return;
-
-    const map = L.map(mapId, { zoomControl: true }).setView([36.8463, 14.7642], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap', maxZoom: 19
-    }).addTo(map);
-
-    const bounds = [];
-    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
-
-    staz.forEach(s => {
-      const colore = coloreMarker(s);
-      const iconHtml = `<div style="background:${colore};width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`;
-      const icon = L.divIcon({ html: iconHtml, className:'', iconSize:[16,16], iconAnchor:[8,8] });
-
-      const prezziHtml = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean)
-        .map(p => `${p.carburante} ${p.tipo}: <b>${p.prezzo.toFixed(3)} €/L</b>`)
-        .join('<br>');
-
-      L.marker([s.lat, s.lon], { icon })
-        .bindPopup(`<b>${s.nome}</b><br><small>${s.indirizzo || ''}</small><br>${prezziHtml}`)
-        .addTo(map);
-
-      bounds.push([s.lat, s.lon]);
-    });
-
-    setTimeout(() => {
-      map.invalidateSize();
-      if (bounds.length > 0)
-        map.fitBounds(bounds, { padding:[32,32], maxZoom:15 });
-    }, 300);
-  });
 }
 
 // ── Dark Mode ────────────────────────────────────────────────────
@@ -2482,9 +2394,7 @@ async function caricaTraffco() {
   try {
     const res = await fetch(API_URL + '/traffico');
     const dati = await res.json();
-    console.log('[TRAFFICO]', JSON.stringify(dati));
     if (dati.segmenti && dati.segmenti.length) {
-      console.log('[TRAFFICO] aggiornaBarra con', dati.segmenti.map(s => s.stato));
       aggiornaBarra(dati.segmenti);
       window._trafficoDati = dati;
     } else {
@@ -2632,45 +2542,6 @@ function chiudiMappaTraffco(e) {
 }
 
 // ── Mappa Farmacie ─────────────────────────────────────────────────
-// ── Helper: aspetta che un elemento sia nel DOM con altezza > 0 ──
-// Usa MutationObserver + polling come fallback. Timeout in ms.
-function _aspettaElemento(id, timeout) {
-  return new Promise(resolve => {
-    const existing = document.getElementById(id);
-    if (existing && existing.offsetHeight > 0) { resolve(existing); return; }
-
-    const start = Date.now();
-    const observer = new MutationObserver(() => {
-      const el = document.getElementById(id);
-      if (el && el.offsetHeight > 0) {
-        observer.disconnect();
-        resolve(el);
-      } else if (Date.now() - start > timeout) {
-        observer.disconnect();
-        // Prova con offsetParent (elemento nel DOM ma altezza CSS non ancora calcolata)
-        resolve(el || null);
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Fallback polling ogni 100ms
-    const poll = setInterval(() => {
-      const el = document.getElementById(id);
-      if (el) {
-        clearInterval(poll);
-        observer.disconnect();
-        // Piccolo delay per lasciare al browser il tempo di calcolare le dimensioni
-        setTimeout(() => resolve(el), 50);
-      }
-      if (Date.now() - start > timeout) {
-        clearInterval(poll);
-        observer.disconnect();
-        resolve(null);
-      }
-    }, 100);
-  });
-}
-
 // ── Mappa Farmacie INLINE in chat ────────────────────────────────
 // La mappa non apre più un modale overlay — appare come messaggio AI nella chat.
 // Una nuova istanza Leaflet viene creata per ogni richiesta (ID univoco).
@@ -2718,8 +2589,10 @@ async function apriMappaFarmacie(farmaciaDiTurnoNome) {
 
   addMessage('ai', msgHtml, 'OpenStreetMap', '');
 
-  // Aspetta che il div sia effettivamente nel DOM con dimensioni reali
-  const container = await _aspettaElemento(mapId, 3000);
+  // Piccolo delay per lasciare al DOM il tempo di renderizzare il div
+  await new Promise(r => setTimeout(r, 120));
+
+  const container = document.getElementById(mapId);
   if (!container) return;
 
   // Inizializza mappa Leaflet nell'elemento inline
@@ -3199,9 +3072,22 @@ if ('serviceWorker' in navigator) {
       reg.update().catch(() => {});
     }).catch(() => {});
   });
+
   // Ricarica la pagina se il SW si aggiorna (prende il controllo)
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     window.location.reload();
+  });
+
+  // Messaggio SW_UPDATED: nuova versione attivata → ricarica pulita
+  // Evita il reload se l'utente sta già scrivendo un messaggio
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data && e.data.type === 'SW_UPDATED') {
+      const inputEl = document.querySelector('#input');
+      const hasText = inputEl && inputEl.value.trim().length > 0;
+      if (!hasText) {
+        window.location.reload();
+      }
+    }
   });
 }
 
