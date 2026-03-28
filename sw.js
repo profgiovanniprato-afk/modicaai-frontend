@@ -1,81 +1,52 @@
-// ModicaAI Service Worker v5
-// ─────────────────────────────────────────────────────────────────
-// STRATEGIA:
-//   • Pagine HTML     → NETWORK-FIRST  (sempre contenuto fresco)
-//   • Asset statici   → CACHE-FIRST    (icone, manifest, font)
-//   • API /ask        → BYPASS         (mai cacheate)
-//   • API /carburanti /news → NETWORK-FIRST con fallback offline
-//
-// AGGIORNAMENTO: prima di ogni push eseguire:
-//   python3 bump_version.py
-// Il cambio di CACHE_VERSION invalida tutta la cache vecchia e
-// ricarica automaticamente tutti i tab e l'app installata.
-// ─────────────────────────────────────────────────────────────────
-const CACHE_VERSION = 'modicaai-v20260328-1500';
-const CACHE_STATIC  = `modicaai-static-${CACHE_VERSION}`;
-const CACHE_API     = `modicaai-api-${CACHE_VERSION}`;
+// ModicaAI Service Worker v4 — network-first per API live, cache-first per assets
+const CACHE_STATIC = 'modicaai-static-v7';
+const CACHE_API    = 'modicaai-api-v7';
 
-// Solo asset statici in precache — le pagine HTML restano sempre fresche
 const STATIC_ASSETS = [
+  '/',
+  '/index.html',
   '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
 ];
 
-// ── Install: precache asset statici ──────────────────────────────
+// ── Install: precache risorse statiche ────────────────────────────
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_STATIC)
-      .then(c => Promise.allSettled(
+    caches.open(CACHE_STATIC).then(c => {
+      return Promise.allSettled(
         STATIC_ASSETS.map(url => c.add(url).catch(() => {}))
-      ))
-      .then(() => self.skipWaiting())
+      );
+    }).then(() => self.skipWaiting())
   );
 });
 
-// ── Activate: elimina cache vecchie e notifica tutti i tab ───────
+// ── Activate: pulisce cache vecchie ──────────────────────────────
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(
+    caches.keys().then(keys =>
+      Promise.all(
         keys
           .filter(k => k !== CACHE_STATIC && k !== CACHE_API)
           .map(k => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
-      .then(() => self.clients.matchAll({ type: 'window', includeUncontrolled: true }))
-      .then(clients => {
-        // Invia messaggio a tutti i tab → index.html ricarica automaticamente
-        clients.forEach(client =>
-          client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION })
-        );
-      })
+      )
+    ).then(() => self.clients.claim())
   );
 });
 
-// ── Fetch: strategia adattiva per tipo di risorsa ────────────────
+// ── Fetch: strategia adattiva ────────────────────────────────────
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-
   const url = e.request.url;
-  let parsed;
-  try { parsed = new URL(url); } catch { return; }
-  const { hostname, pathname } = parsed;
 
-  // ── API backend → strategia specifica per endpoint ──────────────
-  if (hostname === 'modicaai-api.onrender.com') {
-    // Endpoint conversazionali → sempre rete, MAI cache
-    if (
-      pathname.includes('/ask') ||
-      pathname.includes('/genera-immagine') ||
-      pathname.includes('/session') ||
-      pathname.includes('/kb-reload')
-    ) {
-      return; // bypass: il browser gestisce la richiesta normalmente
+  // API backend → SEMPRE network-first (dati live: carburanti, news, traffico)
+  // Fallback cache solo se rete completamente offline
+  if (url.includes('modicaai-api.onrender.com')) {
+    // /ask, /ask-stream, /genera-immagine → sempre rete, mai cache
+    if (url.includes('/ask') || url.includes('/genera-immagine') || url.includes('/session')) {
+      return; // lascia passare normalmente
     }
 
-    // Endpoint dati live (carburanti, news, traffico, health, meteo)
-    // → network-first con fallback cache offline
+    // /carburanti, /news, /traffico, /health → network-first con fallback cache
     e.respondWith(
       fetch(e.request)
         .then(res => {
@@ -86,6 +57,7 @@ self.addEventListener('fetch', e => {
           return res;
         })
         .catch(async () => {
+          // Solo se rete non disponibile → usa cache
           const cached = await caches.match(e.request);
           return cached || new Response(
             JSON.stringify({ items: [], stazioni: [], segmenti: [], error: 'offline' }),
@@ -96,40 +68,21 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // ── Pagine HTML → NETWORK-FIRST (sempre aggiornate) ──────────────
-  if (pathname === '/' || pathname.endsWith('.html')) {
+  // Assets statici → cache-first
+  if (e.request.method === 'GET') {
     e.respondWith(
-      fetch(e.request)
-        .then(res => {
-          if (res.ok) {
-            // Salva in cache come backup offline
-            const clone = res.clone();
+      caches.match(e.request).then(cached => {
+        if (cached) return cached;
+        return fetch(e.request).then(res => {
+          if (res.ok && !url.includes('chrome-extension')) {
+            const clone = res.clone(); // clona PRIMA di return
             caches.open(CACHE_STATIC).then(c => c.put(e.request, clone));
           }
           return res;
-        })
-        .catch(async () => {
-          // Rete non disponibile: usa versione cached
-          const cached = await caches.match(e.request);
-          return cached || caches.match('/index.html');
-        })
+        }).catch(() => caches.match('/index.html'));
+      })
     );
-    return;
   }
-
-  // ── Asset statici (icone, manifest, font, script) → CACHE-FIRST ──
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(res => {
-        if (res.ok && !url.includes('chrome-extension')) {
-          const clone = res.clone();
-          caches.open(CACHE_STATIC).then(c => c.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => caches.match('/index.html'));
-    })
-  );
 });
 
 // ── Messaggi dal client ───────────────────────────────────────────
