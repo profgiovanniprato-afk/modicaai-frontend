@@ -2377,40 +2377,40 @@ async function mostraMappaCarburanti(stazioni) {
 
   addMessage('ai', msgHtml, 'MiMIT', '');
 
-  await new Promise(r => setTimeout(r, 120));
-  const container = document.getElementById(mapId);
-  if (!container) return;
+  // Aspetta che il div sia effettivamente nel DOM con dimensioni reali
+  _aspettaElemento(mapId, 3000).then(container => {
+    if (!container) return;
 
-  const map = L.map(mapId, { zoomControl: true }).setView([36.8463, 14.7642], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap', maxZoom: 19
-  }).addTo(map);
+    const map = L.map(mapId, { zoomControl: true }).setView([36.8463, 14.7642], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap', maxZoom: 19
+    }).addTo(map);
 
-  const bounds = [];
-
-  staz.forEach(s => {
-    const colore = coloreMarker(s);
-    const iconHtml = `<div style="background:${colore};width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`;
-    const icon = L.divIcon({ html: iconHtml, className:'', iconSize:[16,16], iconAnchor:[8,8] });
-
-    // Popup con prezzi
+    const bounds = [];
     const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
-    const prezziHtml = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean)
-      .map(p => `${p.carburante} ${p.tipo}: <b>${p.prezzo.toFixed(3)} €/L</b>`)
-      .join('<br>');
 
-    L.marker([s.lat, s.lon], { icon })
-      .bindPopup(`<b>${s.nome}</b><br><small>${s.indirizzo || ''}</small><br>${prezziHtml}`)
-      .addTo(map);
+    staz.forEach(s => {
+      const colore = coloreMarker(s);
+      const iconHtml = `<div style="background:${colore};width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>`;
+      const icon = L.divIcon({ html: iconHtml, className:'', iconSize:[16,16], iconAnchor:[8,8] });
 
-    bounds.push([s.lat, s.lon]);
+      const prezziHtml = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean)
+        .map(p => `${p.carburante} ${p.tipo}: <b>${p.prezzo.toFixed(3)} €/L</b>`)
+        .join('<br>');
+
+      L.marker([s.lat, s.lon], { icon })
+        .bindPopup(`<b>${s.nome}</b><br><small>${s.indirizzo || ''}</small><br>${prezziHtml}`)
+        .addTo(map);
+
+      bounds.push([s.lat, s.lon]);
+    });
+
+    setTimeout(() => {
+      map.invalidateSize();
+      if (bounds.length > 0)
+        map.fitBounds(bounds, { padding:[32,32], maxZoom:15 });
+    }, 300);
   });
-
-  setTimeout(() => {
-    map.invalidateSize();
-    if (bounds.length > 0)
-      map.fitBounds(bounds, { padding:[32,32], maxZoom:15 });
-  }, 200);
 }
 
 // ── Dark Mode ────────────────────────────────────────────────────
@@ -2632,6 +2632,45 @@ function chiudiMappaTraffco(e) {
 }
 
 // ── Mappa Farmacie ─────────────────────────────────────────────────
+// ── Helper: aspetta che un elemento sia nel DOM con altezza > 0 ──
+// Usa MutationObserver + polling come fallback. Timeout in ms.
+function _aspettaElemento(id, timeout) {
+  return new Promise(resolve => {
+    const existing = document.getElementById(id);
+    if (existing && existing.offsetHeight > 0) { resolve(existing); return; }
+
+    const start = Date.now();
+    const observer = new MutationObserver(() => {
+      const el = document.getElementById(id);
+      if (el && el.offsetHeight > 0) {
+        observer.disconnect();
+        resolve(el);
+      } else if (Date.now() - start > timeout) {
+        observer.disconnect();
+        // Prova con offsetParent (elemento nel DOM ma altezza CSS non ancora calcolata)
+        resolve(el || null);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Fallback polling ogni 100ms
+    const poll = setInterval(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        clearInterval(poll);
+        observer.disconnect();
+        // Piccolo delay per lasciare al browser il tempo di calcolare le dimensioni
+        setTimeout(() => resolve(el), 50);
+      }
+      if (Date.now() - start > timeout) {
+        clearInterval(poll);
+        observer.disconnect();
+        resolve(null);
+      }
+    }, 100);
+  });
+}
+
 // ── Mappa Farmacie INLINE in chat ────────────────────────────────
 // La mappa non apre più un modale overlay — appare come messaggio AI nella chat.
 // Una nuova istanza Leaflet viene creata per ogni richiesta (ID univoco).
@@ -2679,10 +2718,8 @@ async function apriMappaFarmacie(farmaciaDiTurnoNome) {
 
   addMessage('ai', msgHtml, 'OpenStreetMap', '');
 
-  // Piccolo delay per lasciare al DOM il tempo di renderizzare il div
-  await new Promise(r => setTimeout(r, 120));
-
-  const container = document.getElementById(mapId);
+  // Aspetta che il div sia effettivamente nel DOM con dimensioni reali
+  const container = await _aspettaElemento(mapId, 3000);
   if (!container) return;
 
   // Inizializza mappa Leaflet nell'elemento inline
