@@ -328,8 +328,11 @@
     white-space: nowrap; letter-spacing: 0.1px;
   }
   .chip:hover { border-color: var(--sky); color: var(--sky); background: rgba(26,58,92,0.04); }
+  .chip-mappa { border-color: var(--border); color: var(--ink-mid); }
+  .chip-mappa:hover { border-color: var(--gold); color: var(--gold); background: rgba(184,134,11,0.05); }
   body.dark .chip { background: var(--white); border-color: var(--border); color: var(--ink-mid); }
   body.dark .chip:hover { border-color: var(--sky); color: var(--sky); background: rgba(74,143,191,0.08); }
+  body.dark .chip-mappa:hover { border-color: var(--gold); color: var(--gold); background: rgba(212,160,23,0.08); }
   @media(max-width:480px) { .chips-grid { gap:6px; } .chip { font-size:11px; padding:6px 12px; } }
 
   /* ── Griglia immagini ricerca ── */
@@ -1123,6 +1126,16 @@
     .rm-btn{width:24px;height:24px;}
     .radio-mini{gap:3px;margin-right:4px;padding-right:5px;}
   }
+
+  /* ── MOBILE FINAL: tickers nascosti, barre riallineate ── */
+  @media (max-width: 640px) {
+    .news-ticker, .fuel-ticker, .traffic-bar { display: none !important; }
+    .top-stripe  { top: calc(30px + env(safe-area-inset-top, 0px)) !important; }
+    .header      { top: calc(33px + env(safe-area-inset-top, 0px)) !important; }
+    .main        { padding-top: calc(97px + env(safe-area-inset-top, 0px)) !important; }
+    .main.empty  { padding-top: calc(87px + env(safe-area-inset-top, 0px)) !important; }
+    .hero-widgets{ top: calc(87px + env(safe-area-inset-top, 0px)) !important; }
+  }
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1314,7 +1327,7 @@
         <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
         <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
         <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico Live</button>
-        <button class="chip" id="chip7" onclick="window.location.href='/mappa.html'" style="background:linear-gradient(135deg,rgba(26,58,92,0.06),rgba(184,134,11,0.06));border-color:var(--sky);color:var(--sky);">🗺️ Mappa Interattiva</button>
+        <button class="chip chip-mappa" id="chip7" onclick="window.location.href='/mappa.html'">🗺️ Mappa Interattiva</button>
       </div>
     </div>
   </div>
@@ -2281,11 +2294,15 @@ async function caricaCarburantiFuel() {
 
     if (!items) return;
     // Duplica per scorrimento continuo senza salti
+    track.style.animationDuration = '9999s';
     track.innerHTML = items + items;
-    // Adatta velocità animazione alla quantità di contenuto
+    // Forza reflow, poi imposta durata reale
+    void track.offsetWidth;
     const totalWidth = track.scrollWidth / 2;
-    const speed = Math.max(30, Math.round(totalWidth / 80));
-    track.style.animationDuration = speed + 's';
+    if (totalWidth > 0) {
+      const speed = Math.max(20, Math.round(totalWidth / 80));
+      track.style.animationDuration = speed + 's';
+    }
   } catch (e) {
     // Ticker silenzioso in caso di errore
   }
@@ -2481,8 +2498,8 @@ async function caricaNotizie() {
     const track = document.getElementById('tickerTrack');
     if (!track) return;
 
-    // Ferma animazione precedente
-    track.classList.remove('running');
+    // Reset animazione
+    track.style.animationDuration = '9999s';
     track.innerHTML = '';
 
     // Duplica gli item per scorrimento continuo senza salti
@@ -2497,10 +2514,13 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
-    // Avvia animazione CSS nel prossimo frame (DOM deve essere dipinto prima)
-    requestAnimationFrame(() => {
-      track.classList.add('running');
-    });
+    // Forza reflow, poi imposta durata reale
+    void track.offsetWidth;
+    const totalWidth = track.scrollWidth / 2;
+    if (totalWidth > 0) {
+      const speed = Math.max(25, Math.round(totalWidth / 90));
+      track.style.animationDuration = speed + 's';
+    }
   } catch(e) { /* silenzioso */ }
 }
 
