@@ -60,7 +60,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 .snb-dropdown{position:relative;}
 .snb-dropdown-btn{font-size:11px;font-weight:500;color:rgba(255,255,255,0.6);padding:3px 9px;border-radius:6px;background:none;border:none;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;}
 .snb-dropdown-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
-.snb-dropdown-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;background:rgba(10,12,16,0.98);border:1px solid rgba(184,134,11,0.2);border-radius:10px;padding:6px;min-width:170px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:600;}
+.snb-dropdown-menu{display:none;position:absolute;top:100%;left:0;background:rgba(10,12,16,0.98);border:1px solid rgba(184,134,11,0.2);border-radius:10px;padding:6px 6px 6px 6px;padding-top:6px;min-width:170px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:600;}
 .snb-dropdown:hover .snb-dropdown-menu{display:block;}
 .snb-dropdown-menu a{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,0.65);text-decoration:none;padding:7px 12px;border-radius:6px;transition:all 0.12s;white-space:nowrap;}
 .snb-dropdown-menu a:hover{background:rgba(184,134,11,0.15);color:#D4A017;}
@@ -68,7 +68,18 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 .snb-social{display:flex;align-items:center;gap:8px;margin-left:10px;padding-left:10px;border-left:1px solid rgba(255,255,255,0.1);}
 .snb-social a{color:rgba(255,255,255,0.5);display:flex;align-items:center;transition:color 0.15s;}
 .snb-social a:hover{color:#fff;}
-@media(max-width:640px){.snb-link{padding:2px 6px;font-size:10px;}.snb-social{display:none;}}
+@media(max-width:640px){
+    /* ── MOBILE: nasconde i ticker per non sovraffollare lo schermo ── */
+    .news-ticker  { display: none !important; }
+    .fuel-ticker  { display: none !important; }
+    .traffic-bar  { display: none !important; }
+    /* Riallinea le barre fisse: senza ticker, sotto la navbar c'è solo la top-stripe */
+    .top-stripe   { top: calc(30px + env(safe-area-inset-top, 0px)); }
+    .header       { top: calc(33px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 12px; }
+    .main         { padding: calc(103px + env(safe-area-inset-top, 0px)) 10px 200px; }
+    .main.empty   { padding-top: calc(90px + env(safe-area-inset-top, 0px)); padding-bottom: 30px; }
+    /* Widget meteo/orologio: riadattati senza ticker */
+    .hero-widgets { top: calc(87px + env(safe-area-inset-top, 0px)); }.snb-link{padding:2px 6px;font-size:10px;}.snb-social{display:none;}}
 
 /* NEWS TICKER */
 .news-ticker{position:fixed;top: calc(34px + env(safe-area-inset-top, 0px));left:0;right:0;z-index:500;height:28px;background:var(--sky);display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.1);}
@@ -754,6 +765,8 @@ function fermaFuochi(){
 // TICKER NEWS
 let _tickerNewsInterval = null;
 async function caricaNotizie() {
+  // Su mobile i ticker sono nascosti — non eseguire
+  if (window.innerWidth <= 640) return;
   try {
     const res = await fetch(API_URL + '/news');
     const data = await res.json();
@@ -761,8 +774,12 @@ async function caricaNotizie() {
 
     const track = document.getElementById('tickerTrack');
     if (!track) return;
+
+    // Ferma animazione precedente
+    track.classList.remove('running');
     track.innerHTML = '';
-    // Duplica per scorrimento continuo senza salti
+
+    // Duplica gli item per scorrimento continuo senza salti
     const allItems = [...data.items, ...data.items];
     allItems.forEach(item => {
       const a = document.createElement('a');
@@ -774,23 +791,9 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
-    // Aspetta che il DOM sia pronto e calcoli la larghezza
+    // Avvia animazione CSS nel prossimo frame (DOM deve essere dipinto prima)
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const totalWidth = track.scrollWidth / 2;
-        if (totalWidth <= 0) return;
-        let pos = 0;
-        let rafId = null;
-        function step() {
-          pos -= 0.42;
-          if (Math.abs(pos) >= totalWidth) pos = 0;
-          track.style.transform = 'translateX(' + pos + 'px)';
-          rafId = requestAnimationFrame(step);
-        }
-        // Salva rafId per poter cancellare se necessario
-        if (window._newsRafId) cancelAnimationFrame(window._newsRafId);
-        window._newsRafId = requestAnimationFrame(step);
-      });
+      track.classList.add('running');
     });
   } catch(e) { /* silenzioso */ }
 }

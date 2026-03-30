@@ -100,11 +100,12 @@
   .snb-dropdown:hover .snb-dropdown-btn svg { transform: rotate(180deg); }
   .snb-dropdown-menu {
     display: none;
-    position: absolute; top: calc(100% + 6px); left: 0;
+    position: absolute; top: 100%; left: 0;
+    padding-top: 6px;
     background: rgba(10,12,16,0.98);
     border: 1px solid rgba(184,134,11,0.2);
     border-radius: 10px;
-    padding: 6px;
+    padding: 0 6px 6px;
     min-width: 170px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     z-index: 600;
@@ -127,6 +128,17 @@
     margin: 4px 8px;
   }
   @media (max-width: 640px) {
+    /* ── MOBILE: nasconde i ticker per non sovraffollare lo schermo ── */
+    .news-ticker  { display: none !important; }
+    .fuel-ticker  { display: none !important; }
+    .traffic-bar  { display: none !important; }
+    /* Riallinea le barre fisse: senza ticker, sotto la navbar c'è solo la top-stripe */
+    .top-stripe   { top: calc(30px + env(safe-area-inset-top, 0px)); }
+    .header       { top: calc(33px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 12px; }
+    .main         { padding: calc(103px + env(safe-area-inset-top, 0px)) 10px 200px; }
+    .main.empty   { padding-top: calc(90px + env(safe-area-inset-top, 0px)); padding-bottom: 30px; }
+    /* Widget meteo/orologio: riadattati senza ticker */
+    .hero-widgets { top: calc(87px + env(safe-area-inset-top, 0px)); }
     .site-nav-bar { height: calc(30px + env(safe-area-inset-top, 0px)); padding-left: 10px; padding-right: 10px; }
     .snb-link { padding: 2px 6px; font-size: 10px; }
     .snb-dropdown-btn { padding: 2px 6px; font-size: 10px; }
@@ -839,6 +851,7 @@ function rmPrev(){_rmI=(_rmI-1+RM_STAZIONI.length)%RM_STAZIONI.length;_rmSave();
 // ── Ticker carburanti, traffico, news ──────────────────────────
 const _TAPI = 'https://modicaai-api.onrender.com';
 async function _loadFuel(){
+  if(window.innerWidth<=640)return;
   try{
     const d=await(await fetch(_TAPI+'/carburanti')).json();
     if(!d.stazioni?.length)return;
@@ -863,6 +876,7 @@ async function _loadTraffic(){
   }catch(e){}
 }
 async function _loadTickerNews(){
+  if(window.innerWidth<=640)return;
   try{
     const d=await(await fetch(_TAPI+'/news')).json();
     if(!d.items?.length)return;

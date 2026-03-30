@@ -276,37 +276,7 @@
   body.dark .traffic-modal-header { border-color:var(--border); }
   body.dark .traffic-zona-card { background:rgba(255,255,255,0.04); }
 
-  /* Ticker carburanti */
-  .fuel-ticker {
-    position: fixed; top: calc(66px + env(safe-area-inset-top, 0px)); left:0; right:0; z-index:499;
-    height: 28px;
-    background: #1a1a2e;
-    display: flex; align-items: center;
-    overflow: hidden;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .fuel-ticker .ticker-label {
-    background: #e63946;
-    font-size: 10px; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 0 12px; height: 100%;
-    display: flex; align-items: center;
-    flex-shrink: 0;
-    z-index: 1;
-  }
-  .fuel-ticker .ticker-track {
-    animation: ticker-scroll 50s linear infinite;
-  }
-  .fuel-ticker .ticker-item {
-    font-size: 11px;
-    color: rgba(255,255,255,0.85);
-    padding: 0 24px;
-  }
-  .fuel-ticker .ticker-item strong {
-    color: #ffd166;
-    font-weight: 700;
-  }
-  .fuel-ticker .ticker-item:hover { color: #ffd166; }
+  
 
 
   /* ── Chip suggerimenti — sopra l'input ── */
@@ -391,6 +361,17 @@
   body.dark .lang-drop-item:hover { background:rgba(255,255,255,0.06); }
 
   @media (max-width: 640px) {
+    /* ── MOBILE: nasconde i ticker per non sovraffollare lo schermo ── */
+    .news-ticker  { display: none !important; }
+    .fuel-ticker  { display: none !important; }
+    .traffic-bar  { display: none !important; }
+    /* Riallinea le barre fisse: senza ticker, sotto la navbar c'è solo la top-stripe */
+    .top-stripe   { top: calc(30px + env(safe-area-inset-top, 0px)); }
+    .header       { top: calc(33px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 12px; }
+    .main         { padding: calc(103px + env(safe-area-inset-top, 0px)) 10px 200px; }
+    .main.empty   { padding-top: calc(90px + env(safe-area-inset-top, 0px)); padding-bottom: 30px; }
+    /* Widget meteo/orologio: riadattati senza ticker */
+    .hero-widgets { top: calc(87px + env(safe-area-inset-top, 0px)); }
     .lang-toggle { display:none; }
     .lang-mobile-btn { display:flex; }
     .btn-new-chat .btn-label { display:none; }
@@ -753,11 +734,22 @@
   .ticker-track-wrap {
     flex: 1; overflow: hidden; position: relative;
   }
-  /* NESSUNA animation CSS sul news ticker — JS rAF gestisce lo scroll */
+  /* News ticker: animazione CSS attivata via classe JS dopo caricamento contenuto */
   .ticker-track {
     display: flex; gap: 0;
     white-space: nowrap;
     will-change: transform;
+  }
+  /* La classe .running viene aggiunta via JS dopo aver inserito il contenuto */
+  #tickerTrack.running {
+    animation: ticker-scroll-news 40s linear infinite;
+  }
+  #tickerTrack.running:hover {
+    animation-play-state: paused;
+  }
+  @keyframes ticker-scroll-news {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
   .ticker-item {
     display: inline-flex; align-items: center;
@@ -806,8 +798,6 @@
   }
   @keyframes ticker-scroll {
     0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
     100% { transform: translateX(-50%); }
   }
 
@@ -988,11 +978,12 @@
   .snb-dropdown:hover .snb-dropdown-btn svg { transform: rotate(180deg); }
   .snb-dropdown-menu {
     display: none;
-    position: absolute; top: calc(100% + 6px); left: 0;
+    position: absolute; top: 100%; left: 0;
+    padding-top: 6px;
     background: rgba(10,12,16,0.98);
     border: 1px solid rgba(184,134,11,0.2);
     border-radius: 10px;
-    padding: 6px;
+    padding: 0 6px 6px;
     min-width: 170px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     z-index: 600;
@@ -2127,6 +2118,8 @@ async function generaImmagine(prompt) {
 // ── Carburanti ───────────────────────────────────────────────────
 // ── Ticker carburanti (avvio automatico) ─────────────────────────
 async function caricaCarburantiFuel() {
+  // Su mobile i ticker sono nascosti — non eseguire
+  if (window.innerWidth <= 640) return;
   try {
     const res = await fetch(API_URL + '/carburanti');
     const data = await res.json();
@@ -2256,6 +2249,8 @@ function toggleDark() {
 
 // ── News Ticker RSS ──────────────────────────────────────────────
 async function caricaNotizie() {
+  // Su mobile i ticker sono nascosti — non eseguire
+  if (window.innerWidth <= 640) return;
   try {
     const res = await fetch(API_URL + '/news');
     const data = await res.json();
@@ -2263,8 +2258,12 @@ async function caricaNotizie() {
 
     const track = document.getElementById('tickerTrack');
     if (!track) return;
+
+    // Ferma animazione precedente
+    track.classList.remove('running');
     track.innerHTML = '';
-    // Duplica per scorrimento continuo senza salti
+
+    // Duplica gli item per scorrimento continuo senza salti
     const allItems = [...data.items, ...data.items];
     allItems.forEach(item => {
       const a = document.createElement('a');
@@ -2276,23 +2275,9 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
-    // Aspetta che il DOM sia pronto e calcoli la larghezza
+    // Avvia animazione CSS nel prossimo frame (DOM deve essere dipinto prima)
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const totalWidth = track.scrollWidth / 2;
-        if (totalWidth <= 0) return;
-        let pos = 0;
-        let rafId = null;
-        function step() {
-          pos -= 0.42;
-          if (Math.abs(pos) >= totalWidth) pos = 0;
-          track.style.transform = 'translateX(' + pos + 'px)';
-          rafId = requestAnimationFrame(step);
-        }
-        // Salva rafId per poter cancellare se necessario
-        if (window._newsRafId) cancelAnimationFrame(window._newsRafId);
-        window._newsRafId = requestAnimationFrame(step);
-      });
+      track.classList.add('running');
     });
   } catch(e) { /* silenzioso */ }
 }
