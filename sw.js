@@ -1,54 +1,84 @@
-// ModicaAI Service Worker v4 — network-first per API live, cache-first per assets
-const CACHE_STATIC = 'modicaai-static-v7';
-const CACHE_API    = 'modicaai-api-v7';
+// ModicaAI Service Worker v9 — network-first HTML, cache-first assets
+// Incrementa la versione ad ogni deploy per forzare aggiornamento su tutti i device
+const CACHE_VERSION = 'v9';
+const CACHE_STATIC  = 'modicaai-static-' + CACHE_VERSION;
+const CACHE_API     = 'modicaai-api-'    + CACHE_VERSION;
 
+// Asset statici da pre-cachare (solo quelli essenziali)
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
   '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icon-192.png',
+  '/icon-512.png',
 ];
 
-// ── Install: precache risorse statiche ────────────────────────────
+// Pagine HTML del sito
+const HTML_PAGES = [
+  '/',
+  '/index.html',
+  '/news.html',
+  '/gioco.html',
+  '/mappa.html',
+  '/mission.html',
+  '/contatti.html',
+  '/cioccolato.html',
+  '/cosa-vedere.html',
+  '/come-arrivare.html',
+  '/gastronomia.html',
+  '/guida-pratica.html',
+  '/storia.html',
+  '/dintorni.html',
+  '/faq.html',
+];
+
+// ── Install: pre-cache assets statici ──────────────────────────────
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_STATIC).then(c => {
       return Promise.allSettled(
         STATIC_ASSETS.map(url => c.add(url).catch(() => {}))
       );
-    }).then(() => self.skipWaiting())
+    }).then(() => self.skipWaiting()) // attiva subito senza aspettare chiusura tab
   );
 });
 
-// ── Activate: pulisce cache vecchie ──────────────────────────────
+// ── Activate: elimina TUTTE le cache vecchie ───────────────────────
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
         keys
           .filter(k => k !== CACHE_STATIC && k !== CACHE_API)
-          .map(k => caches.delete(k))
+          .map(k => {
+            console.log('[SW] Elimino cache obsoleta:', k);
+            return caches.delete(k);
+          })
       )
-    ).then(() => self.clients.claim())
+    ).then(() => self.clients.claim()) // prende controllo di tutti i client aperti
   );
 });
 
-// ── Fetch: strategia adattiva ────────────────────────────────────
+// ── Fetch: strategia adattiva per tipo di risorsa ──────────────────
 self.addEventListener('fetch', e => {
-  const url = e.request.url;
+  const url  = new URL(e.request.url);
+  const href = e.request.url;
 
-  // API backend → SEMPRE network-first (dati live: carburanti, news, traffico)
-  // Fallback cache solo se rete completamente offline
-  if (url.includes('modicaai-api.onrender.com')) {
-    // /ask, /ask-stream, /genera-immagine → sempre rete, mai cache
-    if (url.includes('/ask') || url.includes('/genera-immagine') || url.includes('/session')) {
-      return; // lascia passare normalmente
+  // Ignora richieste non-GET
+  if (e.request.method !== 'GET') return;
+
+  // Ignora chrome-extension e altri schemi non-http
+  if (!href.startsWith('http')) return;
+
+  // ── 1. API backend → SEMPRE network-first ──────────────────────
+  if (href.includes('modicaai-api.onrender.com') || href.includes('modicaai-api.koyeb.app')) {
+    // Route AI/streaming/sessioni → mai cache
+    if (href.includes('/ask') || href.includes('/genera-immagine') ||
+        href.includes('/session') || href.includes('/ottimizza-prompt') ||
+        href.includes('/analizza-file') || href.includes('/genera-documento')) {
+      return; // passa direttamente alla rete
     }
-
-    // /carburanti, /news, /traffico, /health → network-first con fallback cache
+    // Dati live con fallback cache
     e.respondWith(
-      fetch(e.request)
+      fetch(e.request, { credentials: 'omit' })
         .then(res => {
           if (res.ok) {
             const clone = res.clone();
@@ -57,7 +87,6 @@ self.addEventListener('fetch', e => {
           return res;
         })
         .catch(async () => {
-          // Solo se rete non disponibile → usa cache
           const cached = await caches.match(e.request);
           return cached || new Response(
             JSON.stringify({ items: [], stazioni: [], segmenti: [], error: 'offline' }),
@@ -68,24 +97,74 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Assets statici → cache-first
-  if (e.request.method === 'GET') {
+  // ── 2. Pagine HTML → NETWORK-FIRST (sempre contenuto fresco) ───
+  const isHTML = url.pathname === '/' ||
+                 url.pathname.endsWith('.html') ||
+                 e.request.headers.get('accept')?.includes('text/html');
+
+  if (isHTML) {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          if (res.ok) {
+            // Aggiorna cache con versione fresca
+            const clone = res.clone();
+            caches.open(CACHE_STATIC).then(c => c.put(e.request, clone));
+          }
+          return res;
+        })
+        .catch(async () => {
+          // Offline → usa cache se disponibile
+          const cached = await caches.match(e.request);
+          if (cached) return cached;
+          // Ultima risorsa → index.html
+          return caches.match('/index.html') ||
+                 new Response('<h1>ModicaAI — Offline</h1><p>Connettiti a internet per usare ModicaAI.</p>',
+                   { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+        })
+    );
+    return;
+  }
+
+  // ── 3. Font Google / CDN esterni → cache-first con timeout ────
+  if (href.includes('fonts.googleapis.com') || href.includes('fonts.gstatic.com') ||
+      href.includes('cdnjs.cloudflare.com') || href.includes('unpkg.com')) {
     e.respondWith(
       caches.match(e.request).then(cached => {
         if (cached) return cached;
         return fetch(e.request).then(res => {
-          if (res.ok && !url.includes('chrome-extension')) {
-            const clone = res.clone(); // clona PRIMA di return
+          if (res.ok) {
+            const clone = res.clone();
             caches.open(CACHE_STATIC).then(c => c.put(e.request, clone));
           }
           return res;
-        }).catch(() => caches.match('/index.html'));
+        }).catch(() => cached);
       })
     );
+    return;
   }
+
+  // ── 4. Assets statici (icone, manifest, splash) → cache-first ──
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if (cached) return cached;
+      return fetch(e.request).then(res => {
+        if (res.ok && !href.includes('chrome-extension')) {
+          const clone = res.clone();
+          caches.open(CACHE_STATIC).then(c => c.put(e.request, clone));
+        }
+        return res;
+      }).catch(() => caches.match('/index.html'));
+    })
+  );
 });
 
-// ── Messaggi dal client ───────────────────────────────────────────
+// ── Messaggi dal client (forza skipWaiting) ─────────────────────────
 self.addEventListener('message', e => {
-  if (e.data === 'skipWaiting') self.skipWaiting();
+  if (e.data === 'skipWaiting') {
+    self.skipWaiting();
+  }
+  if (e.data === 'clearCache') {
+    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
+  }
 });

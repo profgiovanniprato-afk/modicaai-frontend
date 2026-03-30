@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<!-- Android / Chrome -->
+<meta name="theme-color" content="#1A3A5C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151820" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ModicaAI">
+<link rel="apple-touch-icon" href="/icon-192.png">
+
+<!-- SEO -->
+<title>Mappa Interattiva di Modica — ModicaAI</title>
+<meta name="keywords" content="mappa modica interattiva, punti interesse modica, farmacie modica mappa, parcheggi modica, turismo modica mappa">
+<meta name="description" content="Esplora Modica con la mappa interattiva di ModicaAI: quartieri, chiese, farmacie, parcheggi, carburanti, trasporti e tutti i punti di interesse turistici."/>
+<meta name="robots" content="index, follow"/>
+<meta name="geo.region" content="IT-RG"/>
+<meta name="geo.placename" content="Modica, Ragusa, Sicilia"/>
+<link rel="canonical" href="https://www.modicaai.it/mappa.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://www.modicaai.it/mappa.html"/>
+<meta property="og:title" content="Mappa Interattiva di Modica — ModicaAI"/>
+<meta property="og:description" content="Esplora Modica con la mappa interattiva: quartieri, POI turistici, farmacie, parcheggi e molto altro."/>
+<meta property="og:image" content="https://www.modicaai.it/icon-512.png"/>
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Map","@id":"https://www.modicaai.it/mappa.html#map","name":"Mappa Interattiva di Modica","description":"Esplora Modica con la mappa interattiva: quartieri, chiese, farmacie, parcheggi, carburanti, trasporti e tutti i punti di interesse turistici.","datePublished":"2026-03-30","dateModified":"2026-03-30","url":"https://www.modicaai.it/mappa.html","about":{"@type":"City","name":"Modica","addressRegion":"RG","addressCountry":"IT","geo":{"@type":"GeoCoordinates","latitude":"36.8604","longitude":"14.7742"}},"inLanguage":"it"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Mappa Interattiva","item":"https://www.modicaai.it/mappa.html"}]}]}
+</script>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<!-- Leaflet MarkerCluster -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+
+<!-- Fonts (identici al sito) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6KDD1Z4WMZ');
+</script>
+
+<style>
+  /* ── CSS Variables — stesse del sito principale ── */
+  :root {
+    --white:    #FFFFFF;
+    --bg:       #F8F8F8;
+    --bg-card:  #FFFFFF;
+    --gold:     #B8860B;
+    --gold-lt:  #D4A017;
+    --terra:    #C1440E;
+    --sky:      #1A3A5C;
+    --ink:      #1A1A1A;
+    --ink-mid:  #555555;
+    --ink-soft: #999999;
+    --border:   #EBEBEB;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    --nav-h: calc(34px + env(safe-area-inset-top, 0px));
+    --header-h: 56px;
+  }
+  body.dark {
+    --white:    #1E2330;
+    --bg:       #151820;
+    --bg-card:  #1E2330;
+    --gold:     #D4A017;
+    --gold-lt:  #E8B824;
+    --sky:      #4A8FBF;
+    --ink:      #E8E8E8;
+    --ink-mid:  #AAAAAA;
+    --ink-soft: #777777;
+    --border:   #2E3448;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%; overflow: hidden;
+    background: var(--bg); color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── NAVBAR (identica al sito) ── */
+  .site-nav-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1200;
+    background: rgba(26,58,92,0.97);
+    backdrop-filter: blur(10px);
+    height: var(--nav-h); padding-top: env(safe-area-inset-top, 0px); align-items: flex-end;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .snb-logo {
+    font-size: 12px; font-weight: 600;
+    color: #fff; text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    margin-right: auto;
+    font-family: 'Outfit', sans-serif;
+  }
+  .snb-logo span { color: #D4A017; }
+  .snb-links { display: flex; align-items: center; gap: 2px; }
+  .snb-link {
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    padding: 3px 9px; border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .snb-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .snb-link.active { color: #fff; background: rgba(255,255,255,0.1); }
+  .snb-social {
+    display: flex; align-items: center; gap: 8px;
+    margin-left: 10px; padding-left: 10px;
+    border-left: 1px solid rgba(255,255,255,0.1);
+  }
+  .snb-social a {
+    color: rgba(255,255,255,0.5);
+    display: flex; align-items: center;
+    transition: color 0.15s;
+  }
+  .snb-social a:hover { color: #fff; }
+  .snb-dropdown { position: relative; }
+  .snb-dropdown-btn {
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    padding: 3px 9px; border-radius: 6px;
+    transition: all 0.15s;
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; display: flex; align-items: center; gap: 4px;
+    letter-spacing: 0.3px;
+  }
+  .snb-dropdown-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .snb-dropdown-btn svg { opacity: 0.5; transition: transform 0.2s; }
+  .snb-dropdown:hover .snb-dropdown-btn svg { transform: rotate(180deg); }
+  .snb-dropdown-menu {
+    display: none;
+    position: absolute; top: calc(100% + 6px); left: 0;
+    background: rgba(10,12,16,0.98);
+    border: 1px solid rgba(184,134,11,0.2);
+    border-radius: 10px;
+    padding: 6px;
+    min-width: 170px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    z-index: 1300;
+    backdrop-filter: blur(12px);
+  }
+  .snb-dropdown:hover .snb-dropdown-menu { display: block; }
+  .snb-dropdown-menu a {
+    display: block;
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    padding: 7px 12px;
+    border-radius: 6px;
+    transition: all 0.12s;
+    white-space: nowrap;
+  }
+  .snb-dropdown-menu a:hover { background: rgba(184,134,11,0.15); color: #D4A017; }
+  .snb-dropdown-menu .snb-drop-sep {
+    height: 1px; background: rgba(184,134,11,0.12);
+    margin: 4px 8px;
+  }
+
+  /* ── HEADER MAPPA ── */
+  #map-header {
+    position: fixed;
+    top: var(--nav-h); left: 0; right: 0;
+    height: var(--header-h);
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; z-index: 1100;
+    box-shadow: var(--shadow-sm);
+  }
+  body.dark #map-header {
+    background: rgba(21,24,32,0.97);
+  }
+  .map-header-left { display: flex; align-items: center; gap: 12px; }
+  .map-logo-mark {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--sky) 0%, #2a5a8c 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(26,58,92,0.3);
+    flex-shrink: 0;
+  }
+  .map-header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--ink); letter-spacing: 0.3px;
+  }
+  .map-header-title span { color: var(--gold); }
+  .map-header-sub {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--ink-soft); margin-top: 1px;
+  }
+  .map-header-right { display: flex; align-items: center; gap: 8px; }
+  #btn-back {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500;
+    color: var(--ink-mid); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 20px;
+    padding: 6px 14px; transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+    background: var(--white);
+  }
+  #btn-back:hover { color: var(--sky); border-color: var(--sky); }
+  #btn-dark-map {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--white);
+    color: var(--ink-mid); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s;
+  }
+  #btn-dark-map:hover { border-color: var(--sky); color: var(--sky); }
+
+  /* ── MAPPA ── */
+  #map {
+    position: fixed;
+    top: calc(var(--nav-h) + var(--header-h));
+    left: 0; right: 0; bottom: 32px;
+    z-index: 1;
+  }
+
+  /* ── BARRA RICERCA + GEOLOC ── */
+  #cerca-wrap {
+    position: fixed;
+    top: calc(var(--nav-h) + var(--header-h) + 12px);
+    left: 16px;
+    display: flex; gap: 8px; z-index: 1050; align-items: center;
+  }
+  #cerca-box {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 30px; padding: 7px 14px;
+    backdrop-filter: blur(12px); width: 230px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #cerca-box:focus-within {
+    border-color: var(--sky);
+    box-shadow: 0 4px 20px rgba(26,58,92,0.12);
+  }
+  #cerca-input {
+    border: none; background: transparent; color: var(--ink);
+    font-family: 'Outfit', sans-serif; font-size: 13px; outline: none;
+    width: 100%; min-width: 0;
+  }
+  #cerca-input::placeholder { color: var(--ink-soft); }
+  #cerca-clear {
+    background: none; border: none; color: var(--ink-soft);
+    cursor: pointer; font-size: 12px; padding: 0; line-height: 1;
+  }
+  #cerca-risultati {
+    position: fixed;
+    top: calc(var(--nav-h) + var(--header-h) + 56px);
+    left: 16px;
+    width: 270px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    z-index: 1050;
+    backdrop-filter: blur(12px);
+    display: none; max-height: 280px; overflow-y: auto;
+    box-shadow: var(--shadow-md);
+  }
+  .cerca-item {
+    padding: 10px 14px; cursor: pointer; display: flex;
+    align-items: center; gap: 10px; font-size: 13px;
+    color: var(--ink); border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .cerca-item:last-child { border-bottom: none; }
+  .cerca-item:hover { background: var(--bg); }
+  .cerca-item-cat { font-size: 11px; color: var(--ink-soft); }
+  #btn-geoloc {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--ink-mid); cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm); transition: all 0.2s; flex-shrink: 0;
+  }
+  #btn-geoloc:hover { color: var(--sky); border-color: var(--sky); }
+  #btn-geoloc.active { color: var(--sky); border-color: var(--sky); background: rgba(26,58,92,0.06); }
+  #marker-geoloc {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #4A90E2; border: 3px solid white;
+    box-shadow: 0 0 0 3px rgba(74,144,226,0.3);
+  }
+
+  /* ── FILTRI CATEGORIA ── */
+  #filtri {
+    position: fixed;
+    top: calc(var(--nav-h) + var(--header-h) + 12px);
+    right: 16px;
+    display: flex; gap: 5px; z-index: 1050;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 30px; padding: 5px 8px;
+    backdrop-filter: blur(12px);
+    flex-wrap: nowrap; overflow-x: auto;
+    max-width: calc(100vw - 310px);
+    scrollbar-width: none;
+    box-shadow: var(--shadow-sm);
+  }
+  #filtri::-webkit-scrollbar { display: none; }
+  .f-btn {
+    font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 400;
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid transparent;
+    background: transparent; color: var(--ink-soft);
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .f-btn:hover { color: var(--ink); background: var(--bg); }
+  .f-btn.active {
+    background: var(--sky); color: white;
+    border-color: var(--sky); font-weight: 500;
+  }
+
+  /* ── PANNELLO LATERALE (desktop) ── */
+  #panel {
+    position: fixed;
+    top: calc(var(--nav-h) + var(--header-h));
+    right: 0; bottom: 32px;
+    width: 300px;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border);
+    z-index: 1080; display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    backdrop-filter: blur(16px);
+    box-shadow: var(--shadow-md);
+  }
+  #panel.open { transform: translateX(0); }
+  #panel-header {
+    padding: 20px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  #panel-color-stripe {
+    height: 3px; border-radius: 2px; width: 36px; margin-bottom: 12px;
+  }
+  #panel-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600;
+    color: var(--ink); line-height: 1.2; margin-bottom: 6px;
+  }
+  #panel-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+  #panel-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--ink-mid); cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  #panel-close:hover { color: var(--terra); border-color: var(--terra); }
+  #panel-body {
+    flex: 1; overflow-y: auto; padding: 16px 20px;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .panel-section-title {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 10px; font-weight: 600;
+  }
+  .poi-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .poi-item:last-child { border-bottom: none; }
+  .poi-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+    background: var(--bg); border: 1px solid var(--border);
+  }
+  .poi-info { flex: 1; }
+  .poi-label { font-size: 13px; color: var(--ink); font-weight: 500; line-height: 1.3; }
+  .poi-cat { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  #panel-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    padding: 40px 20px; text-align: center;
+  }
+  #panel-empty svg { opacity: 0.2; }
+  #panel-empty p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ── LEGENDA ── */
+  #legenda {
+    position: fixed; bottom: 42px; left: 16px; z-index: 1050;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px;
+    backdrop-filter: blur(12px); box-shadow: var(--shadow-sm);
+  }
+  #legenda-title {
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 8px; font-weight: 600;
+  }
+  .leg-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .leg-item:last-child { margin-bottom: 0; }
+  .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .leg-label { font-size: 11px; color: var(--ink-mid); }
+  .leg-sep {
+    margin: 8px 0 5px;
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-soft); font-weight: 600;
+  }
+
+  /* ── BOTTOM SHEET (mobile) ── */
+  #bottom-sheet {
+    display: none;
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    z-index: 1090;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    max-height: 70vh; overflow-y: auto;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.1);
+  }
+  #bottom-sheet.open { transform: translateY(0); }
+  .bs-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 12px auto 0;
+  }
+  #bs-content { padding: 16px 20px 32px; }
+  #bs-stripe { height: 3px; border-radius: 2px; width: 36px; margin-bottom: 10px; }
+  #bs-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px;
+    font-weight: 600; color: var(--ink); margin-bottom: 6px;
+  }
+  #bs-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 14px; }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #0a0c10;
+    font-size: 11px; color: var(--gold);
+    padding: 5px 16px;
+    z-index: 1150;
+    border-top: 1px solid rgba(194,157,82,0.2);
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.3px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap; min-height: 32px;
+  }
+  .site-footer a { color: var(--gold); text-decoration: none; }
+  .site-footer a:hover { text-decoration: underline; }
+  .footer-sep { color: rgba(194,157,82,0.4); margin: 0 5px; }
+
+  /* ── LEAFLET OVERRIDES — tema sito ── */
+  .leaflet-control-zoom {
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm) !important;
+  }
+  .leaflet-control-zoom a {
+    background: var(--bg-card) !important;
+    color: var(--ink-mid) !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+  .leaflet-control-zoom a:hover {
+    background: var(--bg) !important;
+    color: var(--sky) !important;
+  }
+  .leaflet-popup-content-wrapper {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    color: var(--ink) !important;
+    box-shadow: var(--shadow-md) !important;
+    backdrop-filter: blur(12px);
+  }
+  .leaflet-popup-tip { background: var(--bg-card) !important; }
+  .leaflet-popup-content { margin: 12px 16px !important; font-family: 'Outfit', sans-serif !important; }
+  .pop-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .pop-cat { font-size: 11px; color: var(--ink-soft); margin-top: 3px; letter-spacing: 0.05em; }
+  .pop-extra { font-size: 11px; color: var(--ink-mid); margin-top: 4px; }
+  .pop-gmaps {
+    display: inline-block; margin-top: 8px; font-size: 12px;
+    color: var(--sky); text-decoration: none; font-weight: 500;
+  }
+  .pop-gmaps:hover { text-decoration: underline; }
+
+  /* Cluster */
+  .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large {
+    background: rgba(26,58,92,0.12) !important;
+  }
+  .marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div {
+    background: rgba(26,58,92,0.75) !important;
+    color: white !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    #panel { display: none; }
+    #bottom-sheet { display: block; }
+    #filtri {
+      top: calc(var(--nav-h) + var(--header-h) + 54px);
+      max-width: calc(100vw - 24px);
+      right: 12px; left: 12px;
+    }
+    #cerca-wrap {
+      top: calc(var(--nav-h) + var(--header-h) + 8px);
+      left: 12px; right: 58px;
+    }
+    #cerca-box { width: 100%; }
+    #cerca-risultati { left: 12px; width: calc(100vw - 24px); }
+    #legenda { bottom: 40px; left: 10px; }
+    .snb-link { padding: 2px 6px; font-size: 10px; }
+    .snb-dropdown-btn { padding: 2px 6px; font-size: 10px; }
+  }
+  @media (max-width: 640px) {
+    .site-nav-bar { height: 30px; padding: 0 10px; }
+    :root { --nav-h: 30px; --header-h: 48px; }
+    .map-header-title { font-size: 15px; }
+    .map-header-sub { display: none; }
+    #btn-back .btn-label { display: none; }
+    #btn-back { padding: 5px 9px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVBAR (identica al sito) ── -->
+<nav class="site-nav-bar" role="navigation" aria-label="Navigazione principale">
+  <a href="/" class="snb-logo">Modica<span>AI</span></a>
+  <div class="snb-links">
+    <a href="/" class="snb-link">Home</a>
+    <a href="/news.html" class="snb-link">News</a>
+    <a href="/gioco.html" class="snb-link">Giochi</a>
+    <a href="/mission.html" class="snb-link">Mission</a>
+    <div class="snb-dropdown">
+      <button class="snb-dropdown-btn">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="snb-dropdown-menu">
+        <a href="/cioccolato.html">Cioccolato IGP</a>
+        <a href="/cosa-vedere.html">Cosa vedere</a>
+        <a href="/come-arrivare.html">Come arrivare</a>
+        <a href="/gastronomia.html">Gastronomia</a>
+        <div class="snb-drop-sep"></div>
+        <a href="/storia.html">Storia</a>
+        <a href="/dintorni.html">Dintorni</a>
+        <a href="/faq.html">FAQ</a>
+        <a href="/guida-pratica.html">Guida pratica</a>
+      </div>
+    </div>
+    <a href="/mappa.html" class="snb-link active">Mappa</a>
+    <a href="/contatti.html" class="snb-link">Contatti</a>
+  </div>
+  <div class="snb-social">
+    <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" title="Facebook"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+    <a href="https://www.instagram.com/modicaai.it" target="_blank" rel="noopener" title="Instagram"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+    <a href="https://www.tiktok.com/@modicaai" target="_blank" rel="noopener" title="TikTok"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V7.0a4.85 4.85 0 01-1.01-.31z"/></svg></a>
+  </div>
+</nav>
+
+<!-- ── HEADER MAPPA ── -->
+<header id="map-header">
+  <div class="map-header-left">
+    <div class="map-logo-mark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z" fill="white" opacity="0.9"/>
+        <circle cx="12" cy="10" r="3" fill="white" opacity="0.6"/>
+      </svg>
+    </div>
+    <div>
+      <div class="map-header-title">Modica<span>AI</span></div>
+      <div class="map-header-sub">Mappa Interattiva</div>
+    </div>
+  </div>
+  <div class="map-header-right">
+    <button id="btn-dark-map" onclick="toggleDarkMap()" title="Dark mode">
+      <svg id="iconDarkMap" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    </button>
+    <a href="/" id="btn-back" title="Torna alla chat">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      <span class="btn-label">← Chat</span>
+    </a>
+  </div>
+</header>
+
+<!-- ── BARRA RICERCA + DOVE SONO ── -->
+<div id="cerca-wrap">
+  <div id="cerca-box">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-soft);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="cerca-input" placeholder="Cerca un posto..." autocomplete="off"/>
+    <button id="cerca-clear" style="display:none;">✕</button>
+  </div>
+  <button id="btn-geoloc" title="Dove sono">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/><circle cx="12" cy="12" r="9" stroke-dasharray="2 4"/></svg>
+  </button>
+</div>
+<div id="cerca-risultati"></div>
+
+<!-- ── FILTRI CATEGORIA ── -->
+<div id="filtri">
+  <button class="f-btn active" data-cat="all">Tutti</button>
+  <button class="f-btn" data-cat="chiesa">⛪ Chiese</button>
+  <button class="f-btn" data-cat="monumento">🏛️ Monumenti</button>
+  <button class="f-btn" data-cat="cibo">🍫 Gastronomia</button>
+  <button class="f-btn" data-cat="natura">🔭 Natura</button>
+  <button class="f-btn" data-cat="mare">🏖️ Mare</button>
+  <button class="f-btn" data-cat="parcheggio">🅿️ Parcheggi</button>
+  <button class="f-btn" data-cat="carburante">⛽ Carburante</button>
+  <button class="f-btn" data-cat="servizi">🏥 Servizi</button>
+  <button class="f-btn" data-cat="farmacia">💊 Farmacie</button>
+  <button class="f-btn" data-cat="atm">🏧 Bancomat</button>
+  <button class="f-btn" data-cat="posta">📮 Posta</button>
+  <button class="f-btn" data-cat="trasporti">✈️ Trasporti</button>
+</div>
+
+<!-- ── MAPPA ── -->
+<div id="map"></div>
+
+<!-- ── LEGENDA ── -->
+<div id="legenda">
+  <div id="legenda-title">Frazioni</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#7F77DD"></div><span class="leg-label">Centro Storico</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#EF9F27"></div><span class="leg-label">Marina di Modica</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#F0997B"></div><span class="leg-label">Frigintini</span></div>
+  <div class="leg-sep">Strade</div>
+  <div class="leg-item"><div style="background:#C9933A;border-radius:2px;height:4px;width:16px;flex-shrink:0;"></div><span class="leg-label">Corso Umberto I</span></div>
+  <div class="leg-item"><div style="background:#5DCAA5;border-radius:2px;height:3px;width:16px;flex-shrink:0;"></div><span class="leg-label">Vie principali</span></div>
+  <div class="leg-item"><div style="background:#EF9F27;border-radius:2px;height:3px;width:16px;flex-shrink:0;"></div><span class="leg-label">SS115 / SP25</span></div>
+</div>
+
+<!-- ── PANNELLO LATERALE (desktop) ── -->
+<div id="panel">
+  <div id="panel-empty">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1" opacity="0.3">
+      <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 16l4.553-2.276A1 1 0 0021 19.382V8.618a1 1 0 00-.553-.894L15 5m0 18V5M9 7l6-2"/>
+    </svg>
+    <p>Clicca su un quartiere colorato per esplorarne i dettagli e i punti di interesse</p>
+  </div>
+  <div id="panel-header" style="display:none;">
+    <div id="panel-color-stripe"></div>
+    <button id="panel-close" onclick="closePanel()">✕</button>
+    <div id="panel-name"></div>
+    <div id="panel-desc"></div>
+  </div>
+  <div id="panel-body" style="display:none;">
+    <div class="panel-section-title">Punti di interesse</div>
+    <div id="panel-pois"></div>
+  </div>
+</div>
+
+<!-- ── BOTTOM SHEET (mobile) ── -->
+<div id="bottom-sheet">
+  <div class="bs-handle"></div>
+  <div id="bs-content">
+    <div id="bs-stripe"></div>
+    <div id="bs-name"></div>
+    <div id="bs-desc"></div>
+    <div class="panel-section-title">Punti di interesse</div>
+    <div id="bs-pois"></div>
+  </div>
+</div>
+
+<!-- ── FOOTER (identico al sito) ── -->
+<div class="site-footer">
+  <a href="https://modicaai.it">modicaai.it</a>
+  <span class="footer-sep">·</span>
+  Modica, Sicilia
+  <span class="footer-sep">·</span>
+  © 2026 ModicaAI
+  <span class="footer-sep">·</span>
+  © Dati geografici OpenStreetMap (ODbL)
+</div>
+
+<script>
+// ── DARK MODE SYNC con il sito ─────────────────────────────────
+const sunIconMap  = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const moonIconMap = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>`;
+
+function toggleDarkMap() {
+  const isDark = document.body.classList.toggle('dark');
+  document.getElementById('iconDarkMap').parentElement.innerHTML = isDark ? sunIconMap : moonIconMap;
+  try { localStorage.setItem('modicaai-dark', isDark ? '1' : '0'); } catch(e) {}
+  // Aggiorna tile mappa
+  aggiornaMapTile(isDark);
+}
+
+// Applica dark mode al caricamento (sincronizzato con il sito)
+(function() {
+  try {
+    if (localStorage.getItem('modicaai-dark') === '1') {
+      document.body.classList.add('dark');
+      const btn = document.getElementById('btn-dark-map');
+      if (btn) btn.innerHTML = sunIconMap;
+    }
+  } catch(e) {}
+})();
+
+// ── FRAZIONI — coordinate verificate OSM ──────────────────────
+const QUARTIERI = [
+  {
+    id: "centro", name: "Centro Storico", color: "#7F77DD",
+    desc: "Il centro storico UNESCO di Modica, sviluppato sul letto del torrente Moticano coperto dopo l'alluvione del 1902. Ospita il Duomo di San Giorgio, la Chiesa di San Pietro e il Corso Umberto I.",
+    coords: [
+      [36.856, 14.756], [36.865, 14.756], [36.867, 14.762],
+      [36.866, 14.772], [36.861, 14.774], [36.856, 14.769], [36.854, 14.762]
+    ],
+    center: [36.8613, 14.7641], zoom: 15,
+    pois: [
+      { icon: "⛪", label: "Duomo di San Giorgio", cat: "chiesa" },
+      { icon: "⛪", label: "Chiesa di San Pietro", cat: "chiesa" },
+      { icon: "🏛️", label: "Castello dei Conti", cat: "monumento" },
+      { icon: "🏛️", label: "Corso Umberto I", cat: "monumento" },
+      { icon: "🍫", label: "Antica Dolceria Bonajuto", cat: "cibo" }
+    ]
+  },
+  {
+    id: "marina", name: "Marina di Modica", color: "#EF9F27",
+    desc: "Frazione balneare sul Mar Mediterraneo. Circa 15 km a sud del centro urbano, elevazione 19 m. OSM node 825679690: 36.7127°N, 14.7756°E.",
+    coords: [
+      [36.706, 14.768], [36.716, 14.765], [36.720, 14.778],
+      [36.718, 14.788], [36.708, 14.787], [36.703, 14.777]
+    ],
+    center: [36.7127, 14.7756], zoom: 14,
+    pois: [{ icon: "🏖️", label: "Spiaggia Marina di Modica", cat: "mare" }]
+  },
+  {
+    id: "frigintini", name: "Frigintini", color: "#F0997B",
+    desc: "Frazione nell'entroterra ibleo. OSM node 2056096920: 36.9245°N, 14.8297°E. Circa 9 km a nord-est del centro, elevazione 506 m, ~1.750 abitanti.",
+    coords: [
+      [36.918, 14.823], [36.929, 14.821], [36.932, 14.833],
+      [36.930, 14.840], [36.919, 14.839], [36.915, 14.830]
+    ],
+    center: [36.9245, 14.8297], zoom: 14,
+    pois: [{ icon: "🌿", label: "Frigintini — frazione iblea", cat: "natura" }]
+  }
+];
+
+// ── POI — coordinate verificate OSM ───────────────────────────
+const POI_DATA = [
+  // CHIESE
+  { lat: 36.86409, lng: 14.76166, label: "Duomo di San Giorgio", icon: "⛪", cat: "chiesa" },
+  { lat: 36.86060, lng: 14.76069, label: "Chiesa di San Pietro", icon: "⛪", cat: "chiesa" },
+  // MONUMENTI
+  { lat: 36.86300, lng: 14.76080, label: "Castello dei Conti", icon: "🏛️", cat: "monumento" },
+  { lat: 36.86200, lng: 14.76150, label: "Corso Umberto I", icon: "🏛️", cat: "monumento" },
+  // GASTRONOMIA
+  { lat: 36.86050, lng: 14.76200, label: "Antica Dolceria Bonajuto", icon: "🍫", cat: "cibo" },
+  // MARE
+  { lat: 36.71270, lng: 14.77564, label: "Marina di Modica", icon: "🏖️", cat: "mare" },
+  // NATURA
+  { lat: 36.92453, lng: 14.82966, label: "Frigintini", icon: "🌿", cat: "natura" },
+  { lat: 36.8640455, lng: 14.7613905, label: "Belvedere panoramico", icon: "🔭", cat: "natura" },
+  { lat: 36.8619428, lng: 14.7612994, label: "Belvedere panoramico", icon: "🔭", cat: "natura" },
+  { lat: 36.8614091, lng: 14.7612941, label: "Belvedere panoramico", icon: "🔭", cat: "natura" },
+  // OSPEDALE
+  { lat: 36.83926, lng: 14.7652072, label: "Ospedale Maggiore Nino Baglieri", icon: "🏥", cat: "servizi", extra: "☎ +39 0932 448111" },
+  // CARBURANTE
+  { lat: 36.8383224, lng: 14.7826389, label: "Q8", icon: "⛽", cat: "carburante" },
+  { lat: 36.8525139, lng: 14.764588,  label: "Iblea Petroli", icon: "⛽", cat: "carburante" },
+  { lat: 36.8674418, lng: 14.7475147, label: "Enilive", icon: "⛽", cat: "carburante" },
+  { lat: 36.8323021, lng: 14.7669849, label: "Enilive (24h)", icon: "⛽", cat: "carburante" },
+  { lat: 36.8649032, lng: 14.758265,  label: "Enilive (24h)", icon: "⛽", cat: "carburante" },
+  { lat: 36.86925,   lng: 14.7519468, label: "Sepa", icon: "⛽", cat: "carburante" },
+  // PARCHEGGI
+  { lat: 36.8535349, lng: 14.7556746, label: "Parcheggio gratuito", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8466315, lng: 14.7655188, label: "Parcheggio", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8405423, lng: 14.7661773, label: "Parcheggio", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8399912, lng: 14.7666403, label: "Parcheggio", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8388899, lng: 14.7671847, label: "Parcheggio (a pagamento)", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8383996, lng: 14.7737241, label: "Parcheggio", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8377969, lng: 14.7757449, label: "Parcheggio", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8375088, lng: 14.7613648, label: "Parcheggio", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8362094, lng: 14.7650792, label: "Parcheggio", icon: "🅿️", cat: "parcheggio" },
+  { lat: 36.8407097, lng: 14.760333,  label: "Parcheggio gratuito", icon: "🅿️", cat: "parcheggio" },
+  // TRASPORTI
+  { lat: 36.9949291, lng: 14.6070941, label: "Aeroporto di Comiso Pio La Torre", icon: "✈️", cat: "trasporti", extra: "IATA: CIY · aeroportodicomiso.eu" },
+  { lat: 37.4674234, lng: 15.0653073, label: "Aeroporto di Catania Fontanarossa", icon: "✈️", cat: "trasporti", extra: "IATA: CTA · aeroporto.catania.it" },
+  { lat: 36.8667944, lng: 14.7569627, label: "Stazione dei Pullman", icon: "🚌", cat: "trasporti" },
+  { lat: 36.8529123, lng: 14.7542035, label: "Stazione Ferroviaria di Modica", icon: "🚂", cat: "trasporti", extra: "RFI · rfi.it" },
+  // FARMACIE
+  { lat: 36.8396529, lng: 14.768357,  label: "Farmacia Montalbano Sgarlata", icon: "💊", cat: "farmacia" },
+  { lat: 36.8653895, lng: 14.763123,  label: "Farmacia Guccione", icon: "💊", cat: "farmacia" },
+  { lat: 36.8614461, lng: 14.7628677, label: "Farmacia Iaconinoto", icon: "💊", cat: "farmacia" },
+  { lat: 36.8404998, lng: 14.777952,  label: "Farmacia Rizzone", icon: "💊", cat: "farmacia" },
+  { lat: 36.8435442, lng: 14.7657846, label: "Farmacia Roccasalva", icon: "💊", cat: "farmacia" },
+  { lat: 36.8324631, lng: 14.7739479, label: "Farmacia Amore", icon: "💊", cat: "farmacia" },
+  { lat: 36.8404585, lng: 14.7648606, label: "Farmacia Schiavo Lena", icon: "💊", cat: "farmacia" },
+  { lat: 36.8564275, lng: 14.7560093, label: "Farmacia Veninata", icon: "💊", cat: "farmacia" },
+  { lat: 36.8684192, lng: 14.7612973, label: "Farmacia Traina", icon: "💊", cat: "farmacia" },
+  { lat: 36.8556807, lng: 14.7604376, label: "Farmacia Mantegna", icon: "💊", cat: "farmacia" },
+  { lat: 36.8325447, lng: 14.7572002, label: "Farmacia Igea", icon: "💊", cat: "farmacia" },
+  { lat: 36.8736323, lng: 14.7540231, label: "Farmacia San Giorgio", icon: "💊", cat: "farmacia" },
+  { lat: 36.8577731, lng: 14.7604242, label: "Farmacia Floridia", icon: "💊", cat: "farmacia" },
+  { lat: 36.8724715, lng: 14.7635557, label: "Farmacia del Mulino", icon: "💊", cat: "farmacia" },
+  // ATM
+  { lat: 36.8658283, lng: 14.764286,  label: "Bancomat", icon: "🏧", cat: "atm" },
+  { lat: 36.8604611, lng: 14.7598945, label: "Euronet ATM (24h)", icon: "🏧", cat: "atm" },
+  // POSTA
+  { lat: 36.865835,  lng: 14.7641646, label: "Poste Italiane — Modica Alta", icon: "📮", cat: "posta", extra: "Lun-Ven 08:20-13:35 · Sab 08:20-12:35 · ☎ +39 0932 752127" },
+  { lat: 36.8394147, lng: 14.7687826, label: "Poste Italiane — Rocciola Sorda", icon: "📮", cat: "posta", extra: "Lun-Ven 08:20-19:05 · Sab 08:20-12:35" },
+  { lat: 36.8549552, lng: 14.7571385, label: "Poste Italiane — Modica", icon: "📮", cat: "posta", extra: "Lun-Ven 08:20-19:05 · Sab 08:20-12:35 · ☎ +39 0932 758511" },
+];
+
+const CAT_LABELS = {
+  chiesa: "Luogo di culto", monumento: "Monumento", cibo: "Gastronomia",
+  natura: "Natura & Belvedere", mare: "Mare & Spiaggia", altro: "Punto di interesse",
+  parcheggio: "Parcheggio", carburante: "Stazione di servizio", servizi: "Servizi essenziali",
+  trasporti: "Trasporti", farmacia: "Farmacia", atm: "Bancomat / ATM", posta: "Ufficio Postale"
+};
+
+// ── INIT MAPPA ─────────────────────────────────────────────────
+const STADIA_KEY = "4d18467e-c49a-41f4-b2c2-5b1a3c93fe0b";
+const isDarkMode = () => document.body.classList.contains('dark');
+
+const map = L.map('map', {
+  center: [36.860, 14.780],
+  zoom: 11,
+  zoomControl: true,
+  attributionControl: true
+});
+
+// Tile layer — dark o light a seconda del tema
+let tileLayer = null;
+function creaUrlTile(dark) {
+  const stile = dark ? 'alidade_smooth_dark' : 'alidade_smooth';
+  return `https://tiles.stadiamaps.com/tiles/${stile}/{z}/{x}/{y}{r}.png?api_key=${STADIA_KEY}`;
+}
+function aggiornaMapTile(dark) {
+  if (tileLayer) map.removeLayer(tileLayer);
+  tileLayer = L.tileLayer(creaUrlTile(dark), {
+    maxZoom: 20,
+    attribution: '© <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> © <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+  }).addTo(map);
+}
+aggiornaMapTile(isDarkMode());
+
+// ── POLIGONI FRAZIONI ──────────────────────────────────────────
+let activePolygon = null;
+
+QUARTIERI.forEach(q => {
+  const poly = L.polygon(q.coords, {
+    color: q.color, weight: 2,
+    fillColor: q.color, fillOpacity: 0.18
+  }).addTo(map);
+
+  // Etichetta
+  L.marker(q.center, {
+    icon: L.divIcon({
+      html: `<div style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;color:${q.color};white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,0.6),0 0 8px rgba(0,0,0,0.4);letter-spacing:0.08em;pointer-events:none;">${q.name.toUpperCase()}</div>`,
+      className: '', iconAnchor: [50, 8]
+    }),
+    interactive: false
+  }).addTo(map);
+
+  poly.on('mouseover', function() {
+    if (activePolygon !== this) this.setStyle({ fillOpacity: 0.32 });
+  });
+  poly.on('mouseout', function() {
+    if (activePolygon !== this) this.setStyle({ fillOpacity: 0.18 });
+  });
+  poly.on('click', function() {
+    if (activePolygon && activePolygon !== this) {
+      activePolygon.setStyle({ fillOpacity: 0.18, weight: 2 });
+    }
+    activePolygon = this;
+    this.setStyle({ fillOpacity: 0.42, weight: 2.5 });
+    map.flyTo(q.center, q.zoom, { duration: 0.8 });
+    openPanel(q);
+  });
+});
+
+// ── MARKER CLUSTER ─────────────────────────────────────────────
+let clusterGroup = null;
+let activeCat = "all";
+
+function creaIconaMarker(icon) {
+  return L.divIcon({
+    html: `<div style="width:32px;height:32px;border-radius:50%;background:var(--bg-card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:var(--shadow-sm);">${icon}</div>`,
+    className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+  });
+}
+
+function renderMarkers() {
+  if (clusterGroup) map.removeLayer(clusterGroup);
+  clusterGroup = L.markerClusterGroup({
+    maxClusterRadius: 50, spiderfyOnMaxZoom: true, showCoverageOnHover: false
+  });
+  POI_DATA.forEach(poi => {
+    if (activeCat !== 'all' && poi.cat !== activeCat) return;
+    const m = L.marker([poi.lat, poi.lng], { icon: creaIconaMarker(poi.icon) });
+    const gmapsUrl = `https://www.google.com/maps?q=${poi.lat},${poi.lng}`;
+    m.bindPopup(`
+      <div class="pop-name">${poi.label}</div>
+      <div class="pop-cat">${CAT_LABELS[poi.cat] || poi.cat}</div>
+      ${poi.extra ? `<div class="pop-extra">${poi.extra}</div>` : ''}
+      <a href="${gmapsUrl}" target="_blank" rel="noopener" class="pop-gmaps">Apri in Google Maps ↗</a>
+    `, { maxWidth: 220, closeButton: false });
+    clusterGroup.addLayer(m);
+  });
+  map.addLayer(clusterGroup);
+}
+renderMarkers();
+
+// ── STRADE — dati reali OSM (ODbL) ────────────────────────────
+const STRADE_STYLE = {
+  "Corso Umberto Primo":      { color: "#C9933A", weight: 4 },
+  "Via Marchesa Tedeschi":    { color: "#5DCAA5", weight: 3 },
+  "Viale Medaglie d'Oro":     { color: "#7F77DD", weight: 3 },
+  "Via Sacro Cuore":          { color: "#F0997B", weight: 3 },
+  "Via Risorgimento":         { color: "#85B7EB", weight: 3 },
+  "Via Resistenza Partigiana":{ color: "#85B7EB", weight: 3 },
+  "Via Nazionale":            { color: "#5DCAA5", weight: 3 },
+  "Strada statale Sud Occidentale Sicula": { color: "#EF9F27", weight: 3.5, label: "SS115" },
+  "Strada provinciale Ragusa-Marina di Ragusa": { color: "#EF9F27", weight: 3, label: "SP25" }
+};
+
+const STRADE_GEOJSON = {"type":"FeatureCollection","features":[
+  {"type":"Feature","properties":{"name":"Strada provinciale Ragusa-Marina di Ragusa","ref":"SP25"},"geometry":{"type":"LineString","coordinates":[[14.6738489,36.8790138],[14.674518,36.8793508],[14.6763216,36.8803529],[14.6773611,36.8809455],[14.6784713,36.881563],[14.6791658,36.8819406],[14.680973,36.882938],[14.6843383,36.8847814],[14.6852817,36.8853059],[14.6872137,36.8863823],[14.6883577,36.8870233],[14.6894128,36.8876171],[14.689943,36.8879088],[14.6901349,36.8880211]]}},
+  {"type":"Feature","properties":{"name":"Via Risorgimento"},"geometry":{"type":"LineString","coordinates":[[14.7471731,36.9134716],[14.7474715,36.9141641],[14.7477203,36.9158166],[14.7481107,36.917419],[14.7486517,36.9183796],[14.7492571,36.9198002],[14.7492627,36.919933],[14.7492445,36.9200282],[14.7491903,36.9201042],[14.7490701,36.9201761],[14.7487761,36.9202719],[14.7438619,36.9231893]]}},
+  {"type":"Feature","properties":{"name":"Via Resistenza Partigiana"},"geometry":{"type":"LineString","coordinates":[[14.7672732,36.8401301],[14.7672523,36.8401594],[14.7671678,36.840278],[14.7670773,36.8403959],[14.7668262,36.8406972],[14.7666274,36.8409405],[14.7665308,36.8410717],[14.7664677,36.8412058],[14.7663975,36.8414019]]}},
+  {"type":"Feature","properties":{"name":"Via Resistenza Partigiana"},"geometry":{"type":"LineString","coordinates":[[14.7676085,36.8397877],[14.7678914,36.8396049],[14.7681493,36.8394147],[14.7683386,36.839272],[14.7684718,36.8391816],[14.7686705,36.8390113],[14.7688403,36.8388256],[14.7689416,36.8386946],[14.7692451,36.8382965],[14.7696501,36.8377856]]}},
+  {"type":"Feature","properties":{"name":"Strada statale Sud Occidentale Sicula","ref":"SS115"},"geometry":{"type":"LineString","coordinates":[[14.9183337,36.7839267],[14.9182402,36.7838525],[14.9181703,36.7837759],[14.9181046,36.7836846],[14.9180483,36.7835813],[14.9179702,36.7834028]]}},
+  {"type":"Feature","properties":{"name":"Via Nazionale"},"geometry":{"type":"LineString","coordinates":[[14.7657858,36.8447298],[14.7658033,36.8445987],[14.7658186,36.8444848],[14.7658884,36.8438792]]}},
+  {"type":"Feature","properties":{"name":"Corso Umberto Primo","alt_name":"Corso Umberto I"},"geometry":{"type":"LineString","coordinates":[[14.7603245,36.8562654],[14.7604357,36.856912],[14.7604598,36.8570379],[14.7605315,36.8574456],[14.7606997,36.8584078],[14.7608121,36.8589182],[14.7608216,36.8589554]]}},
+  {"type":"Feature","properties":{"name":"Corso Umberto Primo","alt_name":"Corso Umberto I"},"geometry":{"type":"LineString","coordinates":[[14.760819,36.859078],[14.760786,36.8591335],[14.7604466,36.8597044],[14.7600704,36.8603129],[14.7599587,36.8605179],[14.7598555,36.860759],[14.7598951,36.8621886],[14.7599122,36.8623346]]}},
+  {"type":"Feature","properties":{"name":"Corso Umberto Primo","alt_name":"Corso Umberto I"},"geometry":{"type":"LineString","coordinates":[[14.7599122,36.8623346],[14.7597747,36.8631789],[14.7596932,36.8633905],[14.7595598,36.8636188],[14.7591761,36.8642149],[14.7589444,36.8644628],[14.7574388,36.8662046],[14.7572249,36.8665814],[14.7570512,36.8669007]]}},
+  {"type":"Feature","properties":{"name":"Viale Medaglie d'Oro"},"geometry":{"type":"LineString","coordinates":[[14.7557033,36.8540616],[14.7560027,36.8542506],[14.7567618,36.8546273],[14.757432,36.8548854],[14.757853,36.8550233],[14.7582058,36.8551173],[14.7591096,36.8553509],[14.7595919,36.8555182],[14.7598233,36.8556524]]}},
+  {"type":"Feature","properties":{"name":"Via Marchesa Tedeschi"},"geometry":{"type":"LineString","coordinates":[[14.7614725,36.8595338],[14.7617449,36.8597687],[14.7621808,36.8601071],[14.7623871,36.8602305],[14.7626315,36.8603772],[14.762853,36.860642],[14.762909,36.8608027],[14.7628716,36.8611091],[14.7627464,36.8613969]]}},
+  {"type":"Feature","properties":{"name":"Via Sacro Cuore"},"geometry":{"type":"LineString","coordinates":[[14.7657046,36.8416258],[14.7656996,36.8416025],[14.7652897,36.8411452],[14.7649011,36.8406845],[14.7642817,36.8399507],[14.7633835,36.8389035],[14.7628244,36.838245],[14.7625709,36.8379575]]}}
+]};
+
+L.geoJSON(STRADE_GEOJSON, {
+  style: function(feature) {
+    const nome = feature.properties.name || "";
+    const ref  = feature.properties.ref  || "";
+    for (const [key, stile] of Object.entries(STRADE_STYLE)) {
+      if (nome === key || nome.includes(key) || ref === key) {
+        return { color: stile.color, weight: stile.weight, opacity: 0.82 };
+      }
+    }
+    return { color: "#888", weight: 2, opacity: 0.5 };
+  },
+  onEachFeature: function(feature, layer) {
+    const nome = feature.properties.name || "";
+    let labelDisplay = nome;
+    for (const [key, stile] of Object.entries(STRADE_STYLE)) {
+      if (nome === key || nome.includes(key)) { labelDisplay = stile.label || nome; break; }
+    }
+    layer.bindPopup(`<div class="pop-name">${labelDisplay}</div><div class="pop-cat">Via principale · OpenStreetMap</div>`, { maxWidth: 200, closeButton: false });
+  }
+}).addTo(map);
+
+// ── PANEL / BOTTOM SHEET ───────────────────────────────────────
+function buildPoisHtml(pois) {
+  if (!pois || pois.length === 0) return '<p style="font-size:13px;color:var(--ink-soft);">Nessun POI disponibile per questo quartiere.</p>';
+  return pois.map(p => `
+    <div class="poi-item">
+      <div class="poi-icon">${p.icon}</div>
+      <div class="poi-info">
+        <div class="poi-label">${p.label}</div>
+        <div class="poi-cat">${CAT_LABELS[p.cat] || p.cat}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openPanel(q) {
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    document.getElementById('bs-stripe').style.background = q.color;
+    document.getElementById('bs-name').textContent = q.name;
+    document.getElementById('bs-desc').textContent = q.desc;
+    document.getElementById('bs-pois').innerHTML = buildPoisHtml(q.pois);
+    document.getElementById('bottom-sheet').classList.add('open');
+  } else {
+    document.getElementById('panel-empty').style.display = 'none';
+    document.getElementById('panel-header').style.display = 'block';
+    document.getElementById('panel-body').style.display = 'block';
+    document.getElementById('panel-color-stripe').style.background = q.color;
+    document.getElementById('panel-name').textContent = q.name;
+    document.getElementById('panel-desc').textContent = q.desc;
+    document.getElementById('panel-pois').innerHTML = buildPoisHtml(q.pois);
+    document.getElementById('panel').classList.add('open');
+  }
+}
+
+function closePanel() {
+  document.getElementById('panel').classList.remove('open');
+  document.getElementById('bottom-sheet').classList.remove('open');
+  if (activePolygon) {
+    activePolygon.setStyle({ fillOpacity: 0.18, weight: 2 });
+    activePolygon = null;
+  }
+  setTimeout(() => {
+    document.getElementById('panel-empty').style.display = 'flex';
+    document.getElementById('panel-header').style.display = 'none';
+    document.getElementById('panel-body').style.display = 'none';
+  }, 350);
+}
+
+map.on('click', function() {
+  document.getElementById('bottom-sheet').classList.remove('open');
+});
+
+// ── GEOLOCALIZZAZIONE ──────────────────────────────────────────
+let geolocMarker = null;
+document.getElementById('btn-geoloc').addEventListener('click', function() {
+  if (!navigator.geolocation) { alert('Geolocalizzazione non supportata.'); return; }
+  this.classList.add('active');
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      if (geolocMarker) map.removeLayer(geolocMarker);
+      geolocMarker = L.marker([lat, lng], {
+        icon: L.divIcon({ html: '<div id="marker-geoloc"></div>', className: '', iconSize: [16,16], iconAnchor: [8,8] })
+      }).addTo(map);
+      geolocMarker.bindPopup('<div class="pop-name">📍 Sei qui</div>', { closeButton: false }).openPopup();
+      map.flyTo([lat, lng], 15, { duration: 1 });
+    },
+    () => {
+      document.getElementById('btn-geoloc').classList.remove('active');
+      alert('Impossibile ottenere la posizione. Verifica i permessi del browser.');
+    }
+  );
+});
+
+// ── RICERCA ────────────────────────────────────────────────────
+const cercaInput    = document.getElementById('cerca-input');
+const cercaRis      = document.getElementById('cerca-risultati');
+const cercaClear    = document.getElementById('cerca-clear');
+
+cercaInput.addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  cercaClear.style.display = q ? 'block' : 'none';
+  if (q.length < 2) { cercaRis.style.display = 'none'; return; }
+  const matches = POI_DATA.filter(p => p.label.toLowerCase().includes(q)).slice(0, 8);
+  if (matches.length === 0) {
+    cercaRis.innerHTML = '<div class="cerca-item"><span style="color:var(--ink-soft)">Nessun risultato</span></div>';
+  } else {
+    cercaRis.innerHTML = matches.map(p => `
+      <div class="cerca-item" data-lat="${p.lat}" data-lng="${p.lng}" data-label="${p.label}">
+        <span style="font-size:16px">${p.icon}</span>
+        <div>
+          <div>${p.label}</div>
+          <div class="cerca-item-cat">${CAT_LABELS[p.cat] || p.cat}</div>
+        </div>
+      </div>`).join('');
+  }
+  cercaRis.style.display = 'block';
+});
+
+cercaRis.addEventListener('click', function(e) {
+  const item = e.target.closest('.cerca-item');
+  if (!item || !item.dataset.lat) return;
+  map.flyTo([parseFloat(item.dataset.lat), parseFloat(item.dataset.lng)], 16, { duration: 0.8 });
+  cercaInput.value = item.dataset.label;
+  cercaClear.style.display = 'block';
+  cercaRis.style.display = 'none';
+});
+
+cercaClear.addEventListener('click', function() {
+  cercaInput.value = '';
+  this.style.display = 'none';
+  cercaRis.style.display = 'none';
+  cercaInput.focus();
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#cerca-wrap') && !e.target.closest('#cerca-risultati')) {
+    cercaRis.style.display = 'none';
+  }
+});
+
+// ── FILTRI ─────────────────────────────────────────────────────
+document.querySelectorAll('.f-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    renderMarkers();
+  });
+});
+</script>
+</body>
+</html>

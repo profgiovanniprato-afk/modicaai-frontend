@@ -27,6 +27,7 @@
 <link rel="apple-touch-startup-image" media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)" href="/splash/splash-1290x2796.png">
 
 <title>Il Patibolo — ModicaAI</title>
+<meta name="keywords" content="gioco parole modica, ghigliottina modica, il patibolo gioco, quiz modica sicilia, giochi gratis sicilia">
 <meta name="description" content="Gioca al Patibolo su ModicaAI. Trova la parola che collega tutte e 5 le coppie. Montepremi da €200.000!"/>
 <link rel="canonical" href="https://www.modicaai.it/gioco.html"/>
 <link rel="icon" href="/icon-192.png"/>
@@ -70,7 +71,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 @media(max-width:640px){.snb-link{padding:2px 6px;font-size:10px;}.snb-social{display:none;}}
 
 /* NEWS TICKER */
-.news-ticker{position:fixed;top:34px;left:0;right:0;z-index:500;height:28px;background:var(--sky);display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.1);}
+.news-ticker{position:fixed;top: calc(34px + env(safe-area-inset-top, 0px));left:0;right:0;z-index:500;height:28px;background:var(--sky);display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.1);}
 .ticker-label{flex-shrink:0;background:var(--gold);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 12px;height:100%;display:flex;align-items:center;}
 .ticker-track-wrap{flex:1;overflow:hidden;position:relative;}
 .ticker-track{display:flex;white-space:nowrap;}
@@ -278,7 +279,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 
 </style>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Giochi","item":"https://www.modicaai.it/gioco.html"}]}
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://www.modicaai.it/gioco.html#app","name":"Il Patibolo — Gioco di Parole ModicaAI","description":"Il Patibolo: il gioco di parole ispirato a Reazione a Catena. Indovina la parola soluzione collegando le 5 parole indizio. Gratis su ModicaAI.","datePublished":"2024-06-01","dateModified":"2026-03-30","applicationCategory":"Game","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"url":"https://www.modicaai.it/gioco.html","inLanguage":"it"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Giochi","item":"https://www.modicaai.it/gioco.html"}]}]}
 </script>
 </head>
 <body>
@@ -288,10 +289,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
   <div class="snb-links">
     <a href="/" class="snb-link">Home</a>
     <a href="/news.html" class="snb-link">News</a>
-    <a href="/gioco.html" class="snb-link active">🎮 Giochi</a>
+    <a href="/gioco.html" class="snb-link active">Giochi</a>
     <a href="/mission.html" class="snb-link">Mission</a>
     <div class="snb-dropdown">
-      <button class="snb-dropdown-btn" >Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <button class="snb-dropdown-btn">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
       <div class="snb-dropdown-menu">
         <a href="/cioccolato.html">Cioccolato IGP</a>
         <a href="/cosa-vedere.html">Cosa vedere</a>
@@ -304,13 +305,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
         <a href="/guida-pratica.html">Guida pratica</a>
       </div>
     </div>
+    <a href="/mappa.html" class="snb-link">Mappa</a>
     <a href="/contatti.html" class="snb-link">Contatti</a>
   </div>
   <div class="snb-social">
     <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" title="Facebook"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
     <a href="https://www.instagram.com/modicaai.it" target="_blank" rel="noopener" title="Instagram"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
     <a href="https://www.tiktok.com/@modicaai" target="_blank" rel="noopener" title="TikTok"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V7.0a4.85 4.85 0 01-1.01-.31z"/></svg></a>
-  </div></nav>
+  </div>
+</nav>
 
 <div class="news-ticker" id="newsTicker">
   <div class="ticker-label">📰 News</div>
@@ -750,17 +753,46 @@ function fermaFuochi(){
 
 // TICKER NEWS
 let _tickerNewsInterval = null;
-async function caricaNotizie(){
-  try{
-    const d=await(await fetch(API_URL+'/news')).json();
-    if(!d.items?.length)return;
-    const t=document.getElementById('tickerTrack');t.innerHTML='';
-    [...d.items,...d.items].forEach(item=>{const a=document.createElement('a');a.className='ticker-item';a.textContent=item.title;a.href=item.link||'#';a.target='_blank';a.rel='noopener';t.appendChild(a);});
-    // Ferma interval precedente prima di crearne uno nuovo
-    if(_tickerNewsInterval)clearInterval(_tickerNewsInterval);
-    const tw=t.scrollWidth/2;let pos=0;
-    _tickerNewsInterval=setInterval(()=>{pos-=0.4;if(Math.abs(pos)>=tw)pos=0;t.style.transform=`translateX(${pos}px)`;},16);
-  }catch(e){}
+async function caricaNotizie() {
+  try {
+    const res = await fetch(API_URL + '/news');
+    const data = await res.json();
+    if (!data.items || !data.items.length) return;
+
+    const track = document.getElementById('tickerTrack');
+    if (!track) return;
+    track.innerHTML = '';
+    // Duplica per scorrimento continuo senza salti
+    const allItems = [...data.items, ...data.items];
+    allItems.forEach(item => {
+      const a = document.createElement('a');
+      a.className = 'ticker-item';
+      a.textContent = item.title;
+      a.href = item.link || '#';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      track.appendChild(a);
+    });
+
+    // Aspetta che il DOM sia pronto e calcoli la larghezza
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const totalWidth = track.scrollWidth / 2;
+        if (totalWidth <= 0) return;
+        let pos = 0;
+        let rafId = null;
+        function step() {
+          pos -= 0.42;
+          if (Math.abs(pos) >= totalWidth) pos = 0;
+          track.style.transform = 'translateX(' + pos + 'px)';
+          rafId = requestAnimationFrame(step);
+        }
+        // Salva rafId per poter cancellare se necessario
+        if (window._newsRafId) cancelAnimationFrame(window._newsRafId);
+        window._newsRafId = requestAnimationFrame(step);
+      });
+    });
+  } catch(e) { /* silenzioso */ }
 }
 
 // TICKER CARBURANTI

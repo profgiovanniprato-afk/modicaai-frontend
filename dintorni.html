@@ -53,6 +53,7 @@
 <meta property="og:image:height" content="512">
 <meta property="og:image:alt" content="ModicaAI — Assistente AI per Modica, Sicilia">
 <meta property="og:locale" content="it_IT">
+<meta property="og:updated_time" content="2026-03-30">
 <meta property="og:site_name" content="ModicaAI">
 
 <!-- Twitter Card -->
@@ -65,9 +66,10 @@
   <link rel="canonical" href="https://www.modicaai.it/dintorni.html" />
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Article","headline":"Dintorni di Modica","description":"Guida alle gite dai dintorni di Modica: Ragusa Ibla, Scicli, Noto, Cava d'Ispica, Siracusa e le spiagge della Sicilia meridionale.","author":{"@type":"Organization","name":"ModicaAI","url":"https://www.modicaai.it"},"url":"https://www.modicaai.it/dintorni.html"}
-  </script>
+{"@context":"https://schema.org","@graph":[{"@type":"TouristDestination","@id":"https://www.modicaai.it/dintorni.html#dest","name":"Dintorni di Modica — Val di Noto e Barocco Siciliano","description":"Guida ai dintorni di Modica: Ragusa Ibla, Scicli, Ispica, Cava Ispica e i borghi barocchi del Val di Noto, Patrimonio UNESCO.","datePublished":"2024-06-01","dateModified":"2026-03-30","url":"https://www.modicaai.it/dintorni.html","touristType":"Cultural","inLanguage":"it"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Dintorni","item":"https://www.modicaai.it/dintorni.html"}]}]}
+</script>
 
+<meta name="keywords" content="dintorni modica, ragusa ibla, scicli, ispica, cava ispica, val di noto, escursioni modica sicilia">
 <meta name="author" content="ModicaAI">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 
@@ -131,7 +133,7 @@
 
   /* ── Barra Traffico Live ── */
   .traffic-bar {
-    position: fixed; top:94px; left:0; right:0; z-index:498;
+    position: fixed; top: calc(94px + env(safe-area-inset-top, 0px)); left:0; right:0; z-index:498;
     height: 28px;
     background: #1a1a2e;
     display: flex; align-items: center;
@@ -276,7 +278,7 @@
 
   /* Ticker carburanti */
   .fuel-ticker {
-    position: fixed; top:66px; left:0; right:0; z-index:499;
+    position: fixed; top: calc(66px + env(safe-area-inset-top, 0px)); left:0; right:0; z-index:499;
     height: 28px;
     background: #1a1a2e;
     display: flex; align-items: center;
@@ -361,7 +363,7 @@
   .top-stripe { position:fixed; top:122px; left:0; right:0; height:3px; z-index:400; background:linear-gradient(90deg,var(--sky),var(--gold),var(--terra),var(--gold),var(--sky)); background-size:300% 100%; animation:stripe 6s linear infinite; }
   @keyframes stripe{0%{background-position:0%}100%{background-position:300%}}
 
-  .header { position:fixed; top:125px; left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
+  .header { position:fixed; top: calc(125px + env(safe-area-inset-top, 0px)); left:0; right:0; z-index:300; height:56px; background:rgba(255,255,255,0.96); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; box-shadow:var(--shadow-sm); }
 
   .logo { display:flex; align-items:center; gap:10px; cursor:pointer; }
   .logo-mark { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(26,58,92,0.30); position:relative; overflow:hidden; flex-shrink:0; }
@@ -728,9 +730,10 @@
   .btn-send svg { transition:transform 0.2s; }
   .btn-send:hover svg { transform:translateX(2px); }
 
-  /* ── News Ticker ── */
+  
+  /* ── News Ticker — animazione gestita SOLO via JS (requestAnimationFrame) ── */
   .news-ticker {
-    position: fixed; top:34px; left:0; right:0; z-index:500;
+    position: fixed; top: calc(34px + env(safe-area-inset-top, 0px)); left:0; right:0; z-index:500;
     height: 32px;
     background: var(--sky);
     display: flex; align-items: center;
@@ -750,13 +753,12 @@
   .ticker-track-wrap {
     flex: 1; overflow: hidden; position: relative;
   }
+  /* NESSUNA animation CSS sul news ticker — JS rAF gestisce lo scroll */
   .ticker-track {
     display: flex; gap: 0;
     white-space: nowrap;
-    animation: ticker-scroll 40s linear infinite;
     will-change: transform;
   }
-  .ticker-track:hover { animation-play-state: paused; }
   .ticker-item {
     display: inline-flex; align-items: center;
     font-size: 12px; color: rgba(255,255,255,0.90);
@@ -770,8 +772,42 @@
     margin-left: 32px;
     opacity: 0.4;
   }
+  /* ── Fuel Ticker — animazione SOLO CSS ── */
+  .fuel-ticker {
+    position: fixed; top: calc(66px + env(safe-area-inset-top, 0px)); left:0; right:0; z-index:499;
+    height: 28px;
+    background: #1a1a2e;
+    display: flex; align-items: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .fuel-ticker .ticker-label {
+    background: #e63946;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0 12px; height: 100%;
+    display: flex; align-items: center;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .fuel-ticker .ticker-track {
+    animation: ticker-scroll 50s linear infinite;
+    display: flex;
+    white-space: nowrap;
+  }
+  .fuel-ticker .ticker-item {
+    font-size: 11px;
+    color: rgba(255,255,255,0.85);
+    padding: 0 24px;
+  }
+  .fuel-ticker .ticker-item strong {
+    color: #ffd166;
+    font-weight: 700;
+  }
   @keyframes ticker-scroll {
     0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
     100% { transform: translateX(-50%); }
   }
 
@@ -781,11 +817,11 @@
   @media (max-width: 640px) {
 
     /* Barre fisse — altezze ridotte */
-    .news-ticker  { height: 26px; top:34px; }
-    .fuel-ticker  { height: 24px; top: 60px; }
-    .traffic-bar  { height: 24px; top: 84px; }
-    .top-stripe   { top: 108px; }
-    .header       { top: 111px; height: 50px; padding: 0 12px; }
+    .news-ticker  { height: 26px; top: calc(30px + env(safe-area-inset-top, 0px)); }
+    .fuel-ticker  { height: 24px; top: calc(56px + env(safe-area-inset-top, 0px)); }
+    .traffic-bar  { height: 24px; top: calc(80px + env(safe-area-inset-top, 0px)); }
+    .top-stripe   { top: calc(104px + env(safe-area-inset-top, 0px)); }
+    .header       { top: calc(107px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 12px; }
 
     /* Main — padding adattato */
     .main         { padding: 155px 10px 200px; }
@@ -1076,7 +1112,6 @@
 </script>
 </head>
 <body>
-<body>
 
 <!-- ── Barra navigazione ── -->
 <nav class="site-nav-bar" role="navigation" aria-label="Navigazione principale">
@@ -1084,10 +1119,10 @@
   <div class="snb-links">
     <a href="/" class="snb-link">Home</a>
     <a href="/news.html" class="snb-link">News</a>
-    <a href="/gioco.html" class="snb-link">🎮 Giochi</a>
+    <a href="/gioco.html" class="snb-link">Giochi</a>
     <a href="/mission.html" class="snb-link">Mission</a>
     <div class="snb-dropdown">
-      <button class="snb-dropdown-btn" style="color:#fff">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <button class="snb-dropdown-btn  snb-dropdown-btn--active">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
       <div class="snb-dropdown-menu">
         <a href="/cioccolato.html">Cioccolato IGP</a>
         <a href="/cosa-vedere.html">Cosa vedere</a>
@@ -1100,6 +1135,7 @@
         <a href="/guida-pratica.html">Guida pratica</a>
       </div>
     </div>
+    <a href="/mappa.html" class="snb-link">Mappa</a>
     <a href="/contatti.html" class="snb-link">Contatti</a>
   </div>
   <div class="snb-social">
@@ -2227,7 +2263,9 @@ async function caricaNotizie() {
     if (!data.items || !data.items.length) return;
 
     const track = document.getElementById('tickerTrack');
+    if (!track) return;
     track.innerHTML = '';
+    // Duplica per scorrimento continuo senza salti
     const allItems = [...data.items, ...data.items];
     allItems.forEach(item => {
       const a = document.createElement('a');
@@ -2239,18 +2277,25 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
+    // Aspetta che il DOM sia pronto e calcoli la larghezza
     requestAnimationFrame(() => {
-      const totalWidth = track.scrollWidth / 2;
-      let pos = 0;
-      function step() {
-        pos -= 0.4;
-        if (Math.abs(pos) >= totalWidth) pos = 0;
-        track.style.transform = `translateX(${pos}px)`;
-        requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
+      requestAnimationFrame(() => {
+        const totalWidth = track.scrollWidth / 2;
+        if (totalWidth <= 0) return;
+        let pos = 0;
+        let rafId = null;
+        function step() {
+          pos -= 0.42;
+          if (Math.abs(pos) >= totalWidth) pos = 0;
+          track.style.transform = 'translateX(' + pos + 'px)';
+          rafId = requestAnimationFrame(step);
+        }
+        // Salva rafId per poter cancellare se necessario
+        if (window._newsRafId) cancelAnimationFrame(window._newsRafId);
+        window._newsRafId = requestAnimationFrame(step);
+      });
     });
-  } catch(e) {  }
+  } catch(e) { /* silenzioso */ }
 }
 
 // aggiornaTicker() rimossa — era obsoleta e incompatibile con la struttura {stazioni:[]}
@@ -2661,7 +2706,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pulisce cache SW obsoleta (v3) se presente
   if ('caches' in window) {
     caches.keys().then(keys => {
-      keys.filter(k => k.includes('v1') || k.includes('v2') || k.includes('v3') || k.includes('v4') || k.includes('v5') || k.includes('v6'))
+      keys.filter(k => k.includes('v1') || k.includes('v2') || k.includes('v3') || k.includes('v4') || k.includes('v5') || k.includes('v6') || k.includes('v7') || k.includes('v8'))
           .forEach(k => caches.delete(k));
     });
   }
