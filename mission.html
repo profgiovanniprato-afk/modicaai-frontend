@@ -1034,6 +1034,18 @@
     .rm-btn{width:24px;height:24px;}
     .radio-mini{gap:3px;margin-right:4px;padding-right:5px;}
   }
+
+  /* ── MOBILE FINAL: tickers nascosti, barre riallineate ── */
+  @media (max-width: 640px) {
+    .news-ticker, .fuel-ticker, .traffic-bar { display: none !important; }
+    .top-stripe  { top: calc(30px + env(safe-area-inset-top, 0px)) !important; }
+    .header      { top: calc(33px + env(safe-area-inset-top, 0px)) !important; }
+    .main        { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   justify-content: flex-start !important; }
+    .main.empty  { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   justify-content: flex-start !important; }
+    .hero-widgets{ top: calc(83px + env(safe-area-inset-top, 0px)) !important; }
+  }
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Mission","item":"https://www.modicaai.it/mission.html"}]}
@@ -1671,30 +1683,7 @@ if (navigator.geolocation) {
 
 
 function nuovaChat() {
-  cronologia = [];
-  fileContesto = null;
-  const preview = document.getElementById('filePreview');
-  if (preview) preview.classList.remove('show');
-  const btnUpload = document.getElementById('btnUpload');
-  if (btnUpload) btnUpload.classList.remove('active');
-  if (speechSynth) speechSynth.cancel();
-  fetch(API_URL + '/session/new').then(r => r.json()).then(d => { SESSION_ID = d.session_id; }).catch(() => {});
-  document.getElementById('chatArea').innerHTML = '';
-  document.getElementById('hero').classList.remove('hidden');
-  const heroWidgets = document.getElementById('heroWidgets');
-  if (heroWidgets) heroWidgets.classList.remove('hidden');
-  const main = document.getElementById('main');
-  if (main) main.classList.add('empty');
-  // Mostra hero-input-area
-  const hia = document.getElementById('heroInputArea');
-  if (hia) hia.style.display = '';
-  applicaUI();
-  const grid = document.getElementById('chipsGrid');
-  if (grid) grid.style.display = 'flex';
-  const si = document.getElementById('searchInput');
-  const sc = document.getElementById('searchInputChat');
-  if (si) { si.value = ''; si.placeholder = t('placeholder'); }
-  if (sc) { sc.value = ''; sc.placeholder = t('placeholder'); }
+  window.location.href = '/';
 }
 
 function formatText(t) {
@@ -2081,11 +2070,15 @@ async function caricaCarburantiFuel() {
 
     if (!items) return;
     // Duplica per scorrimento continuo senza salti
+    track.style.animationDuration = '9999s';
     track.innerHTML = items + items;
-    // Adatta velocità animazione alla quantità di contenuto
+    // Forza reflow, poi imposta durata reale
+    void track.offsetWidth;
     const totalWidth = track.scrollWidth / 2;
-    const speed = Math.max(30, Math.round(totalWidth / 80));
-    track.style.animationDuration = speed + 's';
+    if (totalWidth > 0) {
+      const speed = Math.max(20, Math.round(totalWidth / 80));
+      track.style.animationDuration = speed + 's';
+    }
   } catch (e) {
     // Ticker silenzioso in caso di errore
   }
@@ -2201,8 +2194,8 @@ async function caricaNotizie() {
     const track = document.getElementById('tickerTrack');
     if (!track) return;
 
-    // Ferma animazione precedente
-    track.classList.remove('running');
+    // Reset animazione
+    track.style.animationDuration = '9999s';
     track.innerHTML = '';
 
     // Duplica gli item per scorrimento continuo senza salti
@@ -2217,10 +2210,13 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
-    // Avvia animazione CSS nel prossimo frame (DOM deve essere dipinto prima)
-    requestAnimationFrame(() => {
-      track.classList.add('running');
-    });
+    // Forza reflow, poi imposta durata reale
+    void track.offsetWidth;
+    const totalWidth = track.scrollWidth / 2;
+    if (totalWidth > 0) {
+      const speed = Math.max(25, Math.round(totalWidth / 90));
+      track.style.animationDuration = speed + 's';
+    }
   } catch(e) { /* silenzioso */ }
 }
 

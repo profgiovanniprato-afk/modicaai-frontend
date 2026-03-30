@@ -558,6 +558,18 @@
     #btn-back .btn-label { display: none; }
     #btn-back { padding: 5px 9px; }
   }
+
+  /* ── MOBILE FINAL: tickers nascosti, barre riallineate ── */
+  @media (max-width: 640px) {
+    .news-ticker, .fuel-ticker, .traffic-bar { display: none !important; }
+    .top-stripe  { top: calc(30px + env(safe-area-inset-top, 0px)) !important; }
+    .header      { top: calc(33px + env(safe-area-inset-top, 0px)) !important; }
+    .main        { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   justify-content: flex-start !important; }
+    .main.empty  { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   justify-content: flex-start !important; }
+    .hero-widgets{ top: calc(83px + env(safe-area-inset-top, 0px)) !important; }
+  }
 </style>
 </head>
 <body>
