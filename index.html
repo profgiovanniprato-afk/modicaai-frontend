@@ -681,7 +681,7 @@
   body.dark .file-preview-sub  { color: var(--ink-soft); }
   body.dark .hero-widgets .bar-widget { background: rgba(30,35,48,0.92); }
 
-  .input-bar { position:fixed; bottom:0; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:10px 16px calc(14px + env(safe-area-inset-bottom, 0px)); display:flex; flex-direction:column; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
+  .input-bar { position:fixed; bottom:34px; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:10px 16px 14px; display:flex; flex-direction:column; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
 
   /* ── Widget meteo e orologio — fissi in alto a sinistra sotto l'header ── */
   .hero { text-align:center; padding: 24px 20px 8px; }
@@ -709,10 +709,10 @@
   .bar-widget-sub  { font-size: 10px; color: var(--ink-soft); margin-left: 2px; }
   body.dark .bar-widget { background: rgba(30,35,48,0.85); border-color: var(--border); }
   .hero-widgets.hidden { display: none !important; }
-  .input-wrap { width:100%; max-width:660px; display:flex; align-items:flex-end; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:6px 6px 6px 16px; min-height:52px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
+  .input-wrap { width:100%; max-width:660px; display:flex; align-items:center; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:0 6px 0 20px; height:52px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
   .input-wrap:focus-within { border-color:var(--sky); box-shadow:0 4px 20px rgba(26,58,92,0.12); }
-  .input-wrap textarea { flex:1; border:none; outline:none; font-family:'Outfit',sans-serif; font-size:16px; color:var(--ink); background:transparent; resize:none; overflow:hidden; line-height:1.5; min-height:28px; max-height:160px; padding:5px 4px; }
-  .input-wrap textarea::placeholder { color:#C8C8C8; }
+  .input-wrap input { flex:1; border:none; outline:none; font-family:'Outfit',sans-serif; font-size:16px; color:var(--ink); background:transparent; }
+  .input-wrap input::placeholder { color:#C8C8C8; }
   .btn-send { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); border:none; color:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 2px 10px rgba(26,58,92,0.28); transition:all 0.2s; }
   .btn-enhance {
     width: 34px; height: 34px; border-radius: 50%;
@@ -772,11 +772,11 @@
     white-space: nowrap;
     will-change: transform;
   }
-  /* Animazione CSS diretta senza classe .running — durata impostata via JS */
-  #tickerTrack {
-    animation: ticker-scroll-news 9999s linear infinite;
+  /* La classe .running viene aggiunta via JS dopo aver inserito il contenuto */
+  #tickerTrack.running {
+    animation: ticker-scroll-news 40s linear infinite;
   }
-  #tickerTrack:hover {
+  #tickerTrack.running:hover {
     animation-play-state: paused;
   }
   @keyframes ticker-scroll-news {
@@ -885,15 +885,15 @@
 
     /* Input bar — più compatta, safe-area iOS */
     .input-bar {
-      padding: 8px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+      padding: 8px 10px 12px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
     }
 
     /* Input wrap — spazio per tutti i bottoni */
     .input-wrap {
-      min-height: 44px;
-      padding: 5px 4px 5px 8px;
+      height: 44px;
+      padding: 0 4px 0 4px;
       gap: 2px;
-      align-items: flex-end;
     }
 
     /* Pulsante upload — visibile e cliccabile su mobile */
@@ -904,9 +904,9 @@
     }
 
     /* Input testo — padding sinistra */
-    .input-wrap textarea {
+    .input-wrap input {
       font-size: 16px; /* 16px = soglia iOS per non zoomare */
-      padding: 4px 4px 4px 4px;
+      padding: 0 4px 0 8px;
       min-width: 0;
     }
 
@@ -1124,31 +1124,12 @@
     .radio-mini{gap:3px;margin-right:4px;padding-right:5px;}
   }
 
-  /* ── TABLET: 641px–1024px — iPad e schermi intermedi ── */
-  @media (min-width: 641px) and (max-width: 1024px) {
-    /* Tickers visibili ma ridotti */
-    .news-ticker  { top: calc(30px + env(safe-area-inset-top, 0px)); }
-    .fuel-ticker  { top: calc(62px + env(safe-area-inset-top, 0px)); }
-    .traffic-bar  { top: calc(94px + env(safe-area-inset-top, 0px)); }
-    /* Header e stripe riallineati sotto i tre ticker */
-    .top-stripe   { top: calc(122px + env(safe-area-inset-top, 0px)); }
-    .header       { top: calc(125px + env(safe-area-inset-top, 0px)); height:52px; padding:0 16px; }
-    /* Contenuto principale */
-    .main         { padding-top: calc(195px + env(safe-area-inset-top, 0px)); padding-left:16px; padding-right:16px; }
-    .main.empty   { padding-top: calc(185px + env(safe-area-inset-top, 0px)); }
-    .hero-widgets { top: calc(185px + env(safe-area-inset-top, 0px)); }
-    /* Input bar */
-    .input-wrap   { max-width: 90%; }
-    .header-right { gap: 8px; }
-  }
-
   /* ── MOBILE FINAL: tickers nascosti, barre riallineate ── */
   @media (max-width: 640px) {
     .news-ticker, .fuel-ticker, .traffic-bar { display: none !important; }
     .top-stripe  { top: calc(30px + env(safe-area-inset-top, 0px)) !important; }
     .header      { top: calc(33px + env(safe-area-inset-top, 0px)) !important; }
     .main        { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
-                   padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)) !important;
                    justify-content: flex-start !important; }
     .main.empty  { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
                    justify-content: flex-start !important; }
@@ -1329,9 +1310,7 @@
                style="display:none" onchange="gestisciFile(this)">
         <button class="btn-upload" id="btnUpload" onclick="document.getElementById('fileInput').click()"
                 title="Carica un file (PDF, Word, TXT)">📎</button>
-        <textarea id="searchInput" placeholder="Chiedimi qualcosa..." autocomplete="off" rows="1"
-                  oninput="syncInputs(this);autoResize(this)"
-                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();ask(this.value);}"></textarea>
+        <input type="text" id="searchInput" placeholder="Chiedimi qualcosa..." autocomplete="off" oninput="syncInputs(this)">
         <button class="btn-enhance" id="btnEnhance" onclick="enhancePrompt()" title="✨ Ottimizza prompt con AI">✨</button>
         <button class="btn-send" onclick="ask(document.getElementById('searchInput').value)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1388,9 +1367,9 @@
   <div class="input-wrap">
     <button class="btn-upload" id="btnUploadChat" onclick="document.getElementById('fileInput').click()"
             title="Carica un file (PDF, Word, TXT)">📎</button>
-    <textarea id="searchInputChat" placeholder="Chiedimi qualcosa..." autocomplete="off" rows="1"
-              oninput="syncInputs(this);autoResize(this)"
-              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();ask(this.value);}"></textarea>
+    <input type="text" id="searchInputChat" placeholder="Chiedimi qualcosa..." autocomplete="off"
+           oninput="syncInputs(this)"
+           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();ask(this.value);}">
     <button class="btn-enhance" id="btnEnhanceChat" onclick="enhancePrompt()" title="✨ Ottimizza prompt con AI">✨</button>
     <button class="btn-send" onclick="ask(document.getElementById('searchInputChat').value)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1500,10 +1479,7 @@ function syncInputs(src) {
   const other = src.id === 'searchInput'
     ? document.getElementById('searchInputChat')
     : document.getElementById('searchInput');
-  if (other) {
-    other.value = src.value;
-    autoResize(other);
-  }
+  if (other) other.value = src.value;
 }
 const TTS_LANG = { it:'it-IT', en:'en-US', de:'de-DE', fr:'fr-FR', es:'es-ES' };
 
@@ -1840,7 +1816,7 @@ function addMessage(type, html, badge, raw) {
     if (voiceEnabled && raw) setTimeout(() => leggiTesto(raw), 200);
   }
   area.appendChild(div);
-  autoScrollToBottom();
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
 function copiaMsg(btn) {
@@ -1917,7 +1893,7 @@ function showTyping(label) {
     <span class="typing-label">${label || 'ModicaAI sta pensando...'}</span>
   </div>`;
   area.appendChild(div);
-  autoScrollToBottom();
+  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
@@ -2098,7 +2074,6 @@ async function ask(q) {
   const sc = document.getElementById('searchInputChat');
   if (si) si.value = '';
   if (sc) sc.value = '';
-  resetInputHeight();
 
   if (isRichiestaImmagine(q)) {
     // Distingue foto luogo reale (Wikimedia) da generazione creativa (FLUX)
@@ -2161,7 +2136,7 @@ async function ask(q) {
               msgDiv = document.getElementById(cid);
             }
             fullText += evt.text;
-            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); autoScrollToBottom(); }
+            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); msgDiv.scrollIntoView({ behavior:'smooth', block:'end' }); }
           } else if (evt.type === 'done') {
             if (evt.lingua) aggiorna_lingua(evt.lingua);
             if (msgDiv) {
@@ -2556,8 +2531,6 @@ async function caricaNotizie() {
 // mappa traffico: Google Maps embed (no variabili JS necessarie)
 
 async function caricaTraffco() {
-  // Su mobile la traffic-bar è nascosta — non eseguire (risparmia risorse e API calls)
-  if (window.innerWidth <= 640) return;
   try {
     const res = await fetch(API_URL + '/traffico');
     const dati = await res.json();
@@ -3061,7 +3034,7 @@ async function askConFile(domanda) {
               msgDiv = document.getElementById(cid);
             }
             fullText += evt.text;
-            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); autoScrollToBottom(); }
+            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); msgDiv.scrollIntoView({ behavior:'smooth', block:'end' }); }
           } else if (evt.type === 'done') {
             if (msgDiv) {
               msgDiv.innerHTML = formatText(fullText);
@@ -3281,37 +3254,6 @@ if ('serviceWorker' in navigator) {
   // Ricarica la pagina se il SW si aggiorna (prende il controllo)
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     window.location.reload();
-  });
-}
-
-// ── Auto-scroll robusto — throttled requestAnimationFrame ──────────
-// scrollIntoView con behavior:'smooth' su iOS Safari viene cancellato
-// se chiamato mentre un'altra smooth scroll è ancora in corso
-// (succede ad ogni token durante lo streaming).
-// Soluzione: throttle con rAF, scroll su window invece che sull'elemento.
-let _scrollPending = false;
-function autoScrollToBottom() {
-  if (_scrollPending) return;
-  _scrollPending = true;
-  requestAnimationFrame(() => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    _scrollPending = false;
-  });
-}
-
-// ── Auto-resize textarea ──────────────────────────────────────────
-function autoResize(el) {
-  el.style.height = 'auto';
-  const maxH = parseInt(getComputedStyle(el).maxHeight) || 160;
-  el.style.height = Math.min(el.scrollHeight, maxH) + 'px';
-  el.style.overflowY = el.scrollHeight > maxH ? 'auto' : 'hidden';
-}
-
-// Reset textarea height dopo invio
-function resetInputHeight() {
-  ['searchInput','searchInputChat'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.style.height = ''; el.style.overflowY = 'hidden'; }
   });
 }
 

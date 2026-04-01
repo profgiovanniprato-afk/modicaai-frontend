@@ -790,11 +790,11 @@
     white-space: nowrap;
     will-change: transform;
   }
-  /* Animazione CSS diretta — durata impostata via JS (void offsetWidth + animationDuration) */
-  #tickerTrack {
-    animation: ticker-scroll-news 9999s linear infinite;
+  /* La classe .running viene aggiunta via JS dopo aver inserito il contenuto */
+  #tickerTrack.running {
+    animation: ticker-scroll-news 40s linear infinite;
   }
-  #tickerTrack:hover {
+  #tickerTrack.running:hover {
     animation-play-state: paused;
   }
   @keyframes ticker-scroll-news {
