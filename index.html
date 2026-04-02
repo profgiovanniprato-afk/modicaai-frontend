@@ -953,6 +953,12 @@
 
   /* Fine media queries mobile */
 
+  /* ── Chip Mappa Interattiva — neutro a riposo, sky all'hover ── */
+  .chip-mappa { background: var(--bg-card); border-color: var(--border); color: var(--ink-mid); }
+  .chip-mappa:hover { background: rgba(26,58,92,0.06); border-color: var(--sky); color: var(--sky); }
+  body.dark .chip-mappa { background: var(--bg-card); border-color: var(--border); color: var(--ink-mid); }
+  body.dark .chip-mappa:hover { background: rgba(74,143,191,0.1); border-color: var(--sky); color: var(--sky); }
+
 
   /* ── Navbar navigazione (Mission / Contatti / Social) ──────── */
   .site-nav-bar {
@@ -1326,7 +1332,7 @@
         <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
         <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
         <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico Live</button>
-        <button class="chip" id="chip7" onclick="window.location.href='/mappa.html'" style="background:linear-gradient(135deg,rgba(26,58,92,0.06),rgba(184,134,11,0.06));border-color:var(--sky);color:var(--sky);">🗺️ Mappa Interattiva</button>
+        <button class="chip chip-mappa" id="chip7" onclick="window.location.href='/mappa.html'">🗺️ Mappa Interattiva</button>
       </div>
     </div>
   </div>
@@ -2310,7 +2316,9 @@ async function caricaCarburantiFuel() {
 // ── Ottimizza Prompt ─────────────────────────────────────────────
 async function enhancePrompt() {
   const input = getActiveInput();
-  const btn = document.getElementById('btnEnhance') || document.getElementById('btnEnhanceChat');
+  const btn = input.id === 'searchInput'
+    ? document.getElementById('btnEnhance')
+    : document.getElementById('btnEnhanceChat');
   const testo = input.value.trim();
 
   if (!testo) {
@@ -2534,9 +2542,7 @@ async function caricaTraffco() {
   try {
     const res = await fetch(API_URL + '/traffico');
     const dati = await res.json();
-    console.log('[TRAFFICO]', JSON.stringify(dati));
     if (dati.segmenti && dati.segmenti.length) {
-      console.log('[TRAFFICO] aggiornaBarra con', dati.segmenti.map(s => s.stato));
       aggiornaBarra(dati.segmenti);
       window._trafficoDati = dati;
     } else {
