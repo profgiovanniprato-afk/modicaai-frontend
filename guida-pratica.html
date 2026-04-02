@@ -2307,9 +2307,7 @@ async function caricaTraffco() {
   try {
     const res = await fetch(API_URL + '/traffico');
     const dati = await res.json();
-    );
     if (dati.segmenti && dati.segmenti.length) {
-      );
       aggiornaBarra(dati.segmenti);
       window._trafficoDati = dati;
     } else {
