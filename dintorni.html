@@ -734,17 +734,14 @@
   .ticker-track-wrap {
     flex: 1; overflow: hidden; position: relative;
   }
-  /* News ticker: animazione CSS attivata via classe JS dopo caricamento contenuto */
+  /* Animation sempre attiva — JS imposta animationDuration (9999s = fermo, Ns = scorre) */
   .ticker-track {
     display: flex; gap: 0;
     white-space: nowrap;
     will-change: transform;
+    animation: ticker-scroll-news 9999s linear infinite;
   }
-  /* La classe .running viene aggiunta via JS dopo aver inserito il contenuto */
-  #tickerTrack.running {
-    animation: ticker-scroll-news 40s linear infinite;
-  }
-  #tickerTrack.running:hover {
+  .ticker-track:hover {
     animation-play-state: paused;
   }
   @keyframes ticker-scroll-news {
@@ -1041,10 +1038,23 @@
     .top-stripe  { top: calc(30px + env(safe-area-inset-top, 0px)) !important; }
     .header      { top: calc(33px + env(safe-area-inset-top, 0px)) !important; }
     .main        { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)) !important;
                    justify-content: flex-start !important; }
     .main.empty  { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   padding-bottom: 30px !important;
                    justify-content: flex-start !important; }
     .hero-widgets{ top: calc(83px + env(safe-area-inset-top, 0px)) !important; }
+    .input-bar   { bottom: env(safe-area-inset-bottom, 0px) !important; }
+  }
+
+  /* ── TABLET: breakpoint iPad 768px–1024px ── */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .top-stripe  { top: calc(122px + env(safe-area-inset-top, 0px)); }
+    .header      { top: calc(125px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 16px; }
+    .main        { padding-top: calc(175px + env(safe-area-inset-top, 0px)); padding-bottom: 130px; }
+    .main.empty  { padding-top: calc(155px + env(safe-area-inset-top, 0px)); }
+    .hero-widgets{ top: calc(175px + env(safe-area-inset-top, 0px)); }
+    .input-bar   { bottom: 0; padding-bottom: max(14px, env(safe-area-inset-bottom, 14px)); }
   }
 </style>
 
@@ -1741,6 +1751,13 @@ if (navigator.geolocation) {
 // ── Utilità ──────────────────────────────────────────────────────
 
 
+
+// ── Scroll al fondo della chat — compensa input-bar fixed ────────
+function _scrollToBottom() {
+  const inputBar = document.querySelector('.input-bar');
+  const offset = inputBar ? inputBar.offsetHeight + 8 : 104;
+  window.scrollTo({ top: document.body.scrollHeight - offset, behavior: 'smooth' });
+}
 function nuovaChat() {
   window.location.href = '/';
 }
@@ -1803,7 +1820,7 @@ function addMessage(type, html, badge, raw) {
     if (voiceEnabled && raw) setTimeout(() => leggiTesto(raw), 200);
   }
   area.appendChild(div);
-  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  _scrollToBottom();
 }
 
 function copiaMsg(btn) {
@@ -1880,7 +1897,7 @@ function showTyping(label) {
     <span class="typing-label">${label || 'ModicaAI sta pensando...'}</span>
   </div>`;
   area.appendChild(div);
-  div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  _scrollToBottom();
 }
 function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
@@ -1990,7 +2007,7 @@ async function ask(q) {
               msgDiv = document.getElementById(cid);
             }
             fullText += evt.text;
-            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); msgDiv.scrollIntoView({ behavior:'smooth', block:'end' }); }
+            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); _scrollToBottom(); }
           } else if (evt.type === 'done') {
             if (evt.lingua) aggiorna_lingua(evt.lingua);
             if (msgDiv) {
@@ -2146,7 +2163,9 @@ async function caricaCarburantiFuel() {
 // ── Ottimizza Prompt ─────────────────────────────────────────────
 async function enhancePrompt() {
   const input = getActiveInput();
-  const btn = document.getElementById('btnEnhance') || document.getElementById('btnEnhanceChat');
+  const btn = input.id === 'searchInput'
+    ? document.getElementById('btnEnhance')
+    : document.getElementById('btnEnhanceChat');
   const testo = input.value.trim();
 
   if (!testo) {
@@ -2253,7 +2272,8 @@ async function caricaNotizie() {
     const track = document.getElementById('tickerTrack');
     if (!track) return;
 
-    // Reset animazione
+    // Ferma animazione durante il caricamento per evitare salto visivo
+    track.style.animationPlayState = 'paused';
     track.style.animationDuration = '9999s';
     track.innerHTML = '';
 
@@ -2269,13 +2289,14 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
-    // Forza reflow, poi imposta durata reale
+    // Forza reflow per ottenere scrollWidth corretto, poi imposta durata e avvia
     void track.offsetWidth;
     const totalWidth = track.scrollWidth / 2;
     if (totalWidth > 0) {
       const speed = Math.max(25, Math.round(totalWidth / 90));
       track.style.animationDuration = speed + 's';
     }
+    track.style.animationPlayState = 'running';
   } catch(e) { /* silenzioso */ }
 }
 
@@ -2583,7 +2604,7 @@ async function askConFile(domanda) {
               msgDiv = document.getElementById(cid);
             }
             fullText += evt.text;
-            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); msgDiv.scrollIntoView({ behavior:'smooth', block:'end' }); }
+            if (msgDiv) { msgDiv.innerHTML = formatText(fullText); _scrollToBottom(); }
           } else if (evt.type === 'done') {
             if (msgDiv) {
               msgDiv.innerHTML = formatText(fullText);
@@ -2725,8 +2746,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Sveglia il backend Render subito (evita cold start al primo messaggio)
   fetch(API_URL + '/health', { method: 'GET' }).catch(() => {});
-  // Keepalive ogni 8 minuti — Render free spegne dopo 15 min di inattività
-  setInterval(() => { fetch(API_URL + '/health', { method: 'GET' }).catch(() => {}); }, 8 * 60 * 1000);
+  // Keepalive gestito solo da index.html — evita consumo TPD multiplo su SEO pages
 
   // Email nel footer — scritta via JS per evitare offuscamento Cloudflare
   const m = document.getElementById('sitemail');

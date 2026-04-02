@@ -85,7 +85,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 .news-ticker{position:fixed;top: calc(34px + env(safe-area-inset-top, 0px));left:0;right:0;z-index:500;height:28px;background:var(--sky);display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.1);}
 .ticker-label{flex-shrink:0;background:var(--gold);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 12px;height:100%;display:flex;align-items:center;}
 .ticker-track-wrap{flex:1;overflow:hidden;position:relative;}
-.ticker-track{display:flex;white-space:nowrap;}
+.ticker-track{display:flex;white-space:nowrap;animation:ticker-scroll-news 9999s linear infinite;}
+@keyframes ticker-scroll-news{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ticker-item{display:inline-flex;align-items:center;font-size:11px;color:rgba(255,255,255,0.9);padding:0 28px;text-decoration:none;transition:color 0.18s;}
 .ticker-item:hover{color:#ffd166;}
 .ticker-item::after{content:'·';margin-left:28px;opacity:0.4;}
@@ -94,6 +95,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 /* CARBURANTI */
 .fuel-ticker{position:fixed;top:62px;left:0;right:0;z-index:499;height:28px;background:#1a1a2e;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.08);}
 .fuel-ticker .ticker-label{background:#e63946;}
+.fuel-ticker .ticker-track{animation:ticker-scroll-fuel 9999s linear infinite;}
+@keyframes ticker-scroll-fuel{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .fuel-ticker .ticker-item{color:rgba(255,255,255,0.85);}
 
 /* TRAFFICO */
@@ -295,10 +298,23 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
     .top-stripe  { top: calc(30px + env(safe-area-inset-top, 0px)) !important; }
     .header      { top: calc(33px + env(safe-area-inset-top, 0px)) !important; }
     .main        { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)) !important;
                    justify-content: flex-start !important; }
     .main.empty  { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
+                   padding-bottom: 30px !important;
                    justify-content: flex-start !important; }
     .hero-widgets{ top: calc(83px + env(safe-area-inset-top, 0px)) !important; }
+    .input-bar   { bottom: env(safe-area-inset-bottom, 0px) !important; }
+  }
+
+  /* ── TABLET: breakpoint iPad 768px–1024px ── */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .top-stripe  { top: calc(122px + env(safe-area-inset-top, 0px)); }
+    .header      { top: calc(125px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 16px; }
+    .main        { padding-top: calc(175px + env(safe-area-inset-top, 0px)); padding-bottom: 130px; }
+    .main.empty  { padding-top: calc(155px + env(safe-area-inset-top, 0px)); }
+    .hero-widgets{ top: calc(175px + env(safe-area-inset-top, 0px)); }
+    .input-bar   { bottom: 0; padding-bottom: max(14px, env(safe-area-inset-bottom, 14px)); }
   }
 </style>
 <script type="application/ld+json">
@@ -787,6 +803,7 @@ async function caricaNotizie() {
     const track = document.getElementById('tickerTrack');
     if (!track) return;
 
+    track.style.animationPlayState = 'paused';
     track.style.animationDuration = '9999s';
     track.innerHTML = '';
 
@@ -807,6 +824,7 @@ async function caricaNotizie() {
       const speed = Math.max(25, Math.round(totalWidth / 90));
       track.style.animationDuration = speed + 's';
     }
+    track.style.animationPlayState = 'running';
   } catch(e) { /* silenzioso */ }
 }
 
@@ -822,12 +840,14 @@ async function caricaCarburanti(){
     let items='';
     d.stazioni.forEach(s=>['Benzina_self','Gasolio_self','GPL_self'].map(k=>s.prezzi[k]).filter(Boolean).forEach(p=>{items+=`<span class="ticker-item"><strong>${s.nome}</strong> ${p.carburante} ${p.tipo}: <strong>${p.prezzo.toFixed(3)} €/L</strong></span>`;}));
     if(!items)return;
+    t.style.animationPlayState='paused';
     t.style.animationDuration='9999s';
     t.innerHTML=items+items;
     _tickerFuelLoaded=true;
     void t.offsetWidth;
     const tw=t.scrollWidth/2;
     if(tw>0){const spd=Math.max(20,Math.round(tw/80));t.style.animationDuration=spd+'s';}
+    t.style.animationPlayState='running';
   }catch(e){}
 }
 
