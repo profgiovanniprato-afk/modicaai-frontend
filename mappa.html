@@ -30,7 +30,59 @@
 
 <!-- JSON-LD -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Map","@id":"https://www.modicaai.it/mappa.html#map","name":"Mappa Interattiva di Modica","description":"Esplora Modica con la mappa interattiva: quartieri, chiese, farmacie, parcheggi, carburanti, trasporti e tutti i punti di interesse turistici.","datePublished":"2026-03-30","dateModified":"2026-03-30","url":"https://www.modicaai.it/mappa.html","about":{"@type":"City","name":"Modica","addressRegion":"RG","addressCountry":"IT","geo":{"@type":"GeoCoordinates","latitude":"36.8604","longitude":"14.7742"}},"inLanguage":"it"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Mappa Interattiva","item":"https://www.modicaai.it/mappa.html"}]}]}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Map",
+        "WebApplication"
+      ],
+      "@id": "https://www.modicaai.it/mappa.html#map",
+      "name": "Mappa Interattiva di Modica — Punti di Interesse e Servizi",
+      "description": "Esplora Modica con la mappa interattiva: chiese barocche, farmacie, parcheggi, carburanti, trasporti, bancomat e tutti i punti di interesse turistici e pratici.",
+      "dateModified": "2026-04-08",
+      "url": "https://www.modicaai.it/mappa.html",
+      "inLanguage": "it",
+      "applicationCategory": "TravelApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "about": {
+        "@type": "City",
+        "name": "Modica",
+        "addressLocality": "Modica",
+        "addressRegion": "RG",
+        "addressCountry": "IT",
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "36.8604",
+          "longitude": "14.7742"
+        },
+        "hasMap": "https://www.modicaai.it/mappa.html"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "ModicaAI",
+          "item": "https://www.modicaai.it/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Mappa Interattiva di Modica",
+          "item": "https://www.modicaai.it/mappa.html"
+        }
+      ]
+    }
+  ]
+}
 </script>
 
 <!-- Leaflet -->
@@ -480,6 +532,17 @@
     overflow: hidden;
     box-shadow: var(--shadow-sm) !important;
   }
+  /* Zoom in bottomright — margine dal bordo e dall'attribuzione */
+  .leaflet-bottom.leaflet-right .leaflet-control-zoom {
+    margin-bottom: 28px !important;
+    margin-right: 10px !important;
+  }
+  @media (max-width: 640px) {
+    .leaflet-bottom.leaflet-right .leaflet-control-zoom {
+      margin-bottom: 40px !important;
+      margin-right: 8px !important;
+    }
+  }
   .leaflet-control-zoom a {
     background: var(--bg-card) !important;
     color: var(--ink-mid) !important;
@@ -863,9 +926,12 @@ const isDarkMode = () => document.body.classList.contains('dark');
 const map = L.map('map', {
   center: [36.860, 14.780],
   zoom: 11,
-  zoomControl: true,
+  zoomControl: false,   // disabilitato qui, riposizionato sotto in bottomright
   attributionControl: true
 });
+
+// Zoom in basso a destra — evita la sovrapposizione con la barra di ricerca (top-left)
+L.control.zoom({ position: 'bottomright' }).addTo(map);
 
 // Tile layer — dark o light a seconda del tema
 let tileLayer = null;
@@ -1128,6 +1194,14 @@ document.querySelectorAll('.f-btn').forEach(btn => {
     renderMarkers();
   });
 });
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
