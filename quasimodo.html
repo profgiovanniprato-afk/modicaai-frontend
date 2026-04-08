@@ -1490,12 +1490,9 @@ async function caricaCarburantiFuel() {
     const res = await fetch(API_URL + '/carburanti');
     const data = await res.json();
     if (!data.stazioni || !data.stazioni.length) return;
+    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
     const track = document.getElementById('fuelTrack');
     if (!track) return;
-    track.style.animationDuration = '9999s';
-    track.innerHTML = '';
-    const items = [];
-    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
     let items = '';
     data.stazioni.forEach(s => {
       const prezziOrdinati = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean);
