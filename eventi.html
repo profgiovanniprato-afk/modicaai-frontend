@@ -35,7 +35,7 @@
 <link rel="canonical" href="https://www.modicaai.it/eventi.html" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-  {"@type":"Article","headline":"Eventi Modica 2026","description":"Calendario completo degli eventi a Modica nel 2026: feste religiose, sagre, concerti, ChocoModica.","author":{"@type":"Organization","name":"ModicaAI"},"publisher":{"@type":"Organization","name":"ModicaAI","logo":{"@type":"ImageObject","url":"https://www.modicaai.it/icon-512.png"}},"datePublished":"2026-04-08","dateModified":"2026-04-08","inLanguage":"it"},
+  {"@type":"Article","headline":"Eventi Modica 2026","description":"Calendario completo degli eventi a Modica nel 2026: feste religiose, sagre, concerti, ChocoModica.","author":{"@type":"Organization","name":"ModicaAI"},"publisher":{"@type":"Organization","name":"ModicaAI","logo":{"@type":"ImageObject","url":"https://www.modicaai.it/icon-512.png"}},"datePublished":"2026-04-08","dateModified":"2026-04-12","inLanguage":"it"},
   {"@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"Quando si tiene ChocoModica?","acceptedAnswer":{"@type":"Answer","text":"ChocoModica 2026 si terrà dal 30 ottobre al 1 novembre nel centro storico di Modica. È la festa dedicata al cioccolato di Modica IGP con degustazioni, laboratori e spettacoli."}},
     {"@type":"Question","name":"Quando è la Madonna Vasa Vasa a Modica?","acceptedAnswer":{"@type":"Answer","text":"La Madonna Vasa Vasa si celebra la Domenica di Pasqua (5 aprile 2026). A mezzogiorno in punto si svolge il tradizionale bacio tra la Madonna e il Cristo Risorto in piazza Monumento."}},
@@ -1165,7 +1165,43 @@
   .seo-content > *:nth-child(2) { animation-delay:0.05s; }
   .seo-content > *:nth-child(3) { animation-delay:0.1s; }
   .seo-content > *:nth-child(4) { animation-delay:0.15s; }
+
+  /* ── Sezione eventi dinamici ── */
+  .ev-live-wrap { margin-bottom:40px; }
+  .ev-live-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .ev-live-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; color:var(--ink); display:flex; align-items:center; gap:10px; }
+  .ev-live-title .ev-pulse { width:10px; height:10px; background:#22c55e; border-radius:50%; animation:evPulse 2s ease infinite; }
+  @keyframes evPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+  .ev-live-meta { font-size:12px; color:var(--ink-soft); }
+  .ev-live-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+  .ev-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:16px 18px; transition:all 0.18s; position:relative; overflow:hidden; }
+  .ev-card:hover { box-shadow:var(--shadow-md); border-color:rgba(26,58,92,0.2); transform:translateY(-1px); }
+  .ev-card-fonte { position:absolute; top:0; right:0; font-size:10px; font-weight:700; color:#fff; padding:4px 10px; border-radius:0 12px 0 8px; text-transform:uppercase; letter-spacing:0.5px; }
+  .ev-card-title { font-size:15px; font-weight:600; color:var(--ink); margin-bottom:6px; line-height:1.4; padding-right:80px; }
+  .ev-card-title a { color:inherit; text-decoration:none; }
+  .ev-card-title a:hover { color:var(--sky); }
+  .ev-card-info { display:flex; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--ink-soft); margin-bottom:6px; }
+  .ev-card-info span { display:flex; align-items:center; gap:3px; }
+  .ev-card-desc { font-size:13px; color:var(--ink-mid); line-height:1.55; }
+  .ev-loading { text-align:center; padding:32px; color:var(--ink-soft); font-size:14px; }
+  .ev-loading .ev-spinner { display:inline-block; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--sky); border-radius:50%; animation:spin 0.8s linear infinite; margin-right:8px; vertical-align:middle; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .ev-error { text-align:center; padding:24px; color:var(--ink-soft); font-size:13px; }
+  .ev-more-btn { display:block; margin:16px auto 0; background:none; border:1px solid var(--border); color:var(--sky); padding:8px 20px; border-radius:20px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; }
+  .ev-more-btn:hover { background:var(--sky); color:#fff; }
+  body.dark .ev-card { background:var(--bg-card); border-color:var(--border); }
+  body.dark .ev-card:hover { border-color:rgba(74,143,191,0.3); }
+  @media(min-width:640px) { .ev-live-grid { grid-template-columns:1fr 1fr; } }
+
 </style>
+
+  <script type="application/ld+json">
+  [
+    {"@context":"https://schema.org","@type":"Event","name":"Festa di San Giorgio — Patrono di Modica","startDate":"2026-04-26","endDate":"2026-04-26","location":{"@type":"Place","name":"Duomo di San Giorgio","address":{"@type":"PostalAddress","addressLocality":"Modica","addressRegion":"RG","addressCountry":"IT"}},"description":"Festa patronale con processione del simulacro, fuochi d'artificio e luminarie","organizer":{"@type":"Organization","name":"Diocesi di Noto"},"eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","isAccessibleForFree":true,"image":"https://www.modicaai.it/icon-512.png"},
+    {"@context":"https://schema.org","@type":"Event","name":"Festa di San Pietro e Fiera","startDate":"2026-06-27","endDate":"2026-06-29","location":{"@type":"Place","name":"Duomo di San Pietro, Corso Umberto I","address":{"@type":"PostalAddress","addressLocality":"Modica","addressRegion":"RG","addressCountry":"IT"}},"description":"Processione serale e Fiera di San Pietro con bancarelle, artigianato e cibo di strada","isAccessibleForFree":true,"image":"https://www.modicaai.it/icon-512.png"},
+    {"@context":"https://schema.org","@type":"Event","name":"ChocoModica — Festival del Cioccolato di Modica IGP","startDate":"2026-10-30","endDate":"2026-11-01","location":{"@type":"Place","name":"Centro storico di Modica","address":{"@type":"PostalAddress","addressLocality":"Modica","addressRegion":"RG","addressCountry":"IT"}},"description":"Festival del cioccolato di Modica IGP: degustazioni, laboratori, convegni e spettacoli nel centro storico barocco","isAccessibleForFree":true,"image":"https://www.modicaai.it/icon-512.png"}
+  ]
+  </script>
 </head>
 <body>
 
@@ -1189,6 +1225,10 @@
         <a href="/dintorni.html">Dintorni</a>
         <a href="/faq.html">FAQ</a>
         <a href="/guida-pratica.html">Guida pratica</a>
+        <div class="snb-drop-sep"></div>
+        <a href="/dove-dormire-modica.html">Dove dormire</a>
+        <a href="/meteo-modica-quando-andare.html">Meteo e quando andare</a>
+        <a href="/modica-con-bambini.html">Modica con bambini</a>
         <div class="snb-drop-sep"></div>
         <a href="/spiagge.html">Spiagge</a>
         <a href="/parcheggi.html">Parcheggi</a>
@@ -1347,6 +1387,19 @@
   <div class="seo-divider"></div>
   <p class="seo-intro">Modica è una città viva tutto l'anno. Dalle feste patronali che richiamano decine di migliaia di persone ai concerti estivi a Marina di Modica, fino alla celebre ChocoModica in autunno. Ecco il calendario degli eventi principali del 2026.</p>
 
+  <!-- ═══ Sezione eventi LIVE (caricamento dinamico da /eventi-aggregated) ═══ -->
+  <div class="ev-live-wrap" id="evLiveWrap">
+    <div class="ev-live-header">
+      <div class="ev-live-title"><div class="ev-pulse"></div> Eventi in programma</div>
+      <div class="ev-live-meta" id="evLiveMeta"></div>
+    </div>
+    <div id="evLiveGrid" class="ev-live-grid">
+      <div class="ev-loading"><span class="ev-spinner"></span> Caricamento eventi in corso...</div>
+    </div>
+  </div>
+
+
+
   <div class="seo-section">
     <h2><span class="sec-icon">🐣</span> Pasqua — Madonna Vasa Vasa</h2>
     <div class="info-card">
@@ -1397,6 +1450,96 @@
     <p>Il cioccolato di Modica IGP è lavorato a freddo secondo la ricetta azteca, con cristalli di zucchero che gli conferiscono la caratteristica granulosità. I gusti tradizionali — cannella, vaniglia, peperoncino, agrumi, carruba — si affiancano ogni anno a nuove sperimentazioni dei cioccolatieri locali.</p>
   </div>
 
+
+  <div class="seo-section">
+    <h2><span class="sec-icon">🎭</span> Teatro Garibaldi — Stagione 2025/2026</h2>
+    <div class="info-card">
+      <div class="info-card-title">📅 Aprile — Giugno 2026</div>
+      <div class="info-card-meta"><span>📍 Teatro Garibaldi, Corso Umberto I 207</span><span>🎟️ Biglietti su ciaotickets.com</span></div>
+      <p>Il Teatro Garibaldi, gioiello ottocentesco nel cuore di Modica con il celebre tondo di Piero Guccione sulla volta, ospita una stagione ricca di appuntamenti. Il cartellone prosa-musica 2025/2026 prosegue fino a giugno con spettacoli in doppia replica.</p>
+    </div>
+    <h3>Prossimi appuntamenti confermati</h3>
+    <div class="info-card">
+      <div class="info-card-title">🎺 12 Aprile — Paolo Fresu & Rino Cirinnà</div>
+      <div class="info-card-meta"><span>🕐 ore 18:30</span><span>🎵 "Sketches of Islands"</span></div>
+      <p>Il trombettista sardo Paolo Fresu e Rino Cirinnà portano in scena un viaggio sonoro tra le isole del Mediterraneo, omaggio a "Sketches of Spain" di Miles Davis. Un progetto nato da Insulæ Lab che trasforma il teatro in una mappa sonora.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎤 19 Aprile — Simona Molinari & Tony Canto</div>
+      <div class="info-card-meta"><span>🕐 ore 18:30</span><span>🎵 Voce e chitarra</span></div>
+      <p>Simona Molinari, una delle voci più raffinate del panorama jazz italiano, in concerto con Tony Canto. Appuntamento fuori abbonamento.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎼 10 Maggio — Orchestra del Teatro Bellini di Catania</div>
+      <div class="info-card-meta"><span>🕐 ore 18:30</span><span>🎵 Concerto sinfonico</span></div>
+      <p>L'Orchestra del Teatro Massimo Bellini di Catania in trasferta a Modica per un concerto sinfonico. Un appuntamento di grande prestigio nella stagione musicale.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎭 12-13 Maggio — "Gente di facili costumi"</div>
+      <div class="info-card-meta"><span>🕐 ore 21:00</span><span>🎭 di Nino Marino e Nino Manfredi</span></div>
+      <p>Commedia brillante in doppia replica, parte della stagione di prosa che ha portato a Modica titoli come "Perfetti sconosciuti", "L'Avaro" di Molière e "Moby Dick".</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎭 23-24 Maggio — "L'interpretazione dei sogni"</div>
+      <div class="info-card-meta"><span>🕐 ore 21:00</span><span>🎭 di Stefano Massini</span></div>
+      <p>Stefano Massini, autore del pluripremiato "Lehman Trilogy", porta a Modica il suo ultimo lavoro. Doppia replica.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎼 14 Giugno — Orchestra del Teatro Bellini di Catania</div>
+      <div class="info-card-meta"><span>🕐 ore 18:30</span><span>🎵 Secondo concerto sinfonico</span></div>
+      <p>Secondo appuntamento con l'Orchestra del Bellini, a chiusura della stagione musicale 2025/2026.</p>
+    </div>
+    <p>Info e biglietti: <strong>fondazioneteatrogaribaldi.it</strong> — botteghino del teatro — <strong>ciaotickets.com</strong>. Prezzi: platea e palchi centrali €27, palchi laterali €22, loggione €17.</p>
+  </div>
+
+  <div class="seo-section">
+    <h2><span class="sec-icon">🎵</span> Estate Modicana — Programma Confermato</h2>
+    <div class="info-card">
+      <div class="info-card-title">🎸 The Kolors — Live in concerto</div>
+      <div class="info-card-meta"><span>📍 Auditorium Mediterraneo, Marina di Modica</span><span>🎟️ A pagamento (ticket)</span></div>
+      <p>I The Kolors confermati per l'estate 2026 all'Auditorium Mediterraneo di Marina di Modica, nell'ambito del programma "Estate Modicana" del Comune.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎤 Fiorella Mannoia — Live in concerto</div>
+      <div class="info-card-meta"><span>📍 Auditorium Mediterraneo, Marina di Modica</span><span>🎟️ A pagamento (ticket)</span></div>
+      <p>Fiorella Mannoia confermata per l'estate 2026 all'Auditorium Mediterraneo.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎸 Cristiano De André — "De André canta De André"</div>
+      <div class="info-card-meta"><span>📍 Auditorium Mediterraneo, Marina di Modica</span><span>🎟️ A pagamento (ticket)</span></div>
+      <p>Cristiano De André porta il suo tributo al padre Fabrizio con il tour "De André canta De André — Live".</p>
+    </div>
+    <h3>Altri eventi estivi confermati</h3>
+    <p><strong>Tarantarneo</strong> — Festa della Taranta a Piazza Mediterraneo, Marina di Modica. <strong>Vallinote</strong> con Trip Recordings al Castello dei Conti. <strong>Lune d'Oriente</strong> — passeggiate notturne guidate tra i vicoli del centro storico (partenza Infopoint Baricentro). <strong>Cinema all'aperto</strong>, schiuma party in spiaggia, spettacoli teatrali e serate musicali in piazza. Omaggio a Battiato ("Orizzonti Perduti") al Sagrato della Madonna delle Grazie.</p>
+    <div class="highlight"><strong>Date esatte:</strong> Il programma completo con le date definitive dell'Estate Modicana 2026 viene pubblicato dal Comune di Modica tra fine maggio e inizio giugno. Chiedi a ModicaAI per aggiornamenti in tempo reale.</div>
+  </div>
+
+  <div class="seo-section">
+    <h2><span class="sec-icon">🎪</span> Sagre e Feste Minori</h2>
+    <div class="info-card">
+      <div class="info-card-title">🙏 Madonna delle Grazie</div>
+      <div class="info-card-meta"><span>📅 Terza domenica di Maggio</span><span>📍 Santuario Madonna delle Grazie</span></div>
+      <p>Pellegrinaggio al santuario e festa religiosa con processione. Una delle devozioni più sentite dalla comunità modicana.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🏖️ Ferragosto a Marina di Modica</div>
+      <div class="info-card-meta"><span>📅 15 Agosto</span><span>📍 Marina di Modica</span></div>
+      <p>Fuochi d'artificio sulla spiaggia, concerti, street food e festa in piazza Mediterraneo. L'evento estivo più partecipato della frazione marina.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🎄 Natale e Presepi Viventi</div>
+      <div class="info-card-meta"><span>📅 Dicembre 2026</span><span>📍 Centro storico</span></div>
+      <p>Mercatini di Natale lungo il Corso Umberto I, presepi viventi nei quartieri storici di Modica Alta, concerti di Natale e Capodanno al Teatro Garibaldi (tradizionale sold out). Gospel Show il 25 dicembre.</p>
+    </div>
+  </div>
+
+  <div class="seo-section">
+    <h2><span class="sec-icon">📌</span> Fonti e Aggiornamenti</h2>
+    <p>Gli eventi su questa pagina sono raccolti da fonti ufficiali verificate: Fondazione Teatro Garibaldi (<strong>fondazioneteatrogaribaldi.it</strong>), Comune di Modica, enjoysicilia.it, e pagine Facebook ufficiali degli organizzatori. Le date possono subire variazioni — chiedi sempre conferma a ModicaAI per gli eventi dei prossimi giorni.</p>
+    <p>Segui gli aggiornamenti su: <strong>CosafareaModica</strong> (Facebook — il portale eventi di Modica, Marina di Modica, Frigintini e Maganuco) e <strong>Modica Summer Fest</strong> (Facebook) per il programma estivo.</p>
+  </div>
+
+
   <div class="seo-section">
     <h2><span class="sec-icon">📋</span> Calendario Riepilogativo 2026</h2>
     <div class="info-card"><div class="info-card-title">🐣 5 Aprile</div><p>Madonna Vasa Vasa — Domenica di Pasqua</p></div>
@@ -1405,6 +1548,9 @@
     <div class="info-card"><div class="info-card-title">🔥 29 Giugno</div><p>Festa di San Pietro + Fiera (27-29 giugno)</p></div>
     <div class="info-card"><div class="info-card-title">🎵 Luglio-Agosto</div><p>Estate Modicana — Concerti, teatro, eventi a Marina</p></div>
     <div class="info-card"><div class="info-card-title">🍫 30 Ott — 1 Nov</div><p>ChocoModica — Festival del Cioccolato IGP</p></div>
+    <div class="info-card"><div class="info-card-title">🎭 Apr — Giu</div><p>Teatro Garibaldi — Stagione prosa e musica (Fresu, Molinari, Bellini, Massini)</p></div>
+    <div class="info-card"><div class="info-card-title">🎸 Lug — Ago</div><p>Estate Modicana — The Kolors, Fiorella Mannoia, Cristiano De André</p></div>
+    <div class="info-card"><div class="info-card-title">🎄 Dicembre</div><p>Presepi viventi, mercatini, Concerto di Capodanno al Garibaldi</p></div>
     <div class="highlight"><strong>Nota:</strong> Le date degli eventi estivi e di ChocoModica possono subire variazioni. Chiedi a ModicaAI per conferme e programmi aggiornati.</div>
   </div>
 
@@ -1515,9 +1661,12 @@ async function caricaCarburantiFuel() {
     const res = await fetch(API_URL + '/carburanti');
     const data = await res.json();
     if (!data.stazioni || !data.stazioni.length) return;
-    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
     const track = document.getElementById('fuelTrack');
     if (!track) return;
+    track.style.animationDuration = '9999s';
+    track.innerHTML = '';
+    const items = [];
+    const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
     let items = '';
     data.stazioni.forEach(s => {
       const prezziOrdinati = tipiOrdine.map(k => s.prezzi[k]).filter(Boolean);
@@ -1645,5 +1794,85 @@ caricaCarburantiFuel();
 caricaTraffco();
 (function(){if(_rmLoad())rmToggle();})();
 </script>
+
+<script>
+// ── Eventi Live — Fetch da /eventi-aggregated ──
+(function(){
+  const API = window.location.hostname === 'localhost'
+    ? 'https://modicaai-api.onrender.com/eventi-aggregated'
+    : 'https://modicaai-api.onrender.com/eventi-aggregated';
+
+  const grid = document.getElementById('evLiveGrid');
+  const meta = document.getElementById('evLiveMeta');
+  const wrap = document.getElementById('evLiveWrap');
+  let showCount = 8;
+
+  function renderCards(items) {
+    if (!items || items.length === 0) {
+      grid.innerHTML = '<div class="ev-error">Nessun evento trovato al momento. Gli eventi vengono aggiornati ogni 2 ore.</div>';
+      return;
+    }
+
+    const visible = items.slice(0, showCount);
+    let html = '';
+    for (const ev of visible) {
+      const bg = ev.colore || '#1A3A5C';
+      const titleHtml = ev.link
+        ? '<a href="' + ev.link + '" target="_blank" rel="noopener">' + esc(ev.titolo) + '</a>'
+        : esc(ev.titolo);
+
+      html += '<div class="ev-card">'
+        + '<div class="ev-card-fonte" style="background:' + bg + '">' + esc(ev.fonte || '') + '</div>'
+        + '<div class="ev-card-title">' + titleHtml + '</div>'
+        + '<div class="ev-card-info">'
+        + (ev.data ? '<span>📅 ' + esc(ev.data) + '</span>' : '')
+        + (ev.luogo ? '<span>📍 ' + esc(ev.luogo) + '</span>' : '')
+        + '</div>'
+        + (ev.desc ? '<div class="ev-card-desc">' + esc(ev.desc.substring(0, 150)) + '</div>' : '')
+        + '</div>';
+    }
+
+    if (items.length > showCount) {
+      html += '<button class="ev-more-btn" id="evMoreBtn">Mostra altri ' + Math.min(8, items.length - showCount) + ' eventi</button>';
+    }
+
+    grid.innerHTML = html;
+
+    const moreBtn = document.getElementById('evMoreBtn');
+    if (moreBtn) {
+      moreBtn.addEventListener('click', function() {
+        showCount += 8;
+        renderCards(items);
+      });
+    }
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  fetch(API, {mode:'cors'})
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.items) {
+        renderCards(data.items);
+        if (meta) {
+          meta.textContent = 'Aggiornato alle ' + (data.aggiornato || '--:--')
+            + ' · ' + (data.totale || 0) + ' eventi da ' + (data.fonti_ok || 0) + ' fonti';
+        }
+      } else {
+        grid.innerHTML = '<div class="ev-error">Dati non disponibili al momento.</div>';
+      }
+    })
+    .catch(function(err) {
+      console.warn('Eventi fetch error:', err);
+      grid.innerHTML = '<div class="ev-error">Impossibile caricare gli eventi. Riprova più tardi.</div>';
+    });
+})();
+</script>
+
 </body>
 </html>
