@@ -4248,7 +4248,7 @@ async function caricaSunrise() {
   } catch(e) { /* silenzioso */ }
 }
 
-async function caricaMeteoWidget() {
+async function caricaMeteoWidget(retry = 0) {
   try {
     const res = await fetch(API_URL + '/meteo-widget');
     if (!res.ok) return;
@@ -4256,6 +4256,11 @@ async function caricaMeteoWidget() {
     const icon = document.getElementById('meteoIcon');
     const temp = document.getElementById('meteoTemp');
     const desc = document.getElementById('meteoDesc');
+    // Se il backend risponde con fallback "--", riprova fino a 3 volte
+    if (d.temp === '--' && retry < 3) {
+      setTimeout(() => caricaMeteoWidget(retry + 1), 6000);
+      return;
+    }
     if (icon) icon.textContent = METEO_ICONS[d.icona] || '🌤️';
     if (temp) temp.textContent = `${d.temp}°`;
     if (desc) desc.textContent = d.desc;
