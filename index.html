@@ -397,12 +397,8 @@
     .news-ticker  { display: none !important; }
     .fuel-ticker  { display: none !important; }
     .traffic-bar  { display: none !important; }
-    /* Riallinea le barre fisse: senza ticker, sotto la navbar c'è solo la top-stripe */
     .top-stripe   { top: calc(30px + env(safe-area-inset-top, 0px)); }
     .header       { top: calc(33px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 12px; }
-    .main         { padding: calc(103px + env(safe-area-inset-top, 0px)) 10px 200px; }
-    .main.empty   { padding-top: calc(90px + env(safe-area-inset-top, 0px)); padding-bottom: 30px; }
-    /* Widget meteo/orologio: riadattati senza ticker */
     .hero-widgets { top: calc(87px + env(safe-area-inset-top, 0px)); }
     .lang-toggle { display:none; }
     .lang-mobile-btn { display:flex; }
@@ -417,7 +413,13 @@
 
   /* Main */
   .main { flex:1; display:flex; flex-direction:column; align-items:center; padding:176px 20px 200px; }
-  .main.empty { justify-content: center; padding-top: 110px; padding-bottom: 40px; }
+  .main.empty {
+    /* In chat mode non viene mai usato così — in home mode override sotto */
+    justify-content: flex-start;
+    padding-top: 176px;
+    padding-bottom: 0;
+    min-height: 0;
+  }
 
   /* Input bar fissa — nascosta nella home, visibile durante la chat */
   .main.empty ~ .input-bar { display: none !important; }
@@ -425,13 +427,25 @@
 
   /* Hero input area — visibile solo nella home */
   .hero-input-area {
-    width: 100%; max-width: 660px;
-    margin: 24px auto 0;
+    width: 100%; max-width: 900px;
+    margin: 28px auto 0;
     display: flex; flex-direction: column; align-items: center;
     animation: fadeUp 0.5s 0.3s ease both;
   }
   .hero-input-area .input-wrap {
-    margin-bottom: 14px;
+    margin-bottom: 0;
+  }
+
+  /* In home mode: non espandere a tutto viewport — il hero foto deve essere visibile subito */
+  body.home-visible .main.empty {
+    flex: 0 0 auto;       /* annulla flex:1: .main occupa solo lo spazio del suo contenuto */
+    background: #F8F8F8;
+    padding-top: 209px;   /* stack fisso 181px + 28px respiro visivo */
+    padding-bottom: 40px;
+    margin-bottom: 0;
+  }
+  body.dark.home-visible .main.empty {
+    background: #151820;
   }
 
   /* Hero — stile Claude/ChatGPT: minimalista, centrato */
@@ -474,7 +488,7 @@
     font-size: 11px;
     color: var(--gold);
     padding: 5px 16px;
-    z-index: 999;
+    z-index: 99;
     border-top: 1px solid rgba(194,157,82,0.2);
     font-family: 'Outfit', sans-serif;
     letter-spacing: 0.3px;
@@ -484,7 +498,12 @@
     gap: 0;
     flex-wrap: wrap;
     min-height: 32px;
+    transition: opacity 0.2s;
   }
+  /* Nasconde il footer fisso quando la home è visibile — usa !important per overridare */
+  body.home-visible .site-footer { display: none !important; }
+  /* Nasconde anche l'input-bar fissa quando la home è visibile */
+  body.home-visible .input-bar { display: none !important; }
   .footer-left  { display:flex; align-items:center; gap:8px; }
   .footer-right { display:flex; align-items:center; gap:10px; margin-left:auto; }
   .site-footer a { color: var(--gold); text-decoration: none; }
@@ -709,7 +728,7 @@
   .bar-widget-sub  { font-size: 10px; color: var(--ink-soft); margin-left: 2px; }
   body.dark .bar-widget { background: rgba(30,35,48,0.85); border-color: var(--border); }
   .hero-widgets.hidden { display: none !important; }
-  .input-wrap { width:100%; max-width:660px; display:flex; align-items:center; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:0 6px 0 20px; height:52px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
+  .input-wrap { width:100%; max-width:840px; display:flex; align-items:center; background:var(--white); border:1.5px solid var(--border); border-radius:28px; padding:0 6px 0 20px; height:56px; box-shadow:var(--shadow-md); transition:border-color 0.2s,box-shadow 0.2s; }
   .input-wrap:focus-within { border-color:var(--sky); box-shadow:0 4px 20px rgba(26,58,92,0.12); }
   .input-wrap input { flex:1; border:none; outline:none; font-family:'Outfit',sans-serif; font-size:16px; color:var(--ink); background:transparent; }
   .input-wrap input::placeholder { color:#C8C8C8; }
@@ -844,7 +863,7 @@
 
     /* Main — padding adattato */
     .main         { padding: 155px 10px 200px; }
-    .main.empty   { padding-top: 90px; padding-bottom: 30px; }
+    /* main.empty padding gestito da body.home-visible nel CSS home */
 
     /* Hero-input-area su mobile */
     .hero-input-area { margin: 16px auto 0; }
@@ -1135,28 +1154,616 @@
     .main        { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
                    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)) !important;
                    justify-content: flex-start !important; }
-    .main.empty  { padding-top: calc(83px + env(safe-area-inset-top, 0px)) !important;
-                   padding-bottom: 30px !important;
-                   justify-content: flex-start !important; }
+    .main.empty  { padding-top: 83px !important;
+                   padding-bottom: 0 !important;
+                   justify-content: flex-start !important;
+                   min-height: 0 !important; }
+    body.home-visible .main.empty {
+      flex: 0 0 auto !important;
+      padding-top: 83px !important;   /* mobile: navbar 30px + header 50px + 3px = 83px */
+      padding-bottom: 40px !important;
+      justify-content: flex-start !important;
+    }
+    body.home-visible .input-bar { display: none !important; }
+    body.home-visible .site-footer { display: none !important; }
     .hero-widgets{ top: calc(83px + env(safe-area-inset-top, 0px)) !important; }
-    /* input-bar: usa safe-area-inset-bottom per iPhone notch/Dynamic Island */
     .input-bar   { bottom: env(safe-area-inset-bottom, 0px) !important; }
   }
 
   /* ── TABLET: breakpoint iPad 768px–1024px ── */
   @media (min-width: 641px) and (max-width: 1024px) {
-    /* Con ticker visibili, calcoliamo le altezze reali:
-       navbar 34px + news-ticker 32px + fuel-ticker 28px + traffic-bar 28px = 122px
-       top-stripe 3px (top 122px) + header 56px (top 125px) → totale 181px */
     .top-stripe  { top: calc(122px + env(safe-area-inset-top, 0px)); }
     .header      { top: calc(125px + env(safe-area-inset-top, 0px)); height: 50px; padding: 0 16px; }
     .main        { padding-top: calc(175px + env(safe-area-inset-top, 0px)); padding-bottom: 130px; }
-    .main.empty  { padding-top: calc(155px + env(safe-area-inset-top, 0px)); }
+    .main.empty  {
+      padding-top: 203px;
+      padding-bottom: 0;
+      min-height: 0;
+      justify-content: flex-start;
+    }
+    body.home-visible .main.empty { flex: 0 0 auto; padding-top: 203px; padding-bottom: 40px; }
     .hero-widgets{ top: calc(175px + env(safe-area-inset-top, 0px)); }
-    /* Input bar tablet: più spazio, no safe-area bottom necessaria su iPad */
     .input-bar   { bottom: 0; padding-bottom: max(14px, env(safe-area-inset-bottom, 14px)); }
-    /* Chips grid: 2 colonne su tablet */
-    .chips-grid  { max-width: 560px; }
+    body.home-visible .input-bar { display: none !important; }
+    .hero-input-area { max-width: 720px; }
+  }
+
+
+  /* ══════════════════════════════════════════════════════════
+     HOME PAGE — CSS pulito, scritto da zero
+     Unica fonte di verità. Nessun !important, nessun conflitto.
+     ══════════════════════════════════════════════════════════ */
+
+  /* ── Visibilità home-content ── */
+  .home-content { display: none; width: 100%; }
+  body.home-visible .home-content { display: block; }
+  .home-content a { text-decoration: none; color: inherit; }
+
+  /* Quando la home è visibile: footer fisso e input-bar spariscono */
+  body.home-visible .site-footer { display: none; }
+  body.home-visible .input-bar   { display: none; }
+
+  /* padding-top gestito dal CSS app (riga ~440) con valore 209px corretto */
+  body.home-visible .main.empty { justify-content: flex-start; min-height: 0; flex: 0 0 auto; }
+
+  /* ── Utilities ── */
+  .hc-inner { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+  .hc-eyebrow {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .hc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px; font-weight: 600;
+    color: var(--ink); line-height: 1.1; margin: 0;
+  }
+
+  /* ════════════════════════════════
+     1. HERO FOTOGRAFICO
+     ════════════════════════════════ */
+  .hc-hero {
+    position: relative;
+    width: 100%;
+    height: 560px;
+    overflow: hidden;
+    /* Gradient di fallback: transizione fluida dal bianco al navy — mai un blocco piatto */
+    background: linear-gradient(
+      to bottom,
+      #F8F8F8 0%,
+      #e8eef4 8%,
+      #c5d4e3 20%,
+      #1A3A5C 55%
+    );
+    display: block;
+    margin-top: 0;
+  }
+  body.dark .hc-hero {
+    background: linear-gradient(
+      to bottom,
+      #151820 0%,
+      #1a2030 15%,
+      #1A3A5C 55%
+    );
+  }
+  .hc-hero-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 60%;
+    transition: transform 8s ease;
+  }
+  .hc-hero:hover .hc-hero-img { transform: scale(1.03); }
+  .hc-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.88) 0%,
+      rgba(0,0,0,0.30) 50%,
+      rgba(0,0,0,0.10) 100%
+    );
+    pointer-events: none;
+  }
+  .hc-hero-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 32px 52px;
+  }
+  .hc-hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: #C9A84C; margin-bottom: 14px;
+  }
+  .hc-hero-eyebrow::before {
+    content: ''; width: 28px; height: 1px; background: #C9A84C;
+  }
+  .hc-hero-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px; font-weight: 600;
+    color: #fff; line-height: 1.0;
+    margin: 0 0 12px; letter-spacing: -1px;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.4);
+  }
+  .hc-hero-h1 em { font-style: italic; color: #F5E9CC; }
+  .hc-hero-tagline {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px; font-weight: 300;
+    color: rgba(255,255,255,0.62);
+    margin: 0 0 24px;
+  }
+  .hc-hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hc-hero-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    padding: 7px 16px; border-radius: 20px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(6px);
+  }
+  .hc-photo-credit {
+    position: absolute; bottom: 8px; right: 14px;
+    font-size: 9px; color: rgba(255,255,255,0.25);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ════════════════════════════════
+     2. LIVE BAR (4 tile)
+     ════════════════════════════════ */
+  .hc-live-bar {
+    background: #112035;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .hc-live-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .hc-live-tile {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 24px; cursor: pointer;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.2s;
+  }
+  .hc-live-tile:first-child { border-left: 1px solid rgba(255,255,255,0.06); }
+  .hc-live-tile:hover { background: rgba(201,168,76,0.07); }
+  .hc-live-icon {
+    width: 42px; height: 42px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.55);
+    transition: color 0.2s;
+  }
+  .hc-live-tile:hover .hc-live-icon { color: #C9A84C; }
+  .hc-live-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.35); margin-bottom: 3px;
+  }
+  .hc-live-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px; font-weight: 600;
+    color: #fff;
+  }
+  .hc-live-sub {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 1px;
+  }
+  .hc-live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #22c55e; flex-shrink: 0; margin-left: auto;
+    box-shadow: 0 0 0 0 rgba(34,197,94,0.4);
+    animation: hc-pulse 2s infinite;
+  }
+  @keyframes hc-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+    70%  { box-shadow: 0 0 0 7px rgba(34,197,94,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+  }
+
+  /* ════════════════════════════════
+     3. QUICK LINKS
+     ════════════════════════════════ */
+  .hc-ql-section {
+    padding: 64px 0;
+    background: #F8F8F8;
+  }
+  body.dark .hc-ql-section { background: var(--bg); }
+  .hc-ql-header { margin-bottom: 32px; }
+  .hc-ql-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+  .hc-ql-card {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 10px; padding: 22px 8px 18px;
+    background: #fff; border: 1px solid #EBEBEB;
+    border-radius: 16px; cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+  }
+  body.dark .hc-ql-card { background: var(--bg-card); border-color: var(--border); }
+  .hc-ql-card:hover {
+    border-color: #C9A84C;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(201,168,76,0.10);
+  }
+  .hc-ql-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: #F8F8F8; border: 1px solid #EBEBEB;
+    display: flex; align-items: center; justify-content: center;
+    color: #555; transition: all 0.2s;
+  }
+  body.dark .hc-ql-icon { background: rgba(255,255,255,0.05); border-color: var(--border); color: var(--ink-mid); }
+  .hc-ql-card:hover .hc-ql-icon {
+    background: rgba(201,168,76,0.08);
+    border-color: rgba(201,168,76,0.3);
+    color: #C9A84C;
+  }
+  .hc-ql-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11.5px; font-weight: 600;
+    color: var(--ink); text-align: center; line-height: 1.3;
+    transition: color 0.2s;
+  }
+  .hc-ql-card:hover .hc-ql-label { color: #C9A84C; }
+
+  /* ════════════════════════════════
+     4. PHOTO GRID
+     ════════════════════════════════ */
+  .hc-pg-section { padding: 64px 0; background: #fff; }
+  body.dark .hc-pg-section { background: var(--bg-card); }
+  .hc-pg-header {
+    display: flex; align-items: flex-end;
+    justify-content: space-between; margin-bottom: 28px;
+  }
+  .hc-pg-link {
+    font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600;
+    color: #C9A84C; transition: color 0.15s;
+  }
+  .hc-pg-link:hover { color: #B8860B; }
+  .hc-pg-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: 260px 260px;
+    gap: 14px;
+  }
+  .hc-pg-trio {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; height: 240px; margin-top: 14px;
+  }
+  .hc-pc {
+    position: relative; overflow: hidden; border-radius: 18px;
+    display: block; background: #1a2a1a; cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .hc-pc:hover { transform: scale(1.01); box-shadow: 0 16px 40px rgba(0,0,0,0.18); }
+  .hc-pc-main { grid-row: span 2; }
+  .hc-pc img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; transition: transform 0.5s ease;
+  }
+  .hc-pc:hover img { transform: scale(1.06); }
+  .hc-pc-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .hc-pc-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
+  .hc-pc-cat {
+    font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 5px;
+  }
+  .hc-pc-title {
+    font-family: 'Cormorant Garamond', serif; font-weight: 600; color: #fff; line-height: 1.2;
+  }
+  .hc-pc-main .hc-pc-title { font-size: 28px; }
+  .hc-pc:not(.hc-pc-main) .hc-pc-title { font-size: 20px; }
+  .hc-pc-btn {
+    position: absolute; top: 14px; right: 14px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 15px;
+    opacity: 0; transform: translateY(4px); transition: all 0.2s;
+  }
+  .hc-pc:hover .hc-pc-btn { opacity: 1; transform: translateY(0); }
+
+  /* ════════════════════════════════
+     5. FEATURES (cosa puoi chiedere)
+     ════════════════════════════════ */
+  .hc-feat-section { padding: 72px 0; background: #FDFCF9; border-top: 1px solid #EBEBEB; }
+  body.dark .hc-feat-section { background: var(--bg); border-color: var(--border); }
+  .hc-feat-header { text-align: center; margin-bottom: 52px; }
+  .hc-feat-subtitle {
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 300;
+    color: var(--ink-soft); margin-top: 10px;
+  }
+  .hc-feat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .hc-feat-card {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 24px 22px; border-radius: 16px;
+    border: 1px solid #EBEBEB; background: #fff;
+    cursor: pointer; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  body.dark .hc-feat-card { background: var(--bg-card); border-color: var(--border); }
+  .hc-feat-card:hover {
+    border-color: #C9A84C;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(201,168,76,0.10);
+  }
+  .hc-feat-icon {
+    width: 48px; height: 48px; border-radius: 13px; flex-shrink: 0;
+    background: #F8F8F8; border: 1px solid #EBEBEB;
+    display: flex; align-items: center; justify-content: center;
+    color: #555; transition: all 0.2s;
+  }
+  body.dark .hc-feat-icon { background: rgba(255,255,255,0.05); border-color: var(--border); }
+  .hc-feat-card:hover .hc-feat-icon {
+    background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.3); color: #C9A84C;
+  }
+  .hc-feat-body { flex: 1; min-width: 0; }
+  .hc-feat-title {
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--ink); margin-bottom: 5px; transition: color 0.2s;
+  }
+  .hc-feat-card:hover .hc-feat-title { color: #C9A84C; }
+  .hc-feat-desc {
+    font-family: 'Outfit', sans-serif; font-size: 12.5px;
+    color: var(--ink-soft); line-height: 1.55;
+  }
+  .hc-feat-arrow {
+    color: var(--ink-soft); opacity: 0; flex-shrink: 0; margin-top: 2px;
+    transform: translateX(-6px); transition: all 0.2s;
+  }
+  .hc-feat-card:hover .hc-feat-arrow { opacity: 1; transform: translateX(0); color: #C9A84C; }
+
+  /* ════════════════════════════════
+     6. NEWS & EVENTI
+     ════════════════════════════════ */
+  .hc-news-section { padding: 64px 0; background: #F8F8F8; }
+  body.dark .hc-news-section { background: var(--bg); }
+  .hc-news-header {
+    display: flex; align-items: flex-end;
+    justify-content: space-between; margin-bottom: 28px;
+  }
+  .hc-news-grid {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 20px; align-items: start;
+  }
+  .hc-nf {
+    border-radius: 18px; overflow: hidden; display: block; background: #111;
+  }
+  .hc-nf-img-wrap { height: 185px; overflow: hidden; background: #1a1a18; }
+  .hc-nf-img {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.75;
+    transition: transform 0.5s ease;
+  }
+  .hc-nf:hover .hc-nf-img { transform: scale(1.05); }
+  .hc-nf-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .hc-nf-tag {
+    font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: #C9A84C;
+  }
+  .hc-nf-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600;
+    color: #fff; line-height: 1.2;
+  }
+  .hc-nf-desc { font-family: 'Outfit', sans-serif; font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+  .hc-nf-cta { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; color: #C9A84C; }
+  .hc-nl {
+    display: flex; flex-direction: column;
+    border: 1px solid #EBEBEB; border-radius: 14px;
+    overflow: hidden; background: #fff;
+  }
+  body.dark .hc-nl { background: var(--bg-card); border-color: var(--border); }
+  .hc-nl-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; text-decoration: none;
+    border-bottom: 1px solid #EBEBEB; transition: background 0.15s;
+  }
+  body.dark .hc-nl-item { border-color: var(--border); }
+  .hc-nl-item:last-child { border-bottom: none; }
+  .hc-nl-item:hover { background: #FEFBF3; }
+  body.dark .hc-nl-item:hover { background: rgba(201,168,76,0.06); }
+  .hc-nl-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #C9A84C; flex-shrink: 0; opacity: 0.45;
+  }
+  .hc-nl-item:hover .hc-nl-dot { opacity: 1; }
+  .hc-nl-tag {
+    font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; color: #C9A84C; margin-bottom: 2px;
+  }
+  .hc-nl-title {
+    font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--ink); line-height: 1.3;
+  }
+
+  /* ════════════════════════════════
+     7. CTA FINALE
+     ════════════════════════════════ */
+  .hc-cta-section {
+    padding: 80px 32px; background: #1A3A5C;
+    position: relative; overflow: hidden; text-align: center;
+  }
+  .hc-cta-section::before {
+    content: ''; position: absolute; top: -80px; left: -80px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: rgba(201,168,76,0.06); pointer-events: none;
+  }
+  .hc-cta-section::after {
+    content: ''; position: absolute; bottom: -80px; right: -80px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: rgba(255,255,255,0.02); pointer-events: none;
+  }
+  .hc-cta-inner { max-width: 580px; margin: 0 auto; position: relative; z-index: 1; }
+  .hc-cta-eyebrow {
+    font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.35); margin-bottom: 14px;
+  }
+  .hc-cta-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 600;
+    color: #fff; line-height: 1.1; margin-bottom: 12px;
+  }
+  .hc-cta-sub {
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 300;
+    color: rgba(255,255,255,0.48); margin-bottom: 32px; line-height: 1.6;
+  }
+  .hc-cta-form {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 50px; padding: 6px 6px 6px 22px;
+    margin-bottom: 18px; transition: all 0.2s;
+  }
+  .hc-cta-form:focus-within { background: rgba(255,255,255,0.13); border-color: #C9A84C; }
+  .hc-cta-input {
+    flex: 1; background: none; border: none; outline: none;
+    font-family: 'Outfit', sans-serif; font-size: 14px; color: #fff;
+  }
+  .hc-cta-input::placeholder { color: rgba(255,255,255,0.30); }
+  .hc-cta-btn {
+    width: 44px; height: 44px; border-radius: 50%; background: #C9A84C;
+    border: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; color: #fff; flex-shrink: 0; transition: background 0.15s;
+  }
+  .hc-cta-btn:hover { background: #B8860B; }
+  .hc-cta-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .hc-cta-tag {
+    font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.60); background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 20px;
+    padding: 6px 16px; cursor: pointer; transition: all 0.15s;
+  }
+  .hc-cta-tag:hover { background: rgba(201,168,76,0.18); border-color: #C9A84C; color: #C9A84C; }
+
+  /* ════════════════════════════════
+     8. FOOTER
+     ════════════════════════════════ */
+  .hc-footer { background: #0B0F17; padding: 56px 0 0; }
+  .hc-footer-top {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+    gap: 36px; max-width: 1100px; margin: 0 auto;
+    padding: 0 32px 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .hc-footer-brand-name {
+    font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 600;
+    color: #fff; margin-bottom: 10px;
+  }
+  .hc-footer-brand-name span { color: #C9A84C; }
+  .hc-footer-brand-desc {
+    font-family: 'Outfit', sans-serif; font-size: 12.5px;
+    color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 18px;
+  }
+  .hc-footer-socials { display: flex; gap: 8px; }
+  .hc-footer-social {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.80); text-decoration: none; transition: all 0.15s;
+  }
+  .hc-footer-social:hover { background: rgba(201,168,76,0.20); border-color: #C9A84C; color: #C9A84C; }
+  .hc-footer-col-title {
+    font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.55); margin-bottom: 16px;
+  }
+  .hc-footer-link {
+    display: block; font-family: 'Outfit', sans-serif; font-size: 13px;
+    color: #ffffff !important; text-decoration: none;
+    margin-bottom: 10px; transition: color 0.15s;
+  }
+  .hc-footer-link:hover { color: #C9A84C !important; }
+  .hc-footer-bottom {
+    max-width: 1100px; margin: 0 auto;
+    padding: 22px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+    font-family: 'Outfit', sans-serif; font-size: 11.5px;
+    color: rgba(255,255,255,0.45);
+  }
+  .hc-footer-bottom-links { display: flex; gap: 18px; }
+  .hc-footer-bottom-links a { color: rgba(255,255,255,0.50); text-decoration: none; transition: color 0.15s; }
+  .hc-footer-bottom-links a:hover { color: #C9A84C; }
+
+  /* ════════════════════════════════
+     RESPONSIVE — tablet 641-1024px
+     ════════════════════════════════ */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    /* padding gestito dal CSS app tablet sopra */
+    .hc-hero { height: 420px; }
+    .hc-hero-h1 { font-size: 48px; }
+    .hc-hero-tagline { font-size: 14px; }
+    .hc-live-inner { grid-template-columns: repeat(2, 1fr); }
+    .hc-ql-grid { grid-template-columns: repeat(4, 1fr); }
+    .hc-pg-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .hc-pc-main { height: 300px; grid-row: span 1; }
+    .hc-pc:not(.hc-pc-main) { height: 200px; }
+    .hc-feat-grid { grid-template-columns: repeat(2, 1fr); }
+    .hc-news-grid { grid-template-columns: 1fr 1fr; }
+    .hc-news-grid .hc-nl:last-child { display: none; }
+    .hc-footer-top { grid-template-columns: 1fr 1fr; }
+    .hc-footer-brand { grid-column: span 2; }
+    .hc-cta-title { font-size: 36px; }
+  }
+
+  /* ════════════════════════════════
+     RESPONSIVE — mobile ≤640px
+     ════════════════════════════════ */
+  @media (max-width: 640px) {
+    /* padding gestito dal CSS app mobile FINAL sopra */
+    .hc-inner { padding: 0 16px; }
+    .hc-hero { height: 280px; }
+    .hc-hero-h1 { font-size: 30px; letter-spacing: -0.5px; }
+    .hc-hero-tagline { font-size: 12px; margin-bottom: 14px; }
+    .hc-hero-content { padding: 0 16px 24px; }
+    .hc-hero-eyebrow { font-size: 9px; letter-spacing: 1.5px; margin-bottom: 10px; }
+    .hc-hero-pills { gap: 6px; }
+    .hc-hero-pill { font-size: 10px; padding: 5px 12px; }
+    .hc-live-inner { grid-template-columns: repeat(2, 1fr); }
+    .hc-live-tile { padding: 14px 14px; gap: 10px; }
+    .hc-live-icon { width: 34px; height: 34px; }
+    .hc-live-icon svg { width: 20px; height: 20px; }
+    .hc-live-val { font-size: 14px; }
+    .hc-live-sub { font-size: 10px; }
+    .hc-ql-section { padding: 44px 0; }
+    .hc-ql-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .hc-ql-card { padding: 16px 6px 14px; border-radius: 12px; gap: 8px; }
+    .hc-ql-icon { width: 44px; height: 44px; border-radius: 12px; }
+    .hc-ql-icon svg { width: 20px; height: 20px; }
+    .hc-ql-label { font-size: 10.5px; }
+    .hc-pg-section { padding: 44px 0; }
+    .hc-pg-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .hc-pc-main { height: 240px; grid-row: span 1; }
+    .hc-pc:not(.hc-pc-main) { height: 170px; }
+    .hc-pg-trio { grid-template-columns: 1fr 1fr; height: auto; }
+    .hc-pg-trio .hc-pc { height: 150px; }
+    .hc-pg-trio .hc-pc:last-child { display: none; }
+    .hc-feat-section { padding: 48px 0; }
+    .hc-feat-grid { grid-template-columns: 1fr; gap: 10px; }
+    .hc-feat-card { padding: 18px 16px; border-radius: 13px; }
+    .hc-feat-icon { width: 44px; height: 44px; }
+    .hc-feat-title { font-size: 13px; }
+    .hc-feat-desc { font-size: 12px; }
+    .hc-news-section { padding: 44px 0; }
+    .hc-news-grid { grid-template-columns: 1fr; }
+    .hc-news-grid .hc-nl:last-child { display: none; }
+    .hc-nf-img-wrap { height: 150px; }
+    .hc-cta-section { padding: 56px 16px; }
+    .hc-cta-title { font-size: 28px; }
+    .hc-cta-sub { font-size: 13px; }
+    .hc-footer { padding-top: 44px; }
+    .hc-footer-top { grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 16px 36px; }
+    .hc-footer-brand { grid-column: span 2; }
+    .hc-footer-bottom { padding: 18px 16px; flex-direction: column; align-items: flex-start; gap: 6px; }
+    .hc-title { font-size: 26px; }
   }
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -1165,7 +1772,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},{"@type":"ListItem","position":2,"name":"Mappa Interattiva","item":"https://www.modicaai.it/mappa.html"}]}
 </script>
 </head>
-<body>
+<body class="home-visible">
 
 <!-- ── Barra navigazione ── -->
 <nav class="site-nav-bar" role="navigation" aria-label="Navigazione principale">
@@ -1348,16 +1955,7 @@
           </svg>
         </button>
       </div>
-      <!-- Chips 4+2 sotto l'input -->
-      <div class="chips-grid" id="chipsGrid">
-        <button class="chip" onclick="askChip(this,'Dove conviene fare benzina oggi?')">⛽ Benzina più economica</button>
-        <button class="chip" onclick="askChip(this,'Quali sono le ultime notizie di oggi?')">📰 Ultime notizie</button>
-        <button class="chip" onclick="askChip(this,'Che tempo fa oggi a Modica?')">🌤️ Meteo oggi</button>
-        <button class="chip" onclick="askChip(this,'Farmacia di turno adesso?')">💊 Farmacia di turno</button>
-        <button class="chip" onclick="askChip(this,'Genera un immagine del barocco siciliano')">🎨 Genera immagine</button>
-        <button class="chip" id="chip6" onclick="askChip(this,'Com\'è il traffico adesso a Modica?')">🚗 Traffico Live</button>
-        <button class="chip chip-mappa" id="chip7" onclick="window.location.href='/mappa.html'">🗺️ Mappa Interattiva</button>
-      </div>
+
     </div>
   </div>
 
@@ -1489,6 +2087,392 @@
     </div>
   </div>
 </div>
+
+
+<!-- HOME DINAMICA: visibile quando nessuna chat è attiva -->
+<div class="home-content" id="homeContent">
+
+<!-- 1. HERO FOTOGRAFICO -->
+<div class="hc-hero">
+  <img class="hc-hero-img"
+    src="/gallery/modica_panorama.jpg"
+    alt="Modica, città barocca Patrimonio UNESCO, Sicilia"
+    loading="eager"
+    fetchpriority="high"
+    onerror="this.onerror=null;">
+  <div class="hc-hero-overlay"></div>
+  <div class="hc-hero-content">
+    <div class="hc-hero-eyebrow">Patrimonio UNESCO · Sicilia, Italia</div>
+    <h2 class="hc-hero-h1">Benvenuto a <em>Modica</em></h2>
+    <p class="hc-hero-tagline">La città del cioccolato. Il barocco siciliano. Un luogo fuori dal tempo.</p>
+    <div class="hc-hero-pills">
+      <span class="hc-hero-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M9 21V7l3-4 3 4v14"/></svg>
+        Barocco Siciliano
+      </span>
+      <span class="hc-hero-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>
+        Cioccolato IGP
+      </span>
+      <span class="hc-hero-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>
+        300 giorni di sole
+      </span>
+      <span class="hc-hero-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-8 4 5 3-3 4 6"/></svg>
+        A 20 km dal mare
+      </span>
+    </div>
+  </div>
+  <div class="hc-photo-credit">Foto © Unsplash</div>
+</div>
+
+<!-- 2. LIVE BAR -->
+<div class="hc-live-bar">
+  <div class="hc-live-inner">
+    <div class="hc-live-tile" onclick="askChip(null,'Che tempo fa oggi a Modica?')">
+      <div class="hc-live-icon" id="homeMeteoIcon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </div>
+      <div>
+        <div class="hc-live-label">Meteo oggi</div>
+        <div class="hc-live-val" id="homeMeteoTemp">--°C</div>
+        <div class="hc-live-sub" id="homeMeteoDesc">Modica, Sicilia</div>
+      </div>
+      <div class="hc-live-dot"></div>
+    </div>
+    <div class="hc-live-tile" onclick="askChip(null,'Dove conviene fare benzina oggi?')">
+      <div class="hc-live-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 22h12M5 22V7l5-5 5 5v15M9 22V13h4v9"/><path d="M20 8v14M18 8a2 2 0 104 0V6l-2-4-2 4v2z"/></svg>
+      </div>
+      <div>
+        <div class="hc-live-label">Benzina self</div>
+        <div class="hc-live-val" id="homeBenzPrice">---</div>
+        <div class="hc-live-sub">Prezzo più basso</div>
+      </div>
+      <div class="hc-live-dot"></div>
+    </div>
+    <div class="hc-live-tile" onclick="askChip(null,'Farmacia di turno adesso?')">
+      <div class="hc-live-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2h8l4 4v14a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M12 11v6M9 14h6"/></svg>
+      </div>
+      <div>
+        <div class="hc-live-label">Farmacia di turno</div>
+        <div class="hc-live-val">Scopri quale</div>
+        <div class="hc-live-sub">Aggiornata in tempo reale</div>
+      </div>
+      <div class="hc-live-dot"></div>
+    </div>
+    <div class="hc-live-tile" onclick="askChip(null,'Com\'è il traffico adesso a Modica?')">
+      <div class="hc-live-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="7" r="1.5" fill="#22c55e"/><circle cx="12" cy="12" r="1.5" fill="#fbbf24"/><circle cx="12" cy="17" r="1.5" fill="#ef4444"/></svg>
+      </div>
+      <div>
+        <div class="hc-live-label">Traffico live</div>
+        <div class="hc-live-val">Situazione ora</div>
+        <div class="hc-live-sub">Strade principali</div>
+      </div>
+      <div class="hc-live-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. QUICK LINKS -->
+<div class="hc-ql-section">
+  <div class="hc-inner">
+    <div class="hc-ql-header">
+      <div class="hc-eyebrow">Tutto su Modica</div>
+      <h2 class="hc-title">Cosa vuoi fare?</h2>
+    </div>
+    <div class="hc-ql-grid">
+      <a href="/cosa-vedere.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 21h18M9 21V7l3-4 3 4v14M9 21V11h6v10"/></svg></div>
+        <div class="hc-ql-label">Cosa vedere</div>
+      </a>
+      <a href="/gastronomia.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2M7 2v20M21 15V2a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></div>
+        <div class="hc-ql-label">Dove mangiare</div>
+      </a>
+      <a href="/cioccolato.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M8 12h8M8 16h5M8 8h8"/></svg></div>
+        <div class="hc-ql-label">Cioccolato IGP</div>
+      </a>
+      <a href="/parcheggi.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h5a3 3 0 010 6H9"/></svg></div>
+        <div class="hc-ql-label">Parcheggi</div>
+      </a>
+      <a href="/spiagge.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 17l4-8 4 5 3-3 4 6M3 21h18"/></svg></div>
+        <div class="hc-ql-label">Spiagge vicine</div>
+      </a>
+      <a href="/eventi.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>
+        <div class="hc-ql-label">Eventi 2026</div>
+      </a>
+      <a href="/modica-in-un-giorno.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></div>
+        <div class="hc-ql-label">Modica in 1 giorno</div>
+      </a>
+      <a href="/come-arrivare.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 17H5l-2-9 7 3 2-5 2 5 7-3zM5 17v2M19 17v2"/></svg></div>
+        <div class="hc-ql-label">Come arrivare</div>
+      </a>
+      <a href="/storia.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <div class="hc-ql-label">Storia</div>
+      </a>
+      <a href="/dintorni.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 17l4-8 4 5 3-3 4 6"/><path d="M3 21h18"/></svg></div>
+        <div class="hc-ql-label">Dintorni</div>
+      </a>
+      <a href="/mappa.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2C8 2 4 5.5 4 10c0 5.5 8 12 8 12s8-6.5 8-12c0-4.5-4-8-8-8z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="hc-ql-label">Mappa</div>
+      </a>
+      <a href="/guida-pratica.html" class="hc-ql-card">
+        <div class="hc-ql-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+        <div class="hc-ql-label">Guida pratica</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 4. PHOTO GRID -->
+<div class="hc-pg-section">
+  <div class="hc-inner">
+    <div class="hc-pg-header">
+      <div>
+        <div class="hc-eyebrow">Patrimonio UNESCO dal 2002</div>
+        <h2 class="hc-title">Scopri Modica</h2>
+      </div>
+      <a href="/guida-pratica.html" class="hc-pg-link">Guida completa →</a>
+    </div>
+    <div class="hc-pg-grid">
+      <a href="/cosa-vedere.html" class="hc-pc hc-pc-main">
+        <img src="/gallery/modica_duomo_san_giorgio.jpg" alt="Duomo di San Giorgio, Modica"
+    style="object-position: center 20%;"
+    onerror="this.onerror=null;" loading="lazy">
+        <div class="hc-pc-overlay"></div>
+        <div class="hc-pc-body">
+          <div class="hc-pc-cat">Da visitare</div>
+          <div class="hc-pc-title">Duomo di San Giorgio</div>
+        </div>
+        <div class="hc-pc-btn">→</div>
+      </a>
+      <a href="/cioccolato.html" class="hc-pc">
+        <img src="/gallery/modica_cioccolato.jpg" alt="Cioccolato di Modica IGP"
+    style="object-position: center center;"
+    onerror="this.onerror=null;" loading="lazy">
+        <div class="hc-pc-overlay"></div>
+        <div class="hc-pc-body">
+          <div class="hc-pc-cat">Eccellenza IGP</div>
+          <div class="hc-pc-title">Cioccolato di Modica</div>
+        </div>
+        <div class="hc-pc-btn">→</div>
+      </a>
+      <a href="/storia.html" class="hc-pc">
+        <img src="/gallery/modica_centro_storico.jpg" alt="Centro storico barocco di Modica"
+    style="object-position: center 30%;"
+    onerror="this.onerror=null;" loading="lazy">
+        <div class="hc-pc-overlay"></div>
+        <div class="hc-pc-body">
+          <div class="hc-pc-cat">Patrimonio UNESCO</div>
+          <div class="hc-pc-title">Centro storico barocco</div>
+        </div>
+        <div class="hc-pc-btn">→</div>
+      </a>
+    </div>
+    <div class="hc-pg-trio">
+      <a href="/spiagge.html" class="hc-pc">
+        <img src="/gallery/marina_di_modica.jpg" alt="Spiagge vicino Modica"
+    style="object-position: center 40%;"
+    onerror="this.onerror=null;" loading="lazy">
+        <div class="hc-pc-overlay"></div>
+        <div class="hc-pc-body"><div class="hc-pc-cat">A 20 km</div><div class="hc-pc-title">Spiagge della costa</div></div>
+        <div class="hc-pc-btn">→</div>
+      </a>
+      <a href="/dintorni.html" class="hc-pc">
+        <img src="/gallery/scicli.jpg" alt="Scicli e Val di Noto"
+    style="object-position: center 35%;"
+    onerror="this.onerror=null;" loading="lazy">
+        <div class="hc-pc-overlay"></div>
+        <div class="hc-pc-body"><div class="hc-pc-cat">Val di Noto</div><div class="hc-pc-title">Scicli e dintorni</div></div>
+        <div class="hc-pc-btn">→</div>
+      </a>
+      <a href="/modica-in-un-giorno.html" class="hc-pc">
+        <img src="/gallery/modica_panorama_2.jpg" alt="Modica in un giorno"
+    style="object-position: center center;"
+    onerror="this.onerror=null;" loading="lazy">
+        <div class="hc-pc-overlay"></div>
+        <div class="hc-pc-body"><div class="hc-pc-cat">Itinerario</div><div class="hc-pc-title">Modica in un giorno</div></div>
+        <div class="hc-pc-btn">→</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 5. FEATURES — cosa puoi chiedere -->
+<div class="hc-feat-section">
+  <div class="hc-inner">
+    <div class="hc-feat-header">
+      <div class="hc-eyebrow">Cosa puoi chiedere</div>
+      <h2 class="hc-title">Il tuo assistente locale, <em style="font-style:italic;color:#C9A84C">sempre disponibile</em></h2>
+      <p class="hc-feat-subtitle">Nessuna registrazione. Nessun abbonamento. Disponibile 24 ore su 24, 7 giorni su 7.</p>
+    </div>
+    <div class="hc-feat-grid">
+      <div class="hc-feat-card" onclick="askChip(null,'Che tempo fa oggi a Modica?')">
+        <div class="hc-feat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+        <div class="hc-feat-body"><div class="hc-feat-title">Meteo in tempo reale</div><div class="hc-feat-desc">Temperatura, previsioni 3 giorni, alba e tramonto per Modica e Marina di Modica.</div></div>
+        <div class="hc-feat-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </div>
+      <div class="hc-feat-card" onclick="askChip(null,'Farmacia di turno adesso?')">
+        <div class="hc-feat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2h8l4 4v14a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M12 11v6M9 14h6"/></svg></div>
+        <div class="hc-feat-body"><div class="hc-feat-title">Farmacia di turno</div><div class="hc-feat-desc">Trova la farmacia aperta in questo momento a Modica, con indirizzo e orari aggiornati.</div></div>
+        <div class="hc-feat-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </div>
+      <div class="hc-feat-card" onclick="askChip(null,'Dove conviene fare benzina oggi?')">
+        <div class="hc-feat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 22h12M5 22V7l5-5 5 5v15M9 22V13h4v9M20 8v14M18 8a2 2 0 104 0V6l-2-4-2 4v2z"/></svg></div>
+        <div class="hc-feat-body"><div class="hc-feat-title">Prezzi carburanti</div><div class="hc-feat-desc">Benzina, gasolio, GPL e metano — prezzi aggiornati ogni giorno dai distributori di Modica.</div></div>
+        <div class="hc-feat-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </div>
+      <div class="hc-feat-card" onclick="window.location.href='/news.html'">
+        <div class="hc-feat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg></div>
+        <div class="hc-feat-body"><div class="hc-feat-title">Notizie locali</div><div class="hc-feat-desc">RTM, LiveSicilia, RagusaNews — le ultime notizie di Modica e provincia in tempo reale.</div></div>
+        <div class="hc-feat-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </div>
+      <div class="hc-feat-card" onclick="askChip(null,'Com\'è il traffico adesso a Modica?')">
+        <div class="hc-feat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="7" r="1.5" fill="#22c55e"/><circle cx="12" cy="12" r="1.5" fill="#fbbf24"/><circle cx="12" cy="17" r="1.5" fill="#ef4444"/></svg></div>
+        <div class="hc-feat-body"><div class="hc-feat-title">Traffico live</div><div class="hc-feat-desc">Situazione del traffico sulle strade principali di Modica, aggiornata in tempo reale.</div></div>
+        <div class="hc-feat-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </div>
+      <div class="hc-feat-card" onclick="window.location.href='/mappa.html'">
+        <div class="hc-feat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></div>
+        <div class="hc-feat-body"><div class="hc-feat-title">Mappa interattiva</div><div class="hc-feat-desc">50+ punti di interesse: monumenti, ristoranti, parcheggi, farmacie e molto altro.</div></div>
+        <div class="hc-feat-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. NEWS & EVENTI -->
+<div class="hc-news-section">
+  <div class="hc-inner">
+    <div class="hc-news-header">
+      <div>
+        <div class="hc-eyebrow">Notizie e appuntamenti</div>
+        <h2 class="hc-title">Modica in primo piano</h2>
+      </div>
+      <a href="/news.html" class="hc-pg-link">Tutte le news →</a>
+    </div>
+    <div class="hc-news-grid">
+      <a href="/eventi.html" class="hc-nf">
+        <div class="hc-nf-img-wrap">
+          <img class="hc-nf-img" src="/gallery/modica_eventi.jpg" alt="Modica eventi 2026"
+    style="object-position: center 40%;"
+    onerror="this.onerror=null;" loading="lazy">
+        </div>
+        <div class="hc-nf-body">
+          <div class="hc-nf-tag">In evidenza</div>
+          <div class="hc-nf-title">Gli eventi di Modica nel 2026</div>
+          <div class="hc-nf-desc">Sagre, festival, processioni e manifestazioni culturali nella città barocca patrimonio UNESCO.</div>
+          <div class="hc-nf-cta">Scopri tutti gli eventi →</div>
+        </div>
+      </a>
+      <div class="hc-nl">
+        <a href="/news.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">News</div><div class="hc-nl-title">Ultime notizie da Modica</div></div></a>
+        <a href="/storia.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Storia</div><div class="hc-nl-title">La storia millenaria di Modica</div></div></a>
+        <a href="/quasimodo.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Cultura</div><div class="hc-nl-title">Salvatore Quasimodo, Nobel modicano</div></div></a>
+        <a href="/faq.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Info</div><div class="hc-nl-title">Domande frequenti su Modica</div></div></a>
+        <a href="/gastronomia.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Gastronomia</div><div class="hc-nl-title">Dove mangiare a Modica</div></div></a>
+      </div>
+      <div class="hc-nl">
+        <a href="/cioccolato.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Eccellenza</div><div class="hc-nl-title">Il cioccolato IGP di Modica</div></div></a>
+        <a href="/dintorni.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Dintorni</div><div class="hc-nl-title">Ragusa, Scicli, Noto e Ispica</div></div></a>
+        <a href="/modica-o-ragusa.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Guide</div><div class="hc-nl-title">Modica o Ragusa? La guida</div></div></a>
+        <a href="/spiagge.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Mare</div><div class="hc-nl-title">Spiagge vicino Modica</div></div></a>
+        <a href="/parcheggi.html" class="hc-nl-item"><div class="hc-nl-dot"></div><div><div class="hc-nl-tag">Servizi</div><div class="hc-nl-title">Dove parcheggiare a Modica</div></div></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. CTA FINALE -->
+<div class="hc-cta-section">
+  <div class="hc-cta-inner">
+    <div class="hc-cta-eyebrow">Assistente AI gratuito · Disponibile 24/7</div>
+    <div class="hc-cta-title">Non hai trovato quello che cerchi?</div>
+    <p class="hc-cta-sub">Chiedi direttamente all'AI di Modica — risponde su ristoranti, farmacie, eventi, meteo, traffico e molto altro.</p>
+    <div class="hc-cta-form">
+      <input type="text" class="hc-cta-input" id="ctaInput" placeholder="Es. Dove mangiare il pesce a Modica?" onkeydown="if(event.key==='Enter'){askFromCta()}">
+      <button class="hc-cta-btn" onclick="askFromCta()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div class="hc-cta-tags">
+      <button class="hc-cta-tag" onclick="askChip(null,'Dove conviene fare benzina oggi?')">Benzina</button>
+      <button class="hc-cta-tag" onclick="askChip(null,'Farmacia di turno adesso?')">Farmacia</button>
+      <button class="hc-cta-tag" onclick="askChip(null,'Che tempo fa oggi a Modica?')">Meteo</button>
+      <button class="hc-cta-tag" onclick="window.location.href='/eventi.html'">Eventi</button>
+      <button class="hc-cta-tag" onclick="askChip(null,'Com\'è il traffico adesso a Modica?')">Traffico</button>
+      <button class="hc-cta-tag" onclick="window.location.href='/mappa.html'">Mappa</button>
+    </div>
+  </div>
+</div>
+
+<!-- 8. FOOTER -->
+<footer class="hc-footer">
+  <div class="hc-footer-top">
+    <div class="hc-footer-brand">
+      <div class="hc-footer-brand-name">Modica<span>AI</span></div>
+      <p class="hc-footer-brand-desc">L'assistente AI gratuito per Modica, Sicilia. Meteo, farmacie, carburanti e notizie in tempo reale — senza registrazione, 24/7.</p>
+      <div class="hc-footer-socials">
+        <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" class="hc-footer-social" title="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="https://www.instagram.com/modicaai.it" target="_blank" rel="noopener" class="hc-footer-social" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <div class="hc-footer-col-title">Da vedere</div>
+      <a href="/cosa-vedere.html" class="hc-footer-link">Cosa vedere</a>
+      <a href="/modica-in-un-giorno.html" class="hc-footer-link">Modica in 1 giorno</a>
+      <a href="/storia.html" class="hc-footer-link">Storia</a>
+      <a href="/quasimodo.html" class="hc-footer-link">Salvatore Quasimodo</a>
+      <a href="/spiagge.html" class="hc-footer-link">Spiagge vicine</a>
+    </div>
+    <div>
+      <div class="hc-footer-col-title">Mangiare e bere</div>
+      <a href="/gastronomia.html" class="hc-footer-link">Gastronomia</a>
+      <a href="/cioccolato.html" class="hc-footer-link">Cioccolato IGP</a>
+      <a href="/dintorni.html" class="hc-footer-link">Dintorni</a>
+      <a href="/modica-o-ragusa.html" class="hc-footer-link">Modica o Ragusa?</a>
+    </div>
+    <div>
+      <div class="hc-footer-col-title">Servizi</div>
+      <a href="/parcheggi.html" class="hc-footer-link">Parcheggi</a>
+      <a href="/come-arrivare.html" class="hc-footer-link">Come arrivare</a>
+      <a href="/mappa.html" class="hc-footer-link">Mappa interattiva</a>
+      <a href="/faq.html" class="hc-footer-link">FAQ</a>
+      <a href="/guida-pratica.html" class="hc-footer-link">Guida pratica</a>
+    </div>
+    <div>
+      <div class="hc-footer-col-title">ModicaAI</div>
+      <a href="/mission.html" class="hc-footer-link">Chi siamo</a>
+      <a href="/contatti.html" class="hc-footer-link">Contatti</a>
+      <a href="/news.html" class="hc-footer-link">News</a>
+      <a href="/eventi.html" class="hc-footer-link">Eventi 2026</a>
+      <a href="/gioco.html" class="hc-footer-link">Giochi</a>
+    </div>
+  </div>
+  <div class="hc-footer-bottom">
+    <span>© 2026 ModicaAI · Modica, Sicilia</span>
+    <div class="hc-footer-bottom-links">
+      <a href="/contatti.html">Contatti</a>
+      <a href="/mission.html">Chi siamo</a>
+      <a href="https://www.modicaai.it">modicaai.it</a>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /home-content -->
 
 
 <script>
@@ -1786,11 +2770,10 @@ function nuovaChat() {
   document.getElementById('hero').classList.remove('hidden');
   const heroWidgets = document.getElementById('heroWidgets');
   if (heroWidgets) heroWidgets.classList.remove('hidden');
-  const main = document.getElementById('main');
-  if (main) main.classList.add('empty');
-  // Mostra hero-input-area
-  const hia = document.getElementById('heroInputArea');
-  if (hia) hia.style.display = '';
+  const hcEl = document.getElementById('homeContent');
+  if (hcEl) hcEl.style.display = 'block';
+  document.body.classList.add('home-visible');
+
   applicaUI();
   const grid = document.getElementById('chipsGrid');
   if (grid) grid.style.display = 'flex';
@@ -1825,6 +2808,9 @@ function addMessage(type, html, badge, raw) {
   if (heroWidgets) heroWidgets.classList.add('hidden');
   const main = document.getElementById('main');
   if (main) main.classList.remove('empty');
+  const hc = document.getElementById('homeContent');
+  if (hc) hc.style.display = 'none';
+  document.body.classList.remove('home-visible');
   const area = document.getElementById('chatArea');
   const div = document.createElement('div');
   div.className = `msg msg-${type}`;
@@ -3301,6 +4287,55 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+
+// ── Home Content — mostra/nascondi e popola dati ─────────────────
+
+function askFromCta() {
+  const input = document.getElementById('ctaInput');
+  if (!input) return;
+  const q = input.value.trim();
+  if (!q) { input.focus(); return; }
+  input.value = '';
+  ask(q);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function populaHomeMeteo() {
+  try {
+    const res = await fetch(API_URL + '/meteo-widget');
+    if (!res.ok) return;
+    const d = await res.json();
+    const icon = document.getElementById('homeMeteoIcon');
+    const temp = document.getElementById('homeMeteoTemp');
+    const desc = document.getElementById('homeMeteoDesc');
+    if (icon) icon.textContent = METEO_ICONS[d.icona] || '🌤️';
+    if (temp) temp.textContent = `${d.temp}°C`;
+    if (desc) desc.textContent = d.desc || 'Modica, Sicilia';
+  } catch(e) {}
+}
+
+async function populaHomeCarburanti() {
+  try {
+    const res = await fetch(API_URL + '/carburanti');
+    const data = await res.json();
+    if (!data.stazioni || !data.stazioni.length) return;
+    const tipi = ['Benzina_self','Gasolio_self','GPL_self','Metano_self'];
+    const labels = { 'Benzina_self':'Benzina','Gasolio_self':'Gasolio','GPL_self':'GPL','Metano_self':'Metano' };
+    const prezzi = {};
+    data.stazioni.forEach(s => {
+      tipi.forEach(k => {
+        if (s.prezzi[k] && !prezzi[k]) prezzi[k] = s.prezzi[k].prezzo;
+      });
+    });
+    const list = document.getElementById('homeCarburantiList');
+    if (!list) return;
+    list.innerHTML = tipi.map(k => {
+      const p = prezzi[k];
+      return `<div class="carb-row"><span class="carb-tipo">${labels[k]}</span><span class="carb-price">${p ? p.toFixed(3)+' €/L' : 'N.D.'}</span></div>`;
+    }).join('');
+  } catch(e) {}
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   applicaUI();
   // Pulisce cache SW obsoleta (v3) se presente
@@ -3314,6 +4349,15 @@ document.addEventListener('DOMContentLoaded', () => {
   caricaTraffco();
   caricaCarburantiFuel();
   caricaMeteoWidget();
+  populaHomeMeteo();
+  populaHomeCarburanti();
+  // Mostra home-content se siamo in stato empty
+  const hcInit = document.getElementById('homeContent');
+  const mainInit = document.getElementById('main');
+  if (hcInit && mainInit && mainInit.classList.contains('empty')) {
+    hcInit.style.display = 'block';
+    document.body.classList.add('home-visible');
+  }
   caricaSunrise();
   setInterval(caricaNotizie,          5 * 60 * 1000);
   setInterval(caricaCarburantiFuel,  15 * 60 * 1000);
@@ -3611,4 +4655,3 @@ function rmPrev(){_rmI=(_rmI-1+RM_STAZIONI.length)%RM_STAZIONI.length;_rmSave();
 (function(){if(_rmLoad())rmToggle();})();
 </script>
 </body>
-</html>
