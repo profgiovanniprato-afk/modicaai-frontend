@@ -1387,6 +1387,19 @@
   <div class="seo-divider"></div>
   <p class="seo-intro">Modica è una città viva tutto l'anno. Dalle feste patronali che richiamano decine di migliaia di persone ai concerti estivi a Marina di Modica, fino alla celebre ChocoModica in autunno. Ecco il calendario degli eventi principali del 2026.</p>
 
+  <!-- Foto editoriale eventi -->
+  <div style="margin:0 -24px 36px;position:relative;border-radius:16px;overflow:hidden;height:320px;">
+    <img src="/gallery/modica-eventi-2.jpg"
+         alt="Corso Umberto I di Modica di notte durante un evento — mercatino, lanterne e la Cattedrale di San Pietro illuminata"
+         style="width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block;"
+         loading="lazy">
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,12,20,0.65) 0%,transparent 55%);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px;">
+      <p style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin:0;">Corso Umberto I · ChocoModica</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#fff;margin:4px 0 0;line-height:1.2;">La città si trasforma durante gli eventi</p>
+    </div>
+  </div>
+
   <!-- ═══ Sezione eventi LIVE (caricamento dinamico da /eventi-aggregated) ═══ -->
   <div class="ev-live-wrap" id="evLiveWrap">
     <div class="ev-live-header">
@@ -1640,7 +1653,6 @@ async function caricaNotizie() {
     if (!data.items || !data.items.length) return;
     const track = document.getElementById('tickerTrack');
     if (!track) return;
-    track.style.animationDuration = '9999s';
     track.innerHTML = '';
     [...data.items, ...data.items].forEach(item => {
       const a = document.createElement('a');
@@ -1648,9 +1660,10 @@ async function caricaNotizie() {
       a.href = item.link || '#'; a.target = '_blank'; a.rel = 'noopener';
       track.appendChild(a);
     });
-    void track.offsetWidth;
-    const tw = track.scrollWidth / 2;
-    if (tw > 0) track.style.animationDuration = Math.max(25, Math.round(tw / 90)) + 's';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const tw = track.scrollWidth / 2;
+      if (tw > 0) track.style.animationDuration = Math.max(25, Math.round(tw / 90)) + 's';
+    }));
   } catch(e) {}
 }
 
@@ -1665,7 +1678,6 @@ async function caricaCarburantiFuel() {
     if (!track) return;
     track.style.animationDuration = '9999s';
     track.innerHTML = '';
-    const items = [];
     const tipiOrdine = ['Benzina_self','Gasolio_self','GPL_self','Metano_self','Benzina_servito','Gasolio_servito'];
     let items = '';
     data.stazioni.forEach(s => {
@@ -1675,14 +1687,14 @@ async function caricaCarburantiFuel() {
       });
     });
     if (!items) return;
-    track.style.animationDuration = '9999s';
     track.innerHTML = items + items;
-    void track.offsetWidth;
-    const totalWidth = track.scrollWidth / 2;
-    if (totalWidth > 0) {
-      const speed = Math.max(20, Math.round(totalWidth / 80));
-      track.style.animationDuration = speed + 's';
-    }
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const totalWidth = track.scrollWidth / 2;
+      if (totalWidth > 0) {
+        const speed = Math.max(20, Math.round(totalWidth / 80));
+        track.style.animationDuration = speed + 's';
+      }
+    }));
   } catch(e) {}
 }
 
