@@ -1565,6 +1565,105 @@
   .hc-feat-card:hover .hc-feat-arrow { opacity: 1; transform: translateX(0); color: #C9A84C; }
 
   /* ════════════════════════════════
+     5b. TRENO DEL BAROCCO
+     ════════════════════════════════ */
+  .hc-treno-section {
+    padding: 0; background: #fff; overflow: hidden;
+  }
+  body.dark .hc-treno-section { background: var(--bg-card); }
+  .hc-treno-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: 420px;
+  }
+  .hc-treno-img-col {
+    position: relative; overflow: hidden; min-height: 420px;
+  }
+  .hc-treno-img-col img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 40%;
+    transition: transform 0.6s ease;
+  }
+  .hc-treno-section:hover .hc-treno-img-col img { transform: scale(1.04); }
+  .hc-treno-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 60%, rgba(255,255,255,0.08) 100%);
+    pointer-events: none;
+  }
+  body.dark .hc-treno-img-overlay {
+    background: linear-gradient(90deg, transparent 60%, rgba(21,24,32,0.2) 100%);
+  }
+  .hc-treno-content-col {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 60px 56px;
+    background: #fff;
+    border-left: 1px solid #EBEBEB;
+  }
+  body.dark .hc-treno-content-col {
+    background: var(--bg-card); border-left-color: var(--border);
+  }
+  .hc-treno-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.25);
+    border-radius: 20px; padding: 4px 14px; margin-bottom: 20px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: #B8860B; width: fit-content;
+  }
+  .hc-treno-eyebrow {
+    font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: #C9A84C; margin-bottom: 12px; opacity: 0.85;
+  }
+  .hc-treno-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px; font-weight: 600; line-height: 1.1;
+    color: var(--ink); letter-spacing: -0.5px; margin-bottom: 16px;
+  }
+  .hc-treno-title em { font-style: italic; color: #B8860B; }
+  .hc-treno-desc {
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 300;
+    color: var(--ink-mid); line-height: 1.75; margin-bottom: 28px;
+  }
+  .hc-treno-facts {
+    display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px;
+  }
+  .hc-treno-fact {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--ink-mid);
+  }
+  .hc-treno-fact-icon {
+    font-size: 14px; flex-shrink: 0; margin-top: 1px;
+  }
+  .hc-treno-fact strong { color: var(--ink); font-weight: 600; }
+  .hc-treno-cta {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: linear-gradient(135deg, #1A3A5C, #2a5a8c);
+    color: #fff; text-decoration: none;
+    padding: 13px 26px; border-radius: 28px;
+    font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+    box-shadow: 0 4px 16px rgba(26,58,92,0.22);
+    transition: all 0.2s; width: fit-content;
+  }
+  .hc-treno-cta:hover {
+    background: linear-gradient(135deg, #B8860B, #D4A017);
+    box-shadow: 0 4px 20px rgba(184,134,11,0.32);
+    transform: translateY(-2px);
+  }
+  @media (max-width: 900px) {
+    .hc-treno-inner { grid-template-columns: 1fr; }
+    .hc-treno-img-col { min-height: 260px; }
+    .hc-treno-content-col { padding: 36px 24px; border-left: none; border-top: 1px solid #EBEBEB; }
+    .hc-treno-title { font-size: 30px; }
+  }
+  @media (max-width: 640px) {
+    .hc-treno-img-col { min-height: 220px; }
+    .hc-treno-content-col { padding: 28px 18px; }
+    .hc-treno-title { font-size: 26px; }
+    .hc-treno-desc { font-size: 13px; }
+  }
+
+  /* ════════════════════════════════
      6. NEWS & EVENTI
      ════════════════════════════════ */
   .hc-news-section { padding: 64px 0; background: #F8F8F8; }
@@ -1841,6 +1940,8 @@
         <a href="/modica-o-ragusa.html">Modica o Ragusa</a>
         <a href="/eventi.html">Eventi 2026</a>
         <a href="/quasimodo.html">Quasimodo</a>
+        <div class="snb-drop-sep"></div>
+        <a href="/treno-barocco.html" style="color:#D4A017;font-weight:600;">🚂 Treno del Barocco</a>
       </div>
     </div>
     <a href="/mappa.html" class="snb-link">Mappa</a>
@@ -2390,6 +2491,33 @@
         <div class="hc-feat-body"><div class="hc-feat-title" id="hcFeat6T">Mappa interattiva</div><div class="hc-feat-desc" id="hcFeat6D">50+ punti di interesse: monumenti, ristoranti, parcheggi, farmacie e molto altro.</div></div>
         <div class="hc-feat-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5b. TRENO DEL BAROCCO -->
+<div class="hc-treno-section">
+  <div class="hc-treno-inner">
+    <div class="hc-treno-img-col">
+      <img src="/gallery/modica-treno-barocco.jpeg"
+           alt="Treno del Barocco — locomotiva storica Fondazione FS attraversa il viadotto verso Modica"
+           loading="lazy">
+      <div class="hc-treno-img-overlay"></div>
+    </div>
+    <div class="hc-treno-content-col">
+      <div class="hc-treno-badge">🚂 Fondazione FS Italiane</div>
+      <div class="hc-treno-eyebrow">Esperienze da non perdere</div>
+      <h2 class="hc-treno-title">Il <em>Treno del Barocco</em></h2>
+      <p class="hc-treno-desc">Carrozze "Centoporte" degli anni '30 che attraversano il Val di Noto UNESCO. Da Siracusa a Modica e Ragusa, su una linea ferroviaria ottocentesca — con Slow Food Sicilia a bordo.</p>
+      <div class="hc-treno-facts">
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">📍</div><div><strong>Percorso:</strong> Siracusa → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Ragusa</div></div>
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🗓️</div><div><strong>Stagionalità:</strong> estate (agosto–settembre) e dicembre per il ChocoModica</div></div>
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🚲</div><div><strong>Biciclette gratis</strong> nel bagagliaio attrezzato · Visita guidata inclusa</div></div>
+      </div>
+      <a href="/treno-barocco.html" class="hc-treno-cta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Orari, biglietti e guida completa
+      </a>
     </div>
   </div>
 </div>
