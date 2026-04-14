@@ -1645,30 +1645,6 @@
     .hc-treno-desc { font-size: 13px; }
   }
 
-  /* Layout invertito: immagine a destra */
-  .hc-treno-inner--reverse { grid-template-columns: 1fr 1fr; }
-  .hc-treno-inner--reverse .hc-treno-img-col { order: 2; }
-  .hc-treno-inner--reverse .hc-treno-content-col {
-    order: 1; border-left: none; border-right: 1px solid #EBEBEB;
-  }
-  body.dark .hc-treno-inner--reverse .hc-treno-content-col { border-right-color: var(--border); }
-  /* Overlay invertito per sezioni reverse */
-  .hc-treno-inner--reverse .hc-treno-img-overlay {
-    background: linear-gradient(270deg, transparent 60%, rgba(255,255,255,0.08) 100%);
-  }
-  body.dark .hc-treno-inner--reverse .hc-treno-img-overlay {
-    background: linear-gradient(270deg, transparent 60%, rgba(21,24,32,0.2) 100%);
-  }
-  /* Sfondo alternato per separazione visiva */
-  .hc-treno-section--alt { background: #FAFAF8; }
-  body.dark .hc-treno-section--alt { background: var(--bg); }
-  body.dark .hc-treno-section--alt .hc-treno-content-col { background: var(--bg); }
-  .hc-treno-section--alt .hc-treno-content-col { background: #FAFAF8; }
-  @media (max-width: 900px) {
-    .hc-treno-inner--reverse .hc-treno-img-col { order: 0; }
-    .hc-treno-inner--reverse .hc-treno-content-col { order: 0; border-right: none; border-top: 1px solid #EBEBEB; }
-  }
-
   /* ════════════════════════════════
      6. NEWS & EVENTI
      ════════════════════════════════ */
@@ -1948,9 +1924,6 @@
         <a href="/quasimodo.html">Quasimodo</a>
         <div class="snb-drop-sep"></div>
         <a href="/treno-barocco.html" style="color:#D4A017;font-weight:600;">🚂 Treno del Barocco</a>
-        <a href="/dove-dormire-modica.html">Dove dormire</a>
-        <a href="/meteo-modica-quando-andare.html">Meteo e quando andare</a>
-        <a href="/modica-con-bambini.html">Modica con bambini</a>
       </div>
     </div>
     <a href="/mappa.html" class="snb-link">Mappa</a>
@@ -2521,87 +2494,6 @@
   </div>
 </div>
 
-<!-- 5c. DOVE DORMIRE -->
-<div class="hc-treno-section hc-treno-section--alt">
-  <div class="hc-treno-inner hc-treno-inner--reverse">
-    <div class="hc-treno-img-col">
-      <img src="/gallery/modica-dove-dormire.jpg"
-           alt="Centro storico barocco di Modica visto dall'alto — B&B e alloggi nel cuore UNESCO"
-           loading="lazy">
-      <div class="hc-treno-img-overlay"></div>
-    </div>
-    <div class="hc-treno-content-col">
-      <div class="hc-treno-badge">🏡 Alloggi &amp; Quartieri</div>
-      <div class="hc-treno-eyebrow" id="hcDormireEyebrow">Dove soggiornare</div>
-      <h2 class="hc-treno-title" id="hcDormireTitle">Dove dormire a <em>Modica</em></h2>
-      <p class="hc-treno-desc" id="hcDormireDesc">Modica Alta o Bassa? B&B nei palazzi barocchi, agriturismi tra i carrubi o masserie con piscina. Guida completa ai quartieri e alle tipologie di alloggio per ogni budget.</p>
-      <div class="hc-treno-facts">
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🏛️</div><div id="hcDormireFact1"><strong>Centro storico:</strong> B&B nei palazzi barocchi UNESCO, a pochi passi da San Giorgio</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🌿</div><div id="hcDormireFact2"><strong>Campagna:</strong> masserie e agriturismi tra ulivi e carrubi, a 5-15 min dal centro</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">💶</div><div id="hcDormireFact3"><strong>Prezzi medi:</strong> 60-120€/notte B&B centro · da 50€ agriturismo</div></div>
-      </div>
-      <a href="/dove-dormire-modica.html" class="hc-treno-cta">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        <span id="hcDormireCtaLabel">Guida completa agli alloggi</span>
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- 5d. METEO E QUANDO ANDARE -->
-<div class="hc-treno-section">
-  <div class="hc-treno-inner">
-    <div class="hc-treno-img-col">
-      <img src="/gallery/modica-meteo-quando-andare.jpg"
-           alt="Modica in primavera con cielo limpido e temperatura ideale per visitare la Sicilia"
-           loading="lazy">
-      <div class="hc-treno-img-overlay"></div>
-    </div>
-    <div class="hc-treno-content-col">
-      <div class="hc-treno-badge">🌤️ Clima &amp; Stagioni</div>
-      <div class="hc-treno-eyebrow" id="hcMeteoEyebrow">Pianifica il viaggio</div>
-      <h2 class="hc-treno-title" id="hcMeteoTitle">Quando andare a <em>Modica</em></h2>
-      <p class="hc-treno-desc" id="hcMeteoDesc">300 giorni di sole l'anno. Ma il momento giusto cambia tutto: folla, prezzi, temperatura. Guida mese per mese al clima di Modica per scegliere il periodo perfetto.</p>
-      <div class="hc-treno-facts">
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🌸</div><div id="hcMeteoFact1"><strong>Aprile–giugno:</strong> periodo d'oro — 18-26°C, folla bassa, giornate lunghe</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">☀️</div><div id="hcMeteoFact2"><strong>Luglio–agosto:</strong> caldo (30-35°C), vivace, ideale per mare + città</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🍫</div><div id="hcMeteoFact3"><strong>Dicembre:</strong> fresco e magico — il ChocoModica trasforma la città</div></div>
-      </div>
-      <a href="/meteo-modica-quando-andare.html" class="hc-treno-cta">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        <span id="hcMeteoCtaLabel">Guida al clima mese per mese</span>
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- 5e. MODICA CON BAMBINI -->
-<div class="hc-treno-section hc-treno-section--alt">
-  <div class="hc-treno-inner hc-treno-inner--reverse">
-    <div class="hc-treno-img-col">
-      <img src="/gallery/modica-con-bambini.jpg"
-           alt="Bambini al laboratorio del cioccolato di Modica IGP — esperienza family-friendly in Sicilia"
-           loading="lazy">
-      <div class="hc-treno-img-overlay"></div>
-    </div>
-    <div class="hc-treno-content-col">
-      <div class="hc-treno-badge">👨‍👩‍👧 Famiglie</div>
-      <div class="hc-treno-eyebrow" id="hcBambiniEyebrow">Viaggi in famiglia</div>
-      <h2 class="hc-treno-title" id="hcBambiniTitle"><em>Modica</em> con bambini</h2>
-      <p class="hc-treno-desc" id="hcBambiniDesc">Laboratori del cioccolato IGP, spiagge a 20 minuti, scalinate barocche da esplorare e una cucina siciliana che i bambini adorano. Guida pratica per famiglie.</p>
-      <div class="hc-treno-facts">
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🍫</div><div id="hcBambiiniFact1"><strong>Laboratori cioccolato:</strong> attività didattiche per bambini nelle cioccolaterie storiche</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🏖️</div><div id="hcBambiiniFact2"><strong>Spiagge:</strong> Marina di Modica e Sampieri a 20-25 min, acque cristalline</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🎒</div><div id="hcBambiiniFact3"><strong>Consiglio:</strong> marsupio al posto del passeggino — il centro ha molte scalinate</div></div>
-      </div>
-      <a href="/modica-con-bambini.html" class="hc-treno-cta">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        <span id="hcBambiniCtaLabel">Guida completa per famiglie</span>
-      </a>
-    </div>
-  </div>
-</div>
-
 <!-- 6. NEWS & EVENTI -->
 <div class="hc-news-section">
   <div class="hc-inner">
@@ -2685,7 +2577,6 @@
       <a href="/storia.html" class="hc-footer-link">Storia</a>
       <a href="/quasimodo.html" class="hc-footer-link">Salvatore Quasimodo</a>
       <a href="/spiagge.html" class="hc-footer-link">Spiagge vicine</a>
-      <a href="/treno-barocco.html" class="hc-footer-link">Treno del Barocco</a>
     </div>
     <div>
       <div class="hc-footer-col-title">Mangiare e bere</div>
@@ -2699,9 +2590,6 @@
       <a href="/parcheggi.html" class="hc-footer-link">Parcheggi</a>
       <a href="/come-arrivare.html" class="hc-footer-link">Come arrivare</a>
       <a href="/mappa.html" class="hc-footer-link">Mappa interattiva</a>
-      <a href="/dove-dormire-modica.html" class="hc-footer-link">Dove dormire</a>
-      <a href="/meteo-modica-quando-andare.html" class="hc-footer-link">Meteo e quando andare</a>
-      <a href="/modica-con-bambini.html" class="hc-footer-link">Modica con bambini</a>
       <a href="/faq.html" class="hc-footer-link">FAQ</a>
       <a href="/guida-pratica.html" class="hc-footer-link">Guida pratica</a>
     </div>
@@ -2806,28 +2694,8 @@ const UI_STRINGS = {
     hcTrenoFact2: '<strong>Stagionalità:</strong> estate (agosto–settembre) e dicembre per il ChocoModica',
     hcTrenoFact3: '<strong>Biciclette gratis</strong> nel bagagliaio attrezzato · Visita guidata inclusa',
     hcTrenoCtaLabel: 'Orari, biglietti e guida completa',
-    // Dove dormire
-    hcDormireEyebrow: 'Dove soggiornare', hcDormireTitle: 'Dove dormire a <em>Modica</em>',
-    hcDormireDesc: 'Modica Alta o Bassa? B&B nei palazzi barocchi, agriturismi tra i carrubi o masserie con piscina. Guida completa ai quartieri e alle tipologie di alloggio per ogni budget.',
-    hcDormireFact1: '<strong>Centro storico:</strong> B&B nei palazzi barocchi UNESCO, a pochi passi da San Giorgio',
-    hcDormireFact2: '<strong>Campagna:</strong> masserie e agriturismi tra ulivi e carrubi, a 5-15 min dal centro',
-    hcDormireFact3: '<strong>Prezzi medi:</strong> 60-120€/notte B&B centro · da 50€ agriturismo',
-    hcDormireCtaLabel: 'Guida completa agli alloggi',
-    // Meteo
-    hcMeteoEyebrow: 'Pianifica il viaggio', hcMeteoTitle: 'Quando andare a <em>Modica</em>',
-    hcMeteoDesc: '300 giorni di sole l\'anno. Ma il momento giusto cambia tutto: folla, prezzi, temperatura. Guida mese per mese al clima di Modica per scegliere il periodo perfetto.',
-    hcMeteoFact1: '<strong>Aprile–giugno:</strong> periodo d\'oro — 18-26°C, folla bassa, giornate lunghe',
-    hcMeteoFact2: '<strong>Luglio–agosto:</strong> caldo (30-35°C), vivace, ideale per mare + città',
-    hcMeteoFact3: '<strong>Dicembre:</strong> fresco e magico — il ChocoModica trasforma la città',
-    hcMeteoCtaLabel: 'Guida al clima mese per mese',
-    // Bambini
-    hcBambiniEyebrow: 'Viaggi in famiglia', hcBambiniTitle: '<em>Modica</em> con bambini',
-    hcBambiniDesc: 'Laboratori del cioccolato IGP, spiagge a 20 minuti, scalinate barocche da esplorare e una cucina siciliana che i bambini adorano. Guida pratica per famiglie.',
-    hcBambiiniFact1: '<strong>Laboratori cioccolato:</strong> attività didattiche per bambini nelle cioccolaterie storiche',
-    hcBambiiniFact2: '<strong>Spiagge:</strong> Marina di Modica e Sampieri a 20-25 min, acque cristalline',
-    hcBambiiniFact3: '<strong>Consiglio:</strong> marsupio al posto del passeggino — il centro ha molte scalinate',
-    hcBambiniCtaLabel: 'Guida completa per famiglie',
   },
+  en: {
     placeholder: 'Ask me anything...',
     heroSub: 'Your local assistant for Modica',
     chip1: '⛽ Cheapest fuel',            chip1q: 'Where is the cheapest fuel today?',
@@ -2881,25 +2749,8 @@ const UI_STRINGS = {
     hcTrenoFact2: '<strong>Season:</strong> summer (August–September) and December for ChocoModica',
     hcTrenoFact3: '<strong>Free bicycles</strong> in the equipped luggage car · Guided tour included',
     hcTrenoCtaLabel: 'Timetables, tickets and full guide',
-    hcDormireEyebrow: 'Where to stay', hcDormireTitle: 'Where to sleep in <em>Modica</em>',
-    hcDormireDesc: 'Modica Alta or Bassa? B&Bs in baroque palaces, farmhouses among carob trees or masserie with pools. Complete guide to neighbourhoods and accommodation for every budget.',
-    hcDormireFact1: '<strong>Historic centre:</strong> B&Bs in UNESCO baroque palaces, steps from San Giorgio',
-    hcDormireFact2: '<strong>Countryside:</strong> farmhouses among olive and carob trees, 5-15 min from town',
-    hcDormireFact3: '<strong>Average prices:</strong> 60-120€/night B&B centre · from 50€ farmhouse',
-    hcDormireCtaLabel: 'Full accommodation guide',
-    hcMeteoEyebrow: 'Plan your trip', hcMeteoTitle: 'When to visit <em>Modica</em>',
-    hcMeteoDesc: '300 sunny days a year. But the right timing changes everything: crowds, prices, temperature. Month-by-month guide to Modica\'s climate to choose your perfect period.',
-    hcMeteoFact1: '<strong>April–June:</strong> golden season — 18-26°C, low crowds, long days',
-    hcMeteoFact2: '<strong>July–August:</strong> hot (30-35°C), lively, ideal for sea + city',
-    hcMeteoFact3: '<strong>December:</strong> cool and magical — ChocoModica transforms the city',
-    hcMeteoCtaLabel: 'Month-by-month climate guide',
-    hcBambiniEyebrow: 'Family travel', hcBambiniTitle: '<em>Modica</em> with kids',
-    hcBambiniDesc: 'Chocolate IGP workshops, beaches 20 minutes away, baroque staircases to explore and Sicilian cuisine that kids love. Practical guide for families.',
-    hcBambiiniFact1: '<strong>Chocolate workshops:</strong> hands-on activities for kids in historic chocolatiers',
-    hcBambiiniFact2: '<strong>Beaches:</strong> Marina di Modica and Sampieri at 20-25 min, crystal clear water',
-    hcBambiiniFact3: '<strong>Tip:</strong> baby carrier instead of pram — the centre has many staircases',
-    hcBambiniCtaLabel: 'Full family guide',
   },
+  de: {
     placeholder: 'Frag mich etwas...',
     heroSub: 'Dein lokaler Assistent für Modica',
     chip1: '⛽ Günstigster Kraftstoff',   chip1q: 'Wo gibt es heute den günstigsten Kraftstoff?',
@@ -2953,24 +2804,6 @@ const UI_STRINGS = {
     hcTrenoFact2: '<strong>Saison:</strong> Sommer (August–September) und Dezember für ChocoModica',
     hcTrenoFact3: '<strong>Fahrräder kostenlos</strong> im ausgestatteten Gepäckwagen · Führung inklusive',
     hcTrenoCtaLabel: 'Fahrpläne, Tickets und vollständiger Reiseführer',
-    hcDormireEyebrow: 'Wo übernachten', hcDormireTitle: 'Wo schlafen in <em>Modica</em>',
-    hcDormireDesc: 'Modica Alta oder Bassa? B&Bs in Barockpalästen, Bauernhöfe zwischen Johannisbrotbäumen oder Masserien mit Pool. Vollständiger Leitfaden zu Vierteln und Unterkünften für jedes Budget.',
-    hcDormireFact1: '<strong>Altstadt:</strong> B&Bs in UNESCO-Barockpalästen, wenige Schritte von San Giorgio',
-    hcDormireFact2: '<strong>Landschaft:</strong> Bauernhöfe zwischen Oliven und Johannisbrot, 5-15 Min vom Zentrum',
-    hcDormireFact3: '<strong>Durchschnittliche Preise:</strong> 60-120€/Nacht B&B · ab 50€ Agriturismo',
-    hcDormireCtaLabel: 'Vollständiger Unterkunftsführer',
-    hcMeteoEyebrow: 'Reise planen', hcMeteoTitle: 'Wann nach <em>Modica</em> reisen',
-    hcMeteoDesc: '300 Sonnentage im Jahr. Aber der richtige Zeitpunkt ändert alles: Menschenmassen, Preise, Temperatur. Monatlicher Klimaführer für Modica.',
-    hcMeteoFact1: '<strong>April–Juni:</strong> goldene Saison — 18-26°C, wenig Touristen, lange Tage',
-    hcMeteoFact2: '<strong>Juli–August:</strong> heiß (30-35°C), lebhaft, ideal für Meer + Stadt',
-    hcMeteoFact3: '<strong>Dezember:</strong> kühl und magisch — ChocoModica verwandelt die Stadt',
-    hcMeteoCtaLabel: 'Monatlicher Klimaführer',
-    hcBambiniEyebrow: 'Familienreisen', hcBambiniTitle: '<em>Modica</em> mit Kindern',
-    hcBambiniDesc: 'IGP-Schokoladenworkshops, Strände 20 Minuten entfernt, barocke Treppen zu erkunden und sizilianische Küche, die Kinder lieben. Praktischer Leitfaden für Familien.',
-    hcBambiiniFact1: '<strong>Schokoladen-Workshops:</strong> Aktivitäten für Kinder in historischen Chocolaterien',
-    hcBambiiniFact2: '<strong>Strände:</strong> Marina di Modica und Sampieri in 20-25 Min, kristallklares Wasser',
-    hcBambiiniFact3: '<strong>Tipp:</strong> Tragetuch statt Kinderwagen — das Zentrum hat viele Treppen',
-    hcBambiniCtaLabel: 'Vollständiger Familienführer',
   },
   fr: {
     placeholder: 'Pose-moi une question...',
@@ -3026,24 +2859,6 @@ const UI_STRINGS = {
     hcTrenoFact2: '<strong>Saisonnalité :</strong> été (août–septembre) et décembre pour ChocoModica',
     hcTrenoFact3: '<strong>Vélos gratuits</strong> dans le fourgon équipé · Visite guidée incluse',
     hcTrenoCtaLabel: 'Horaires, billets et guide complet',
-    hcDormireEyebrow: 'Où séjourner', hcDormireTitle: 'Où dormir à <em>Modica</em>',
-    hcDormireDesc: 'Modica Alta ou Bassa ? B&B dans des palais baroques, agritourismes parmi les caroubiers ou masserias avec piscine. Guide complet des quartiers et hébergements pour tous les budgets.',
-    hcDormireFact1: '<strong>Centre historique :</strong> B&B dans des palais baroques UNESCO, à deux pas de San Giorgio',
-    hcDormireFact2: '<strong>Campagne :</strong> fermes parmi oliviers et caroubiers, à 5-15 min du centre',
-    hcDormireFact3: '<strong>Prix moyens :</strong> 60-120€/nuit B&B centre · à partir de 50€ agriturismo',
-    hcDormireCtaLabel: 'Guide complet des hébergements',
-    hcMeteoEyebrow: 'Planifier le voyage', hcMeteoTitle: 'Quand aller à <em>Modica</em>',
-    hcMeteoDesc: '300 jours de soleil par an. Mais le bon moment change tout : foule, prix, température. Guide mensuel du climat de Modica pour choisir la période parfaite.',
-    hcMeteoFact1: '<strong>Avril–juin :</strong> saison dorée — 18-26°C, peu de monde, longues journées',
-    hcMeteoFact2: '<strong>Juillet–août :</strong> chaud (30-35°C), animé, idéal pour mer + ville',
-    hcMeteoFact3: '<strong>Décembre :</strong> frais et magique — ChocoModica transforme la ville',
-    hcMeteoCtaLabel: 'Guide du climat mois par mois',
-    hcBambiniEyebrow: 'Voyages en famille', hcBambiniTitle: '<em>Modica</em> avec enfants',
-    hcBambiniDesc: 'Ateliers chocolat IGP, plages à 20 minutes, escaliers baroques à explorer et cuisine sicilienne que les enfants adorent. Guide pratique pour les familles.',
-    hcBambiiniFact1: '<strong>Ateliers chocolat :</strong> activités pédagogiques pour enfants dans les chocolateries historiques',
-    hcBambiiniFact2: '<strong>Plages :</strong> Marina di Modica et Sampieri à 20-25 min, eaux cristallines',
-    hcBambiiniFact3: '<strong>Conseil :</strong> porte-bébé plutôt que poussette — le centre a beaucoup d\'escaliers',
-    hcBambiniCtaLabel: 'Guide complet pour familles',
   },
   es: {
     placeholder: 'Pregúntame algo...',
@@ -3099,24 +2914,6 @@ const UI_STRINGS = {
     hcTrenoFact2: '<strong>Temporada:</strong> verano (agosto–septiembre) y diciembre para ChocoModica',
     hcTrenoFact3: '<strong>Bicicletas gratis</strong> en el furgón equipado · Visita guiada incluida',
     hcTrenoCtaLabel: 'Horarios, billetes y guía completa',
-    hcDormireEyebrow: 'Dónde alojarse', hcDormireTitle: 'Dónde dormir en <em>Modica</em>',
-    hcDormireDesc: '¿Modica Alta o Bassa? B&B en palacios barrocos, agriturismos entre algarrobos o masserías con piscina. Guía completa de barrios y alojamientos para cada presupuesto.',
-    hcDormireFact1: '<strong>Centro histórico:</strong> B&B en palacios barrocos UNESCO, a pocos pasos de San Giorgio',
-    hcDormireFact2: '<strong>Campo:</strong> masserías y agriturismos entre olivos y algarrobos, a 5-15 min del centro',
-    hcDormireFact3: '<strong>Precios medios:</strong> 60-120€/noche B&B centro · desde 50€ agriturismo',
-    hcDormireCtaLabel: 'Guía completa de alojamientos',
-    hcMeteoEyebrow: 'Planifica el viaje', hcMeteoTitle: 'Cuándo ir a <em>Modica</em>',
-    hcMeteoDesc: '300 días de sol al año. Pero el momento adecuado lo cambia todo: multitudes, precios, temperatura. Guía mensual del clima de Modica para elegir el período perfecto.',
-    hcMeteoFact1: '<strong>Abril–junio:</strong> temporada dorada — 18-26°C, poca gente, días largos',
-    hcMeteoFact2: '<strong>Julio–agosto:</strong> caluroso (30-35°C), animado, ideal para mar + ciudad',
-    hcMeteoFact3: '<strong>Diciembre:</strong> fresco y mágico — ChocoModica transforma la ciudad',
-    hcMeteoCtaLabel: 'Guía del clima mes a mes',
-    hcBambiniEyebrow: 'Viajes en familia', hcBambiniTitle: '<em>Modica</em> con niños',
-    hcBambiniDesc: 'Talleres de chocolate IGP, playas a 20 minutos, escalinatas barrocas por explorar y cocina siciliana que los niños adoran. Guía práctica para familias.',
-    hcBambiiniFact1: '<strong>Talleres de chocolate:</strong> actividades didácticas para niños en chocolaterías históricas',
-    hcBambiiniFact2: '<strong>Playas:</strong> Marina di Modica y Sampieri a 20-25 min, aguas cristalinas',
-    hcBambiiniFact3: '<strong>Consejo:</strong> mochila portabebés en lugar de cochecito — el centro tiene muchas escaleras',
-    hcBambiniCtaLabel: 'Guía completa para familias',
   },
 };
 
@@ -3270,36 +3067,6 @@ function applicaUI() {
   const tf2 = document.getElementById('hcTrenoFact2'); if (tf2) tf2.innerHTML = t('hcTrenoFact2');
   const tf3 = document.getElementById('hcTrenoFact3'); if (tf3) tf3.innerHTML = t('hcTrenoFact3');
   _s('hcTrenoCtaLabel', 'hcTrenoCtaLabel');
-
-  // ── HOME CONTENT — Dove dormire ────────────────────────────────
-  _s('hcDormireEyebrow', 'hcDormireEyebrow');
-  const dormireTitle = document.getElementById('hcDormireTitle');
-  if (dormireTitle) dormireTitle.innerHTML = t('hcDormireTitle');
-  _s('hcDormireDesc', 'hcDormireDesc');
-  const df1 = document.getElementById('hcDormireFact1'); if (df1) df1.innerHTML = t('hcDormireFact1');
-  const df2 = document.getElementById('hcDormireFact2'); if (df2) df2.innerHTML = t('hcDormireFact2');
-  const df3 = document.getElementById('hcDormireFact3'); if (df3) df3.innerHTML = t('hcDormireFact3');
-  _s('hcDormireCtaLabel', 'hcDormireCtaLabel');
-
-  // ── HOME CONTENT — Meteo e quando andare ──────────────────────
-  _s('hcMeteoEyebrow', 'hcMeteoEyebrow');
-  const meteoTitle = document.getElementById('hcMeteoTitle');
-  if (meteoTitle) meteoTitle.innerHTML = t('hcMeteoTitle');
-  _s('hcMeteoDesc', 'hcMeteoDesc');
-  const mf1 = document.getElementById('hcMeteoFact1'); if (mf1) mf1.innerHTML = t('hcMeteoFact1');
-  const mf2 = document.getElementById('hcMeteoFact2'); if (mf2) mf2.innerHTML = t('hcMeteoFact2');
-  const mf3 = document.getElementById('hcMeteoFact3'); if (mf3) mf3.innerHTML = t('hcMeteoFact3');
-  _s('hcMeteoCtaLabel', 'hcMeteoCtaLabel');
-
-  // ── HOME CONTENT — Modica con bambini ─────────────────────────
-  _s('hcBambiniEyebrow', 'hcBambiniEyebrow');
-  const bambiniTitle = document.getElementById('hcBambiniTitle');
-  if (bambiniTitle) bambiniTitle.innerHTML = t('hcBambiniTitle');
-  _s('hcBambiniDesc', 'hcBambiniDesc');
-  const bf1 = document.getElementById('hcBambiiniFact1'); if (bf1) bf1.innerHTML = t('hcBambiiniFact1');
-  const bf2 = document.getElementById('hcBambiiniFact2'); if (bf2) bf2.innerHTML = t('hcBambiiniFact2');
-  const bf3 = document.getElementById('hcBambiiniFact3'); if (bf3) bf3.innerHTML = t('hcBambiiniFact3');
-  _s('hcBambiniCtaLabel', 'hcBambiniCtaLabel');
 
   // ── HOME CONTENT — News section ────────────────────────────────
   _s('hcNewsEyebrow', 'hcNewsEyebrow');
