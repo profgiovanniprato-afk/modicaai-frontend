@@ -762,7 +762,6 @@
     box-shadow: var(--shadow-sm);
     pointer-events: none;
   }
-  #clockWidget { pointer-events: auto; cursor: default; }
   .bar-widget-icon { font-size: 16px; line-height: 1; }
   .bar-widget-main { font-size: 12px; font-weight: 600; color: var(--ink); }
   .bar-widget-sub  { font-size: 10px; color: var(--ink-soft); margin-left: 2px; }
@@ -991,7 +990,6 @@
     .bar-widget-icon   { font-size: 12px; }
     .bar-widget-main   { font-size: 10px; }
     .bar-widget-sub    { display: none; }
-    #sunWidget         { display: none !important; } /* troppo stretto su mobile — nascosto */
 
     /* Modal traffico */
     .traffic-modal     { border-radius: 16px 16px 0 0; width: 100%; max-width: 100%; margin: 0; align-self: flex-end; max-height: 80vh; }
@@ -1567,20 +1565,12 @@
   /* ════════════════════════════════
      5b. TRENO DEL BAROCCO
      ════════════════════════════════ */
-  .hc-treno-section {
-    padding: 0; background: #fff; overflow: hidden;
-  }
+  .hc-treno-section { padding: 0; background: #fff; overflow: hidden; }
   body.dark .hc-treno-section { background: var(--bg-card); }
-  .hc-treno-inner {
-    display: grid; grid-template-columns: 1fr 1fr;
-    min-height: 420px;
-  }
-  .hc-treno-img-col {
-    position: relative; overflow: hidden; min-height: 420px;
-  }
+  .hc-treno-inner { display: grid; grid-template-columns: 1fr 1fr; min-height: 420px; }
+  .hc-treno-img-col { position: relative; overflow: hidden; min-height: 420px; }
   .hc-treno-img-col img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
+    position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: center 40%;
     transition: transform 0.6s ease;
   }
@@ -1595,20 +1585,16 @@
   }
   .hc-treno-content-col {
     display: flex; flex-direction: column; justify-content: center;
-    padding: 60px 56px;
-    background: #fff;
+    padding: 60px 56px; background: #fff;
     border-left: 1px solid #EBEBEB;
   }
-  body.dark .hc-treno-content-col {
-    background: var(--bg-card); border-left-color: var(--border);
-  }
+  body.dark .hc-treno-content-col { background: var(--bg-card); border-left-color: var(--border); }
   .hc-treno-badge {
     display: inline-flex; align-items: center; gap: 7px;
     background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.25);
     border-radius: 20px; padding: 4px 14px; margin-bottom: 20px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-    color: #B8860B; width: fit-content;
+    font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: #B8860B; width: fit-content;
   }
   .hc-treno-eyebrow {
     font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700;
@@ -1625,16 +1611,12 @@
     font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 300;
     color: var(--ink-mid); line-height: 1.75; margin-bottom: 28px;
   }
-  .hc-treno-facts {
-    display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px;
-  }
+  .hc-treno-facts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
   .hc-treno-fact {
     display: flex; align-items: flex-start; gap: 10px;
     font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--ink-mid);
   }
-  .hc-treno-fact-icon {
-    font-size: 14px; flex-shrink: 0; margin-top: 1px;
-  }
+  .hc-treno-fact-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
   .hc-treno-fact strong { color: var(--ink); font-weight: 600; }
   .hc-treno-cta {
     display: inline-flex; align-items: center; gap: 9px;
@@ -2110,16 +2092,6 @@
     <div class="bar-widget-main" id="meteoTemp">--°</div>
     <div class="bar-widget-sub" id="meteoDesc">Modica</div>
   </div>
-  <div class="bar-widget" id="clockWidget" onclick="logoClick()" style="cursor:default;">
-    <div class="bar-widget-icon">🕐</div>
-    <div class="bar-widget-main" id="clockTime">--:--</div>
-    <div class="bar-widget-sub" id="clockDate">...</div>
-  </div>
-  <div class="bar-widget" id="sunWidget" style="display:none;">
-    <div class="bar-widget-icon">🌅</div>
-    <div class="bar-widget-main" id="sunMain">--:-- · --:--</div>
-    <div class="bar-widget-sub" id="sunSub">Alba · Tramonto</div>
-  </div>
 </div>
 
 <div class="input-bar">
@@ -2506,17 +2478,17 @@
     </div>
     <div class="hc-treno-content-col">
       <div class="hc-treno-badge">🚂 Fondazione FS Italiane</div>
-      <div class="hc-treno-eyebrow">Esperienze da non perdere</div>
-      <h2 class="hc-treno-title">Il <em>Treno del Barocco</em></h2>
-      <p class="hc-treno-desc">Carrozze "Centoporte" degli anni '30 che attraversano il Val di Noto UNESCO. Da Siracusa a Modica e Ragusa, su una linea ferroviaria ottocentesca — con Slow Food Sicilia a bordo.</p>
+      <div class="hc-treno-eyebrow" id="hcTrenoEyebrow">Esperienze da non perdere</div>
+      <h2 class="hc-treno-title" id="hcTrenoTitle">Il <em>Treno del Barocco</em></h2>
+      <p class="hc-treno-desc" id="hcTrenoDesc">Carrozze "Centoporte" degli anni '30 che attraversano il Val di Noto UNESCO. Da Siracusa a Modica e Ragusa, su una linea ferroviaria ottocentesca — con Slow Food Sicilia a bordo.</p>
       <div class="hc-treno-facts">
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">📍</div><div><strong>Percorso:</strong> Siracusa → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Ragusa</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🗓️</div><div><strong>Stagionalità:</strong> estate (agosto–settembre) e dicembre per il ChocoModica</div></div>
-        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🚲</div><div><strong>Biciclette gratis</strong> nel bagagliaio attrezzato · Visita guidata inclusa</div></div>
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">📍</div><div id="hcTrenoFact1"><strong>Percorso:</strong> Siracusa → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Ragusa</div></div>
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🗓️</div><div id="hcTrenoFact2"><strong>Stagionalità:</strong> estate (agosto–settembre) e dicembre per il ChocoModica</div></div>
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🚲</div><div id="hcTrenoFact3"><strong>Biciclette gratis</strong> nel bagagliaio attrezzato · Visita guidata inclusa</div></div>
       </div>
       <a href="/treno-barocco.html" class="hc-treno-cta">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        Orari, biglietti e guida completa
+        <span id="hcTrenoCtaLabel">Orari, biglietti e guida completa</span>
       </a>
     </div>
   </div>
@@ -2715,6 +2687,13 @@ const UI_STRINGS = {
     hcCtaSub: 'Chiedi direttamente all\'AI di Modica — risponde su ristoranti, farmacie, eventi, meteo, traffico e molto altro.',
     hcCtaPlaceholder: 'Es. Dove mangiare il pesce a Modica?',
     hcCtaTag1:'Benzina', hcCtaTag2:'Farmacia', hcCtaTag3:'Meteo', hcCtaTag4:'Eventi', hcCtaTag5:'Traffico', hcCtaTag6:'Mappa',
+    hcTrenoEyebrow: 'Esperienze da non perdere',
+    hcTrenoTitle: 'Il <em>Treno del Barocco</em>',
+    hcTrenoDesc: 'Carrozze "Centoporte" degli anni \'30 che attraversano il Val di Noto UNESCO. Da Siracusa a Modica e Ragusa, su una linea ferroviaria ottocentesca — con Slow Food Sicilia a bordo.',
+    hcTrenoFact1: '<strong>Percorso:</strong> Siracusa → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Ragusa',
+    hcTrenoFact2: '<strong>Stagionalità:</strong> estate (agosto–settembre) e dicembre per il ChocoModica',
+    hcTrenoFact3: '<strong>Biciclette gratis</strong> nel bagagliaio attrezzato · Visita guidata inclusa',
+    hcTrenoCtaLabel: 'Orari, biglietti e guida completa',
   },
   en: {
     placeholder: 'Ask me anything...',
@@ -2763,6 +2742,13 @@ const UI_STRINGS = {
     hcCtaSub: 'Ask Modica\'s AI directly — it answers about restaurants, pharmacies, events, weather, traffic and much more.',
     hcCtaPlaceholder: 'E.g. Where to eat fish in Modica?',
     hcCtaTag1:'Fuel', hcCtaTag2:'Pharmacy', hcCtaTag3:'Weather', hcCtaTag4:'Events', hcCtaTag5:'Traffic', hcCtaTag6:'Map',
+    hcTrenoEyebrow: 'Experiences not to miss',
+    hcTrenoTitle: 'The <em>Baroque Train</em>',
+    hcTrenoDesc: '"Centoporte" carriages from the 1930s crossing the UNESCO Val di Noto. From Syracuse to Modica and Ragusa, on a 19th-century railway — with Slow Food Sicily on board.',
+    hcTrenoFact1: '<strong>Route:</strong> Syracuse → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Ragusa',
+    hcTrenoFact2: '<strong>Season:</strong> summer (August–September) and December for ChocoModica',
+    hcTrenoFact3: '<strong>Free bicycles</strong> in the equipped luggage car · Guided tour included',
+    hcTrenoCtaLabel: 'Timetables, tickets and full guide',
   },
   de: {
     placeholder: 'Frag mich etwas...',
@@ -2811,6 +2797,13 @@ const UI_STRINGS = {
     hcCtaSub: 'Frag die KI von Modica direkt — sie antwortet zu Restaurants, Apotheken, Events, Wetter, Verkehr und mehr.',
     hcCtaPlaceholder: 'Z.B. Wo kann man in Modica Fisch essen?',
     hcCtaTag1:'Kraftstoff', hcCtaTag2:'Apotheke', hcCtaTag3:'Wetter', hcCtaTag4:'Events', hcCtaTag5:'Verkehr', hcCtaTag6:'Karte',
+    hcTrenoEyebrow: 'Erlebnisse, die man nicht verpassen sollte',
+    hcTrenoTitle: 'Der <em>Barockzug</em>',
+    hcTrenoDesc: '"Centoporte"-Waggons aus den 1930er Jahren durchqueren das UNESCO-Welterbe Val di Noto. Von Syrakus nach Modica und Ragusa auf einer Eisenbahnlinie aus dem 19. Jahrhundert — mit Slow Food Sizilien an Bord.',
+    hcTrenoFact1: '<strong>Strecke:</strong> Syrakus → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Ragusa',
+    hcTrenoFact2: '<strong>Saison:</strong> Sommer (August–September) und Dezember für ChocoModica',
+    hcTrenoFact3: '<strong>Fahrräder kostenlos</strong> im ausgestatteten Gepäckwagen · Führung inklusive',
+    hcTrenoCtaLabel: 'Fahrpläne, Tickets und vollständiger Reiseführer',
   },
   fr: {
     placeholder: 'Pose-moi une question...',
@@ -2859,6 +2852,13 @@ const UI_STRINGS = {
     hcCtaSub: 'Demande directement à l\'IA de Modica — elle répond sur les restaurants, pharmacies, événements, météo et plus.',
     hcCtaPlaceholder: 'Ex. Où manger du poisson à Modica ?',
     hcCtaTag1:'Carburant', hcCtaTag2:'Pharmacie', hcCtaTag3:'Météo', hcCtaTag4:'Événements', hcCtaTag5:'Trafic', hcCtaTag6:'Carte',
+    hcTrenoEyebrow: 'Des expériences à ne pas manquer',
+    hcTrenoTitle: 'Le <em>Train du Baroque</em>',
+    hcTrenoDesc: 'Des wagons "Centoporte" des années 30 qui traversent le Val di Noto classé à l\'UNESCO. De Syracuse à Modica et Raguse, sur une ligne ferroviaire du XIXe siècle — avec Slow Food Sicile à bord.',
+    hcTrenoFact1: '<strong>Itinéraire :</strong> Syracuse → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Raguse',
+    hcTrenoFact2: '<strong>Saisonnalité :</strong> été (août–septembre) et décembre pour ChocoModica',
+    hcTrenoFact3: '<strong>Vélos gratuits</strong> dans le fourgon équipé · Visite guidée incluse',
+    hcTrenoCtaLabel: 'Horaires, billets et guide complet',
   },
   es: {
     placeholder: 'Pregúntame algo...',
@@ -2907,6 +2907,13 @@ const UI_STRINGS = {
     hcCtaSub: 'Pregunta directamente a la IA de Modica — responde sobre restaurantes, farmacias, eventos, tiempo, tráfico y más.',
     hcCtaPlaceholder: 'Ej. ¿Dónde comer pescado en Modica?',
     hcCtaTag1:'Gasolina', hcCtaTag2:'Farmacia', hcCtaTag3:'Tiempo', hcCtaTag4:'Eventos', hcCtaTag5:'Tráfico', hcCtaTag6:'Mapa',
+    hcTrenoEyebrow: 'Experiencias que no puedes perderte',
+    hcTrenoTitle: 'El <em>Tren del Barroco</em>',
+    hcTrenoDesc: 'Vagones "Centoporte" de los años 30 que atraviesan el Val di Noto, Patrimonio UNESCO. De Siracusa a Modica y Ragusa, en una línea ferroviaria del siglo XIX — con Slow Food Sicilia a bordo.',
+    hcTrenoFact1: '<strong>Ruta:</strong> Siracusa → Noto → Ispica → Pozzallo → Scicli → <strong>Modica</strong> → Ragusa',
+    hcTrenoFact2: '<strong>Temporada:</strong> verano (agosto–septiembre) y diciembre para ChocoModica',
+    hcTrenoFact3: '<strong>Bicicletas gratis</strong> en el furgón equipado · Visita guiada incluida',
+    hcTrenoCtaLabel: 'Horarios, billetes y guía completa',
   },
 };
 
@@ -3050,6 +3057,16 @@ function applicaUI() {
     _s('hcFeat' + i + 'T', 'hcFeat' + i + 'T');
     _s('hcFeat' + i + 'D', 'hcFeat' + i + 'D');
   }
+
+  // ── HOME CONTENT — Treno del Barocco ──────────────────────────
+  _s('hcTrenoEyebrow', 'hcTrenoEyebrow');
+  const trenoTitle = document.getElementById('hcTrenoTitle');
+  if (trenoTitle) trenoTitle.innerHTML = t('hcTrenoTitle');
+  _s('hcTrenoDesc', 'hcTrenoDesc');
+  const tf1 = document.getElementById('hcTrenoFact1'); if (tf1) tf1.innerHTML = t('hcTrenoFact1');
+  const tf2 = document.getElementById('hcTrenoFact2'); if (tf2) tf2.innerHTML = t('hcTrenoFact2');
+  const tf3 = document.getElementById('hcTrenoFact3'); if (tf3) tf3.innerHTML = t('hcTrenoFact3');
+  _s('hcTrenoCtaLabel', 'hcTrenoCtaLabel');
 
   // ── HOME CONTENT — News section ────────────────────────────────
   _s('hcNewsEyebrow', 'hcNewsEyebrow');
