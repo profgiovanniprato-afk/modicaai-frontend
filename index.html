@@ -1665,7 +1665,6 @@
   body.dark .hc-treno-section--alt .hc-treno-content-col { background: var(--bg); }
   .hc-treno-section--alt .hc-treno-content-col { background: #FAFAF8; }
   @media (max-width: 900px) {
-    .hc-treno-inner--reverse { grid-template-columns: 1fr; }
     .hc-treno-inner--reverse .hc-treno-img-col { order: 0; }
     .hc-treno-inner--reverse .hc-treno-content-col { order: 0; border-right: none; border-top: 1px solid #EBEBEB; }
   }
@@ -1952,6 +1951,7 @@
         <a href="/dove-dormire-modica.html">Dove dormire</a>
         <a href="/meteo-modica-quando-andare.html">Meteo e quando andare</a>
         <a href="/modica-con-bambini.html">Modica con bambini</a>
+        <a href="/trasporti.html" style="color:#D4A017;font-weight:600;">🚌 Trasporti</a>
       </div>
     </div>
     <a href="/mappa.html" class="snb-link">Mappa</a>
@@ -2603,6 +2603,35 @@
   </div>
 </div>
 
+
+<!-- 5b. TRASPORTI -->
+<div class="hc-treno-section">
+  <div class="hc-treno-inner">
+    <div class="hc-treno-img-col">
+      <img src="/gallery/modica-trasporti.jpg"
+           alt="Bus AST da Modica verso l'aeroporto di Catania — trasporti pubblici in Sicilia"
+           loading="lazy"
+           onerror="this.src='/gallery/modica_panorama.jpg'">
+      <div class="hc-treno-img-overlay"></div>
+    </div>
+    <div class="hc-treno-content-col">
+      <div class="hc-treno-badge">🚌 AST · SAIS · Trenitalia</div>
+      <div class="hc-treno-eyebrow" id="hcTrasportiEyebrow">Muoversi da Modica</div>
+      <h2 class="hc-treno-title" id="hcTrasportiTitle">Bus per <em>l'aeroporto</em>, la spiaggia e oltre</h2>
+      <p class="hc-treno-desc" id="hcTrasportiDesc">Orari bus Modica–Aeroporto Catania, bus per Marina di Modica e Pozzallo in estate, bus urbani con tracker in tempo reale. Tutto chiaro, senza PDF illeggibili.</p>
+      <div class="hc-treno-facts">
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">✈️</div><div id="hcTrasportiFact1"><strong>Aeroporto Catania:</strong> bus AST diretto alle 9:00 e 13:00 da Piazza Borsellino, ~2 ore</div></div>
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🏖️</div><div id="hcTrasportiFact2"><strong>Marina di Modica e Pozzallo:</strong> bus estivo ogni 2 ore — incluse corse notturne in agosto</div></div>
+        <div class="hc-treno-fact"><div class="hc-treno-fact-icon">🗺️</div><div id="hcTrasportiFact3"><strong>Bus urbani live:</strong> tracker in tempo reale SAIS — sai esattamente dove si trova il bus</div></div>
+      </div>
+      <a href="/trasporti.html" class="hc-treno-cta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span id="hcTrasportiCtaLabel">Orari bus e trasporti da Modica</span>
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- 6. NEWS & EVENTI -->
 <div class="hc-news-section">
   <div class="hc-inner">
@@ -2828,6 +2857,14 @@ const UI_STRINGS = {
     hcBambiiniFact2: '<strong>Spiagge:</strong> Marina di Modica e Sampieri a 20-25 min, acque cristalline',
     hcBambiiniFact3: '<strong>Consiglio:</strong> marsupio al posto del passeggino — il centro ha molte scalinate',
     hcBambiniCtaLabel: 'Guida completa per famiglie',
+
+    hcTrasportiEyebrow: 'Muoversi da Modica',
+    hcTrasportiTitle: 'Bus per <em>l\'aeroporto</em>, la spiaggia e oltre',
+    hcTrasportiDesc: 'Orari bus Modica–Aeroporto Catania, bus per Marina di Modica e Pozzallo in estate, bus urbani con tracker in tempo reale. Tutto chiaro, senza PDF illeggibili.',
+    hcTrasportiFact1: '<strong>Aeroporto Catania:</strong> bus AST diretto alle 9:00 e 13:00 da Piazza Borsellino, ~2 ore',
+    hcTrasportiFact2: '<strong>Marina di Modica e Pozzallo:</strong> bus estivo ogni 2 ore — incluse corse notturne in agosto',
+    hcTrasportiFact3: '<strong>Bus urbani live:</strong> tracker in tempo reale SAIS — sai esattamente dove si trova il bus',
+    hcTrasportiCtaLabel: 'Orari bus e trasporti da Modica',
   },
   en: {
     placeholder: 'Ask me anything...',
@@ -2901,6 +2938,14 @@ const UI_STRINGS = {
     hcBambiiniFact2: '<strong>Beaches:</strong> Marina di Modica and Sampieri at 20-25 min, crystal clear water',
     hcBambiiniFact3: '<strong>Tip:</strong> baby carrier instead of pram — the centre has many staircases',
     hcBambiniCtaLabel: 'Full family guide',
+
+    hcTrasportiEyebrow: 'Getting around from Modica',
+    hcTrasportiTitle: 'Bus to the <em>airport</em>, beach and beyond',
+    hcTrasportiDesc: 'Bus timetables Modica–Catania Airport, summer buses to Marina di Modica and Pozzallo, urban buses with live tracker. All clear, no unreadable PDFs.',
+    hcTrasportiFact1: '<strong>Catania Airport:</strong> direct AST bus at 9:00 and 13:00 from Piazza Borsellino, ~2 hours',
+    hcTrasportiFact2: '<strong>Marina di Modica & Pozzallo:</strong> summer bus every 2 hours — night services in August',
+    hcTrasportiFact3: '<strong>Live urban buses:</strong> SAIS real-time tracker — know exactly where your bus is',
+    hcTrasportiCtaLabel: 'Bus timetables and transport from Modica',
   },
   de: {
     placeholder: 'Frag mich etwas...',
@@ -2974,6 +3019,14 @@ const UI_STRINGS = {
     hcBambiiniFact2: '<strong>Strände:</strong> Marina di Modica und Sampieri in 20-25 Min, kristallklares Wasser',
     hcBambiiniFact3: '<strong>Tipp:</strong> Tragetuch statt Kinderwagen — das Zentrum hat viele Treppen',
     hcBambiniCtaLabel: 'Vollständiger Familienführer',
+
+    hcTrasportiEyebrow: 'Von Modica aus unterwegs',
+    hcTrasportiTitle: 'Bus zum <em>Flughafen</em>, Strand und mehr',
+    hcTrasportiDesc: 'Busfahrpläne Modica–Flughafen Catania, Sommerbusse nach Marina di Modica und Pozzallo, Stadtbusse mit Live-Tracker. Alles klar, ohne unleserliche PDFs.',
+    hcTrasportiFact1: '<strong>Flughafen Catania:</strong> Direktbus um 9:00 und 13:00 ab Piazza Borsellino, ~2 Stunden',
+    hcTrasportiFact2: '<strong>Marina di Modica & Pozzallo:</strong> Sommerbus alle 2 Stunden — Nachtfahrten im August',
+    hcTrasportiFact3: '<strong>Live-Stadtbusse:</strong> SAIS Echtzeit-Tracker — wissen Sie genau, wo Ihr Bus ist',
+    hcTrasportiCtaLabel: 'Busfahrpläne und Transport ab Modica',
   },
   fr: {
     placeholder: 'Pose-moi une question...',
@@ -3047,6 +3100,14 @@ const UI_STRINGS = {
     hcBambiiniFact2: '<strong>Plages :</strong> Marina di Modica et Sampieri à 20-25 min, eaux cristallines',
     hcBambiiniFact3: '<strong>Conseil :</strong> porte-bébé plutôt que poussette — le centre a beaucoup d\'escaliers',
     hcBambiniCtaLabel: 'Guide complet pour familles',
+
+    hcTrasportiEyebrow: 'Se déplacer depuis Modica',
+    hcTrasportiTitle: 'Bus vers <em>l\'aéroport</em>, la plage et plus',
+    hcTrasportiDesc: 'Horaires bus Modica–Aéroport Catane, bus estivaux vers Marina di Modica et Pozzallo, bus urbains avec tracker en temps réel. Tout clair, sans PDFs illisibles.',
+    hcTrasportiFact1: '<strong>Aéroport Catane :</strong> bus direct AST à 9h00 et 13h00 depuis Piazza Borsellino, ~2 heures',
+    hcTrasportiFact2: '<strong>Marina di Modica & Pozzallo :</strong> bus estival toutes les 2 heures — services nocturnes en août',
+    hcTrasportiFact3: '<strong>Bus urbains en direct :</strong> tracker en temps réel SAIS — sachez exactement où est votre bus',
+    hcTrasportiCtaLabel: 'Horaires bus et transports depuis Modica',
   },
   es: {
     placeholder: 'Pregúntame algo...',
@@ -3120,6 +3181,14 @@ const UI_STRINGS = {
     hcBambiiniFact2: '<strong>Playas:</strong> Marina di Modica y Sampieri a 20-25 min, aguas cristalinas',
     hcBambiiniFact3: '<strong>Consejo:</strong> mochila portabebés en lugar de cochecito — el centro tiene muchas escaleras',
     hcBambiniCtaLabel: 'Guía completa para familias',
+
+    hcTrasportiEyebrow: 'Moverse desde Modica',
+    hcTrasportiTitle: 'Autobús al <em>aeropuerto</em>, playa y más',
+    hcTrasportiDesc: 'Horarios autobús Modica–Aeropuerto Catania, autobuses de verano a Marina di Modica y Pozzallo, autobuses urbanos con rastreador en tiempo real. Todo claro, sin PDFs ilegibles.',
+    hcTrasportiFact1: '<strong>Aeropuerto Catania:</strong> autobús directo AST a las 9:00 y 13:00 desde Piazza Borsellino, ~2 horas',
+    hcTrasportiFact2: '<strong>Marina di Modica y Pozzallo:</strong> autobús de verano cada 2 horas — servicios nocturnos en agosto',
+    hcTrasportiFact3: '<strong>Autobuses urbanos en vivo:</strong> rastreador en tiempo real SAIS — sepa exactamente dónde está su autobús',
+    hcTrasportiCtaLabel: 'Horarios de autobús y transporte desde Modica',
   },
 };
 
@@ -3303,6 +3372,13 @@ function applicaUI() {
   const bf2 = document.getElementById('hcBambiiniFact2'); if (bf2) bf2.innerHTML = t('hcBambiiniFact2');
   const bf3 = document.getElementById('hcBambiiniFact3'); if (bf3) bf3.innerHTML = t('hcBambiiniFact3');
   _s('hcBambiniCtaLabel', 'hcBambiniCtaLabel');
+  _s('hcTrasportiEyebrow', 'hcTrasportiEyebrow');
+  const trasportiTitle = document.getElementById('hcTrasportiTitle'); if (trasportiTitle) trasportiTitle.innerHTML = t('hcTrasportiTitle');
+  _s('hcTrasportiDesc', 'hcTrasportiDesc');
+  const tr1 = document.getElementById('hcTrasportiFact1'); if (tr1) tr1.innerHTML = t('hcTrasportiFact1');
+  const tr2 = document.getElementById('hcTrasportiFact2'); if (tr2) tr2.innerHTML = t('hcTrasportiFact2');
+  const tr3 = document.getElementById('hcTrasportiFact3'); if (tr3) tr3.innerHTML = t('hcTrasportiFact3');
+  _s('hcTrasportiCtaLabel', 'hcTrasportiCtaLabel');
 
   // ── HOME CONTENT — News section ────────────────────────────────
   _s('hcNewsEyebrow', 'hcNewsEyebrow');
