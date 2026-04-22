@@ -132,13 +132,18 @@
 <meta name="ICBM" content="36.8604, 14.7742">
 
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ"></script>
+<!-- Google Analytics — caricato solo dopo consenso cookie -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6KDD1Z4WMZ');
+  (function(){
+    if (localStorage.getItem('modicaai_consent') === 'accepted') {
+      var s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ';
+      document.head.appendChild(s);
+      s.onload = function(){ gtag('js', new Date()); gtag('config', 'G-6KDD1Z4WMZ', {'anonymize_ip': true}); };
+    }
+  })();
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1910,6 +1915,37 @@
     .hc-footer-bottom { padding: 18px 16px; flex-direction: column; align-items: flex-start; gap: 6px; }
     .hc-title { font-size: 26px; }
   }
+
+  /* ── Cookie banner ── */
+  .cookie-banner {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+    background: rgba(10,12,16,0.97); backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .cookie-banner p {
+    font-size: 12px; color: rgba(255,255,255,0.65);
+    flex: 1; min-width: 200px; margin: 0; line-height: 1.5;
+  }
+  .cookie-banner a { color: #D4A017; text-decoration: underline; }
+  .cookie-banner-btns { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn-cookie-acc {
+    padding: 7px 18px; border-radius: 8px; border: none;
+    background: #B8860B; color: #fff;
+    font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-cookie-acc:hover { background: #D4A017; }
+  .btn-cookie-rej {
+    padding: 7px 14px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15); background: transparent;
+    color: rgba(255,255,255,0.5);
+    font-family: 'Outfit', sans-serif; font-size: 12px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-cookie-rej:hover { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); }
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1918,6 +1954,15 @@
 </script>
 </head>
 <body class="home-visible">
+
+<!-- ── Cookie Banner ── -->
+<div class="cookie-banner" id="cookieBanner" style="display:none;">
+  <p>Usiamo cookie analitici (Google Analytics) per migliorare il sito. <a href="/privacy.html">Privacy &amp; Cookie Policy</a>.</p>
+  <div class="cookie-banner-btns">
+    <button class="btn-cookie-rej" onclick="setCookieConsent('rejected')">Rifiuta</button>
+    <button class="btn-cookie-acc" onclick="setCookieConsent('accepted')">Accetta</button>
+  </div>
+</div>
 
 <!-- ── Barra navigazione ── -->
 <nav class="site-nav-bar" role="navigation" aria-label="Navigazione principale">
@@ -2749,6 +2794,7 @@
     <div class="hc-footer-bottom-links">
       <a href="/contatti.html">Contatti</a>
       <a href="/mission.html">Chi siamo</a>
+      <a href="/privacy.html">Privacy &amp; Cookie</a>
       <a href="https://www.modicaai.it">modicaai.it</a>
     </div>
   </div>
@@ -4015,15 +4061,13 @@ async function caricaCarburantiFuel() {
 
     if (!items) return;
     // Duplica per scorrimento continuo senza salti
-    track.style.animationDuration = '9999s';
     track.innerHTML = items + items;
-    // Forza reflow, poi imposta durata reale
+    // Reset animazione, misura, riparte con durata corretta
+    track.style.animation = 'none';
     void track.offsetWidth;
     const totalWidth = track.scrollWidth / 2;
-    if (totalWidth > 0) {
-      const speed = Math.max(20, Math.round(totalWidth / 80));
-      track.style.animationDuration = speed + 's';
-    }
+    const speed = totalWidth > 0 ? Math.max(20, Math.round(totalWidth / 80)) : 50;
+    track.style.animation = `ticker-scroll ${speed}s linear infinite`;
   } catch (e) {
     // Ticker silenzioso in caso di errore
   }
@@ -4221,12 +4265,7 @@ async function caricaNotizie() {
     const track = document.getElementById('tickerTrack');
     if (!track) return;
 
-    // Ferma animazione durante il caricamento per evitare salto visivo
-    track.style.animationPlayState = 'paused';
-    track.style.animationDuration = '9999s';
     track.innerHTML = '';
-
-    // Duplica gli item per scorrimento continuo senza salti
     const allItems = [...data.items, ...data.items];
     allItems.forEach(item => {
       const a = document.createElement('a');
@@ -4238,14 +4277,12 @@ async function caricaNotizie() {
       track.appendChild(a);
     });
 
-    // Forza reflow per ottenere scrollWidth corretto, poi imposta durata e avvia
+    // Reset animazione, misura, riparte con durata corretta
+    track.style.animation = 'none';
     void track.offsetWidth;
     const totalWidth = track.scrollWidth / 2;
-    if (totalWidth > 0) {
-      const speed = Math.max(25, Math.round(totalWidth / 90));
-      track.style.animationDuration = speed + 's';
-    }
-    track.style.animationPlayState = 'running';
+    const speed = totalWidth > 0 ? Math.max(25, Math.round(totalWidth / 90)) : 60;
+    track.style.animation = `ticker-scroll-news ${speed}s linear infinite`;
   } catch(e) { /* silenzioso */ }
 }
 
@@ -5352,5 +5389,24 @@ function rmToggle(){
 function rmNext(){_rmI=(_rmI+1)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
 function rmPrev(){_rmI=(_rmI-1+RM_STAZIONI.length)%RM_STAZIONI.length;_rmSave();if(_rmP&&_rmA){_rmA.src=RM_STAZIONI[_rmI].u;_rmA.play().catch(()=>{});}const n=document.getElementById('rmName');if(n)n.textContent=RM_STAZIONI[_rmI].n;}
 (function(){if(_rmLoad())rmToggle();})();
+</script>
+
+<script>
+// ── Cookie consent ────────────────────────────────────────────────────
+(function(){
+  if (!localStorage.getItem('modicaai_consent')) {
+    document.getElementById('cookieBanner').style.display = 'flex';
+  }
+})();
+function setCookieConsent(val) {
+  localStorage.setItem('modicaai_consent', val);
+  document.getElementById('cookieBanner').style.display = 'none';
+  if (val === 'accepted') {
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ';
+    document.head.appendChild(s);
+    s.onload = function(){ gtag('js', new Date()); gtag('config', 'G-6KDD1Z4WMZ', {'anonymize_ip': true}); };
+  }
+}
 </script>
 </body>
