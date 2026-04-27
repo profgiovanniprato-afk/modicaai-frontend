@@ -1916,42 +1916,6 @@
     .hc-title { font-size: 26px; }
   }
 
-  /* ── Banner San Giorgio ── */
-  .sg-banner {
-    width: 100%; position: relative; overflow: hidden; cursor: pointer;
-  }
-  .sg-banner img {
-    width: 100%; display: block; object-fit: cover;
-    max-height: 420px; transition: transform 0.4s ease;
-  }
-  .sg-banner:hover img { transform: scale(1.02); }
-  .sg-banner-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-end;
-    padding: 28px 20px; text-align: center;
-  }
-  .sg-banner-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(180,0,0,0.85); border: 1px solid rgba(255,80,80,0.4);
-    border-radius: 20px; padding: 4px 14px; margin-bottom: 10px;
-    font-size: 10px; font-weight: 700; letter-spacing: 2px;
-    text-transform: uppercase; color: #fff;
-  }
-  .sg-banner-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(22px, 5vw, 38px); font-weight: 600;
-    color: #fff; line-height: 1.1; margin-bottom: 6px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
-  }
-  .sg-banner-sub {
-    font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 300;
-  }
-  @media (max-width: 640px) {
-    .sg-banner img { max-height: 260px; }
-  }
-
   /* ── Cookie banner ── */
   .cookie-banner {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
@@ -2313,19 +2277,6 @@
 
 <!-- HOME DINAMICA: visibile quando nessuna chat è attiva -->
 <div class="home-content" id="homeContent">
-
-<!-- BANNER SAN GIORGIO — rimuovere dopo domenica 27 aprile 2026 -->
-<div class="sg-banner" onclick="window.location.href='/eventi.html'">
-  <img src="/gallery/san-giorgio-2026.jpg"
-       alt="Festa di San Giorgio 2026 — Duomo di Modica"
-       loading="eager">
-  <div class="sg-banner-overlay">
-    <div class="sg-banner-badge">🔴 Oggi a Modica</div>
-    <div class="sg-banner-title">Festa di San Giorgio 2026</div>
-    <div class="sg-banner-sub">Il patrono di Modica — Duomo di San Giorgio</div>
-  </div>
-</div>
-<!-- /BANNER SAN GIORGIO -->
 
 <!-- 1. HERO FOTOGRAFICO -->
 <div class="hc-hero">
