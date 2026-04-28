@@ -3954,7 +3954,26 @@ async function ask(q) {
         } catch(e){}
       }
     }
-    if (!typingRemoved) { removeTyping(); addMessage('ai','Risposta non ricevuta.','ModicaAI',''); }
+    // ── Stream chiuso: completa la bolla se c'è già testo parziale ──
+    if (!typingRemoved) {
+      removeTyping(); addMessage('ai','Risposta non ricevuta.','ModicaAI','');
+    } else if (msgDiv && fullText) {
+      // Stream interrotto senza "done" — completa il footer comunque
+      msgDiv.innerHTML = formatText(fullText);
+      const ft = document.getElementById('ft-' + msgDiv.id);
+      if (ft && ft.style.display === 'none') {
+        const c2='c2'+Date.now(), v2='v2'+Date.now(), s2='s2'+Date.now();
+        ft.innerHTML = `<span class="source-badge">ModicaAI</span>
+          <button class="btn-copy-msg" id="${c2}" onclick="copiaMsg(this)">${copyIcon} Copia</button>
+          ${speechSynth?`<button class="btn-copy-msg btn-voice" id="${v2}" onclick="leggiAdAlta(this)">${voiceIcon} Ascolta</button>`:''}
+          ${(navigator.share||navigator.clipboard)?`<button class="btn-copy-msg btn-share" id="${s2}" onclick="condividiRisposta(this)">${shareIcon} Condividi</button>`:''}`;
+        ft.style.display = '';
+        document.getElementById(c2).dataset.t = fullText;
+        if (speechSynth) document.getElementById(v2).dataset.t = fullText;
+        cronologia.push({ role:'assistant', content:fullText });
+        if (cronologia.length > 20) cronologia = cronologia.slice(-20);
+      }
+    }
   } catch(e) {
     // Fallback /ask classico (se streaming non disponibile)
     try {
@@ -4823,7 +4842,24 @@ async function askConFile(domanda) {
         } catch(e) {}
       }
     }
-    if (!typingRemoved) { removeTyping(); addMessage('ai','Risposta non ricevuta.','ModicaAI',''); }
+    if (!typingRemoved) {
+      removeTyping(); addMessage('ai','Risposta non ricevuta.','ModicaAI','');
+    } else if (msgDiv && fullText) {
+      msgDiv.innerHTML = formatText(fullText);
+      const ft = document.getElementById('ft-' + msgDiv.id);
+      if (ft && ft.style.display === 'none') {
+        const c2='c2'+Date.now(), v2='v2'+Date.now(), s2='s2'+Date.now();
+        ft.innerHTML = `<span class="source-badge">ModicaAI</span>
+          <button class="btn-copy-msg" id="${c2}" onclick="copiaMsg(this)">${copyIcon} Copia</button>
+          ${speechSynth?`<button class="btn-copy-msg btn-voice" id="${v2}" onclick="leggiAdAlta(this)">${voiceIcon} Ascolta</button>`:''}
+          ${(navigator.share||navigator.clipboard)?`<button class="btn-copy-msg btn-share" id="${s2}" onclick="condividiRisposta(this)">${shareIcon} Condividi</button>`:''}`;
+        ft.style.display = '';
+        document.getElementById(c2).dataset.t = fullText;
+        if (speechSynth) document.getElementById(v2).dataset.t = fullText;
+        cronologia.push({ role:'assistant', content: fullText });
+        if (cronologia.length > 20) cronologia = cronologia.slice(-20);
+      }
+    }
   } catch(e) {
     removeTyping();
     addMessage('ai', t('errWakeup'), 'ModicaAI', '');
