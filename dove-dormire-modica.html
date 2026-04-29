@@ -1120,6 +1120,58 @@
   .pg-quote { padding:20px; }
   .pg-cta { padding:36px 16px; }
 }
+/* ── PARTNER CARD ── */
+.partner-section { margin-bottom: 52px; }
+.partner-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.partner-card-img {
+  width: 100%; height: 220px;
+  object-fit: cover; object-position: center;
+  display: block;
+}
+.partner-card-body { padding: 24px 28px 28px; }
+.partner-card-eyebrow {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); margin: 0 0 8px;
+}
+.partner-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 600;
+  color: var(--sky); margin: 0 0 6px; line-height: 1.2;
+}
+.partner-card-location { font-size: 12px; color: var(--ink-soft); margin: 0 0 14px; }
+.partner-card-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.7; margin: 0 0 16px; }
+.partner-card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.partner-card-tag {
+  font-size: 11px; font-weight: 500;
+  color: var(--ink-mid); background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px;
+}
+.partner-card-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.partner-card-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(135deg, var(--sky), #2a5a8c);
+  color: #fff; text-decoration: none;
+  padding: 10px 22px; border-radius: 24px;
+  font-size: 13px; font-weight: 600; transition: all 0.2s;
+}
+.partner-card-btn:hover { background: linear-gradient(135deg, var(--gold), var(--gold-lt)); }
+.partner-card-btn-ghost {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--sky); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  border: 1px solid var(--border);
+  padding: 10px 18px; border-radius: 24px; transition: all 0.2s;
+}
+.partner-card-btn-ghost:hover { border-color: var(--sky); }
+.partner-card-contact { font-size: 12px; color: var(--ink-soft); margin-top: 12px; }
+.partner-card-contact a { color: var(--sky); text-decoration: none; }
 </style>
 <script>function pgFaq(b){b.closest('.pg-faq-item').classList.toggle('open');}</script>
 <script type="application/ld+json">
@@ -1386,6 +1438,40 @@
       <p class="pg-p"><strong>L'aria condizionata.</strong> In estate è indispensabile. La gran parte delle strutture del centro storico la ha, ma verificare — specialmente nelle case più antiche dove l'installazione può essere parziale.</p>
       <p class="pg-p"><strong>La colazione.</strong> Nei B&B tradizionali siciliani la colazione può includere brioche con granita, cannoli, frutta di stagione, formaggi locali — molto diversa dalla colazione continentale standard. È uno dei piaceri del soggiorno: chiedere in anticipo cosa viene servito.</p>
       <p class="pg-p">Per informazioni in tempo reale su meteo, eventi durante il tuo soggiorno, farmacia di turno e altro ancora, puoi usare gratuitamente <a href="/">ModicaAI</a> — l'assistente AI dedicato a Modica, disponibile 24/7 senza registrazione.</p>
+    </div>
+
+    <!-- PARTNER: Villa Giummarito — rimovibile in autonomia -->
+    <hr class="pg-rule">
+    <div class="partner-section" id="partner-villa-giummarito">
+      <p class="pg-h3">Vicino al mare</p>
+      <h2 class="pg-h2">B&B sul litorale ragusano — a 500 m dal mare</h2>
+      <p class="pg-p">Per chi vuole abbinare la visita a Modica con qualche giorno di mare, una soluzione comoda è soggiornare direttamente sulla costa e raggiungere la città in auto (20–25 minuti). Nella zona di Contrada Arizza, tra Scicli e Marina di Modica, si trovano alcune strutture ricettive in posizione tranquilla e a pochi passi dalla spiaggia.</p>
+
+      <div class="partner-card">
+        <img class="partner-card-img"
+          src="/gallery/villa-giummarito.jpg"
+          alt="Villa Giummarito B&B — Contrada Arizza, Scicli"
+          onerror="this.style.display='none'">
+        <div class="partner-card-body">
+          <p class="partner-card-eyebrow">B&B ★★★ · Contrada Arizza, Scicli</p>
+          <p class="partner-card-title">Villa Giummarito</p>
+          <p class="partner-card-location">📍 Via degli Assiri 1 · 500 m da Spiaggia Pantano Arizza · 14 km da Marina di Modica</p>
+          <p class="partner-card-desc">Villa recentemente ristrutturata con giardino, piscina estiva e veranda per le colazioni. Quattro camere (Mandorla, Limone, Giummarito, Kumquat) con bagno privato, aria condizionata, frigobar, TV e cassaforte. Parcheggio privato in area chiusa. Colazione a buffet con prodotti locali. La struttura offre anche servizi su richiesta: noleggio auto, transfer da/per Catania, massaggi olistici e tour in barca a vela dalla costa di Scoglitti.</p>
+          <div class="partner-card-tags">
+            <span class="partner-card-tag">🏊 Piscina estiva</span>
+            <span class="partner-card-tag">🅿️ Parcheggio privato</span>
+            <span class="partner-card-tag">🍳 Colazione inclusa</span>
+            <span class="partner-card-tag">❄️ Aria condizionata</span>
+            <span class="partner-card-tag">📶 WiFi gratuito</span>
+            <span class="partner-card-tag">🚗 Transfer Catania</span>
+          </div>
+          <div class="partner-card-actions">
+            <a href="https://www.villagiummarito.com/prenotazione" target="_blank" rel="noopener" class="partner-card-btn">Verifica disponibilità →</a>
+            <a href="https://www.villagiummarito.com" target="_blank" rel="noopener" class="partner-card-btn-ghost">Sito ufficiale</a>
+          </div>
+          <p class="partner-card-contact">📞 <a href="tel:+393914707859">+39 391 4707859</a> (anche WhatsApp) · <a href="mailto:villagiummarito@gmail.com">villagiummarito@gmail.com</a></p>
+        </div>
+      </div>
     </div>
 
     <div class="pg-cta">
