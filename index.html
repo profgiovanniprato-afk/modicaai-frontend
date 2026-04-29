@@ -496,6 +496,23 @@
   /* Hero — stile Claude/ChatGPT: minimalista, centrato */
   .hero.hidden { display:none; }
   .hero-eyebrow { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; animation:fadeUp 0.5s 0.05s ease both; opacity:0.8; }
+  /* Titolo "Benvenuto a Modica" sopra tutto nel flusso del hero */
+  .hero-welcome {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 72px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    text-align: left;
+    width: 100%;
+    max-width: 780px;
+    margin: 0 0 32px;
+    padding: 0;
+    color: var(--sky);
+    animation: fadeUp 0.4s ease both;
+  }
+  .hero-welcome em { font-style: italic; color: var(--gold); }
+  body.dark .hero-welcome { color: rgba(255,255,255,0.85); }
   .hero-logo-big { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:12px; animation:fadeUp 0.5s 0.1s ease both; }
   .hero-mark { width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,var(--sky) 0%,#2a5a8c 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 18px rgba(26,58,92,0.22); position:relative; overflow:hidden; flex-shrink:0; }
   .hero-mark::after { content:''; position:absolute; bottom:-5px; right:-5px; width:18px; height:18px; background:var(--gold); border-radius:50%; opacity:0.55; }
@@ -748,7 +765,7 @@
   .input-bar { position:fixed; bottom:34px; left:0; right:0; z-index:300; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-top:1px solid var(--border); padding:10px 16px 14px; display:flex; flex-direction:column; align-items:center; box-shadow:0 -4px 20px rgba(0,0,0,0.06); }
 
   /* ── Widget meteo e orologio — fissi in alto a sinistra sotto l'header ── */
-  .hero { text-align:center; padding: 24px 20px 8px; }
+  .hero { text-align:center; padding: 24px 20px 8px; display:flex; flex-direction:column; align-items:center; }
   .hero-widgets {
     position: fixed;
     top: 152px; left: 20px;
@@ -1264,93 +1281,22 @@
   }
 
   /* ════════════════════════════════
-     1. HERO FOTOGRAFICO
+     1. PANORAMA PNG (nel flusso)
      ════════════════════════════════ */
-  .hc-hero {
-    position: relative;
+  .hc-panorama-wrap {
     width: 100%;
-    height: 560px;
-    overflow: hidden;
-    /* Gradient di fallback: transizione fluida dal bianco al navy — mai un blocco piatto */
-    background: linear-gradient(
-      to bottom,
-      #F8F8F8 0%,
-      #e8eef4 8%,
-      #c5d4e3 20%,
-      #1A3A5C 55%
-    );
+    line-height: 0;
+    background: var(--bg);
+  }
+  .hc-panorama-img {
     display: block;
-    margin-top: 0;
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;   /* il nero scompare su sfondo bianco */
   }
-  body.dark .hc-hero {
-    background: linear-gradient(
-      to bottom,
-      #151820 0%,
-      #1a2030 15%,
-      #1A3A5C 55%
-    );
-  }
-  .hc-hero-img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: center 60%;
-    transition: transform 8s ease;
-  }
-  .hc-hero:hover .hc-hero-img { transform: scale(1.03); }
-  .hc-hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(
-      to top,
-      rgba(0,0,0,0.88) 0%,
-      rgba(0,0,0,0.30) 50%,
-      rgba(0,0,0,0.10) 100%
-    );
-    pointer-events: none;
-  }
-  .hc-hero-content {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    max-width: 1100px; margin: 0 auto;
-    padding: 0 32px 52px;
-  }
-  .hc-hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 10px; font-weight: 700;
-    letter-spacing: 3px; text-transform: uppercase;
-    color: #C9A84C; margin-bottom: 14px;
-  }
-  .hc-hero-eyebrow::before {
-    content: ''; width: 28px; height: 1px; background: #C9A84C;
-  }
-  .hc-hero-h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 72px; font-weight: 600;
-    color: #fff; line-height: 1.0;
-    margin: 0 0 12px; letter-spacing: -1px;
-    text-shadow: 0 2px 24px rgba(0,0,0,0.4);
-  }
-  .hc-hero-h1 em { font-style: italic; color: #F5E9CC; }
-  .hc-hero-tagline {
-    font-family: 'Outfit', sans-serif;
-    font-size: 16px; font-weight: 300;
-    color: rgba(255,255,255,0.62);
-    margin: 0 0 24px;
-  }
-  .hc-hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
-  .hc-hero-pill {
-    display: inline-flex; align-items: center; gap: 7px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 11px; font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    padding: 7px 16px; border-radius: 20px;
-    background: rgba(255,255,255,0.09);
-    border: 1px solid rgba(255,255,255,0.18);
-    backdrop-filter: blur(6px);
-  }
-  .hc-photo-credit {
-    position: absolute; bottom: 8px; right: 14px;
-    font-size: 9px; color: rgba(255,255,255,0.25);
-    font-family: 'Outfit', sans-serif;
+  body.dark .hc-panorama-img {
+    mix-blend-mode: screen;
+    filter: brightness(0.75);
   }
 
   /* ════════════════════════════════
@@ -2125,6 +2071,7 @@
 
 <div class="main empty" id="main">
   <div class="hero" id="hero">
+    <h2 class="hero-welcome">Benvenuto a <em>Modica</em></h2>
     <div class="hero-eyebrow">Assistente AI · Modica, Sicilia</div>
     <div class="hero-logo-big">
       <div class="hero-mark">
@@ -2280,39 +2227,14 @@
 <!-- HOME DINAMICA: visibile quando nessuna chat è attiva -->
 <div class="home-content" id="homeContent">
 
-<!-- 1. HERO FOTOGRAFICO -->
-<div class="hc-hero">
-  <img class="hc-hero-img"
-    src="/gallery/modica_panorama.jpg"
-    alt="Modica, città barocca Patrimonio UNESCO, Sicilia"
+<!-- 1. PANORAMA PNG -->
+<div class="hc-panorama-wrap">
+  <img class="hc-panorama-img"
+    src="/gallery/panorama-modica.png"
+    alt="Panorama di Modica, città barocca Patrimonio UNESCO"
     loading="eager"
     fetchpriority="high"
-    onerror="this.onerror=null;">
-  <div class="hc-hero-overlay"></div>
-  <div class="hc-hero-content">
-    <div class="hc-hero-eyebrow" id="hcHeroEyebrow">Patrimonio UNESCO · Sicilia, Italia</div>
-    <h2 class="hc-hero-h1" id="hcHeroH1">Benvenuto a <em>Modica</em></h2>
-    <p class="hc-hero-tagline" id="hcHeroTagline">La città del cioccolato. Il barocco siciliano. Un luogo fuori dal tempo.</p>
-    <div class="hc-hero-pills">
-      <span class="hc-hero-pill" id="hcPill1">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M9 21V7l3-4 3 4v14"/></svg>
-        Barocco Siciliano
-      </span>
-      <span class="hc-hero-pill" id="hcPill2">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>
-        Cioccolato IGP
-      </span>
-      <span class="hc-hero-pill" id="hcPill3">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>
-        300 giorni di sole
-      </span>
-      <span class="hc-hero-pill" id="hcPill4">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-8 4 5 3-3 4 6"/></svg>
-        A 20 km dal mare
-      </span>
-    </div>
-  </div>
-  <div class="hc-photo-credit">Foto © GiovanniFigura</div>
+    onerror="this.style.display='none'">
 </div>
 
 <!-- 2. LIVE BAR -->
