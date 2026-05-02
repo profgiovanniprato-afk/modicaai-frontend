@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://www.modicaai.it/eventi.html</loc>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.modicaai.it/eventi-en.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.modicaai.it/eventi-de.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.modicaai.it/eventi-fr.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.modicaai.it/eventi-es.html" />
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/eventi-en.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/eventi-de.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/eventi-fr.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/eventi-es.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/marina-di-modica.html</loc>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.modicaai.it/marina-di-modica-en.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.modicaai.it/marina-di-modica-de.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.modicaai.it/marina-di-modica-fr.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.modicaai.it/marina-di-modica-es.html" />
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/marina-di-modica-en.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/marina-di-modica-de.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/marina-di-modica-fr.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/marina-di-modica-es.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-un-giorno.html</loc>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.modicaai.it/modica-in-un-giorno-en.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.modicaai.it/modica-in-un-giorno-de.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.modicaai.it/modica-in-un-giorno-fr.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.modicaai.it/modica-in-un-giorno-es.html" />
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-un-giorno-en.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-un-giorno-de.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-un-giorno-fr.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-un-giorno-es.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
