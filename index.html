@@ -2362,14 +2362,14 @@
       </div>
       <div class="hc-live-dot"></div>
     </div>
-    <div class="hc-live-tile" onclick="askChip(null,'Dove conviene fare benzina oggi?')">
+    <div class="hc-live-tile" onclick="askChip(null,'Com\'è il mare a Marina di Modica oggi?')">
       <div class="hc-live-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 22h12M5 22V7l5-5 5 5v15M9 22V13h4v9"/><path d="M20 8v14M18 8a2 2 0 104 0V6l-2-4-2 4v2z"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 17c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 7c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/></svg>
       </div>
       <div>
-        <div class="hc-live-label" id="hcLiveBenzLabel">Benzina self</div>
-        <div class="hc-live-val" id="homeBenzPrice">---</div>
-        <div class="hc-live-sub" id="hcLiveBenzSub">Prezzo più basso</div>
+        <div class="hc-live-label" id="hcLiveMareLabel">Mare a Marina</div>
+        <div class="hc-live-val" id="homeMareTemp">--°C</div>
+        <div class="hc-live-sub" id="hcLiveMareSub">Temperatura acqua</div>
       </div>
       <div class="hc-live-dot"></div>
     </div>
@@ -2953,7 +2953,7 @@ const UI_STRINGS = {
     hcHeroH1: 'Benvenuto a <em>Modica</em>',
     hcHeroTagline: 'La città del cioccolato. Il barocco siciliano. Un luogo fuori dal tempo.',
     hcPill1: 'Barocco Siciliano', hcPill2: 'Cioccolato IGP', hcPill3: '300 giorni di sole', hcPill4: 'A 20 km dal mare',
-    hcLiveMeteo: 'Meteo oggi', hcLiveBenz: 'Benzina self', hcLiveBenzSub: 'Prezzo più basso',
+    hcLiveMeteo: 'Meteo oggi', hcLiveMare: 'Mare a Marina', hcLiveMareSub: 'Temperatura acqua',
     hcLiveFarm: 'Farmacia di turno', hcLiveFarmVal: 'Scopri quale', hcLiveFarmSub: 'Aggiornata in tempo reale',
     hcLiveTraffic: 'Traffico live', hcLiveTrafficVal: 'Situazione ora', hcLiveTrafficSub: 'Strade principali',
     hcQlEyebrow: 'Tutto su Modica', hcQlTitle: 'Cosa vuoi fare?',
@@ -3037,7 +3037,7 @@ const UI_STRINGS = {
     hcHeroH1: 'Welcome to <em>Modica</em>',
     hcHeroTagline: 'The city of chocolate. Sicilian baroque. A place outside of time.',
     hcPill1: 'Sicilian Baroque', hcPill2: 'IGP Chocolate', hcPill3: '300 sunny days', hcPill4: '20 km from the sea',
-    hcLiveMeteo: 'Weather today', hcLiveBenz: 'Petrol self-service', hcLiveBenzSub: 'Lowest price',
+    hcLiveMeteo: 'Weather today', hcLiveMare: 'Sea at Marina', hcLiveMareSub: 'Water temperature',
     hcLiveFarm: 'On-duty pharmacy', hcLiveFarmVal: 'Find out', hcLiveFarmSub: 'Updated in real time',
     hcLiveTraffic: 'Live traffic', hcLiveTrafficVal: 'Current situation', hcLiveTrafficSub: 'Main roads',
     hcQlEyebrow: 'All about Modica', hcQlTitle: 'What do you want to do?',
@@ -3118,7 +3118,7 @@ const UI_STRINGS = {
     hcHeroH1: 'Willkommen in <em>Modica</em>',
     hcHeroTagline: 'Die Stadt der Schokolade. Sizilianischer Barock. Ein Ort außerhalb der Zeit.',
     hcPill1: 'Sizilianischer Barock', hcPill2: 'IGP Schokolade', hcPill3: '300 Sonnentage', hcPill4: '20 km vom Meer',
-    hcLiveMeteo: 'Wetter heute', hcLiveBenz: 'Kraftstoff Selbst', hcLiveBenzSub: 'Niedrigster Preis',
+    hcLiveMeteo: 'Wetter heute', hcLiveMare: 'Meer bei Marina', hcLiveMareSub: 'Wassertemperatur',
     hcLiveFarm: 'Notfallapotheke', hcLiveFarmVal: 'Herausfinden', hcLiveFarmSub: 'Echtzeit aktualisiert',
     hcLiveTraffic: 'Live-Verkehr', hcLiveTrafficVal: 'Aktuelle Lage', hcLiveTrafficSub: 'Hauptstraßen',
     hcQlEyebrow: 'Alles über Modica', hcQlTitle: 'Was möchtest du tun?',
@@ -3199,7 +3199,7 @@ const UI_STRINGS = {
     hcHeroH1: 'Bienvenue à <em>Modica</em>',
     hcHeroTagline: 'La ville du chocolat. Le baroque sicilien. Un lieu hors du temps.',
     hcPill1: 'Baroque sicilien', hcPill2: 'Chocolat IGP', hcPill3: '300 jours de soleil', hcPill4: 'À 20 km de la mer',
-    hcLiveMeteo: "Météo aujourd'hui", hcLiveBenz: 'Essence self', hcLiveBenzSub: 'Prix le plus bas',
+    hcLiveMeteo: "Météo aujourd'hui", hcLiveMare: 'Mer à Marina', hcLiveMareSub: "Température de l'eau",
     hcLiveFarm: 'Pharmacie de garde', hcLiveFarmVal: 'Découvrir', hcLiveFarmSub: 'Mis à jour en temps réel',
     hcLiveTraffic: 'Trafic en direct', hcLiveTrafficVal: 'Situation actuelle', hcLiveTrafficSub: 'Routes principales',
     hcQlEyebrow: 'Tout sur Modica', hcQlTitle: 'Que veux-tu faire ?',
@@ -3280,7 +3280,7 @@ const UI_STRINGS = {
     hcHeroH1: 'Bienvenido a <em>Modica</em>',
     hcHeroTagline: 'La ciudad del chocolate. El barroco siciliano. Un lugar fuera del tiempo.',
     hcPill1: 'Barroco siciliano', hcPill2: 'Chocolate IGP', hcPill3: '300 días de sol', hcPill4: 'A 20 km del mar',
-    hcLiveMeteo: 'Tiempo hoy', hcLiveBenz: 'Gasolina self', hcLiveBenzSub: 'Precio más bajo',
+    hcLiveMeteo: 'Tiempo hoy', hcLiveMare: 'Mar en Marina', hcLiveMareSub: 'Temperatura del agua',
     hcLiveFarm: 'Farmacia de guardia', hcLiveFarmVal: 'Descubrir', hcLiveFarmSub: 'Actualizada en tiempo real',
     hcLiveTraffic: 'Tráfico en vivo', hcLiveTrafficVal: 'Situación actual', hcLiveTrafficSub: 'Carreteras principales',
     hcQlEyebrow: 'Todo sobre Modica', hcQlTitle: '¿Qué quieres hacer?',
@@ -3450,8 +3450,8 @@ function applicaUI() {
   // ── HOME CONTENT — Live bar ────────────────────────────────────
   const _s = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = t(key); };
   _s('hcLiveMeteoLabel',    'hcLiveMeteo');
-  _s('hcLiveBenzLabel',     'hcLiveBenz');
-  _s('hcLiveBenzSub',       'hcLiveBenzSub');
+  _s('hcLiveMareLabel',     'hcLiveMare');
+  _s('hcLiveMareSub',       'hcLiveMareSub');
   _s('hcLiveFarmLabel',     'hcLiveFarm');
   _s('hcLiveFarmVal',       'hcLiveFarmVal');
   _s('hcLiveFarmSub',       'hcLiveFarmSub');
@@ -5187,25 +5187,22 @@ async function populaHomeMeteo() {
   } catch(e) {}
 }
 
-async function populaHomeCarburanti() {
+async function populaHomeMare() {
   try {
-    const res = await fetch(API_URL + '/carburanti');
-    const data = await res.json();
-    if (!data.stazioni || !data.stazioni.length) return;
-    const tipi = ['Benzina_self','Gasolio_self','GPL_self','Metano_self'];
-    const labels = { 'Benzina_self':'Benzina','Gasolio_self':'Gasolio','GPL_self':'GPL','Metano_self':'Metano' };
-    const prezzi = {};
-    data.stazioni.forEach(s => {
-      tipi.forEach(k => {
-        if (s.prezzi[k] && !prezzi[k]) prezzi[k] = s.prezzi[k].prezzo;
-      });
-    });
-    const list = document.getElementById('homeCarburantiList');
-    if (!list) return;
-    list.innerHTML = tipi.map(k => {
-      const p = prezzi[k];
-      return `<div class="carb-row"><span class="carb-tipo">${labels[k]}</span><span class="carb-price">${p ? p.toFixed(3)+' €/L' : 'N.D.'}</span></div>`;
-    }).join('');
+    // Open-Meteo Marine API — coordinate Marina di Modica
+    const res = await fetch('https://marine-api.open-meteo.com/v1/marine?latitude=36.77&longitude=14.77&current=sea_surface_temperature,wave_height&timezone=Europe%2FRome');
+    if (!res.ok) return;
+    const d = await res.json();
+    const temp = document.getElementById('homeMareTemp');
+    const sub = document.getElementById('hcLiveMareSub');
+    if (!d.current) return;
+    const t = d.current.sea_surface_temperature;
+    const wave = d.current.wave_height;
+    if (temp && t !== undefined) temp.textContent = `${Math.round(t)}°C`;
+    if (sub && wave !== undefined) {
+      const stato = wave < 0.3 ? 'Calmo 🟢' : wave < 0.8 ? 'Poco mosso 🟡' : 'Mosso 🔴';
+      sub.textContent = stato;
+    }
   } catch(e) {}
 }
 
@@ -5223,7 +5220,7 @@ document.addEventListener('DOMContentLoaded', () => {
   caricaCarburantiFuel();
   caricaMeteoWidget();
   populaHomeMeteo();
-  populaHomeCarburanti();
+  populaHomeMare();
   // Mostra home-content se siamo in stato empty
   const hcInit = document.getElementById('homeContent');
   const mainInit = document.getElementById('main');
