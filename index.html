@@ -5756,7 +5756,7 @@ body.dark .wchat-input:focus { background: var(--bg-card); }
 
   setTimeout(function(){
     document.getElementById('wchat-bubble').style.display = 'block';
-    wchatOpen();
+    if (window.innerWidth > 640) wchatOpen();
   }, 5000);
 
   window.wchatToggle = function() { _wcOpen ? wchatClose() : wchatOpen(); };
