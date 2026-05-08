@@ -5544,4 +5544,411 @@ function setCookieConsent(val) {
   }
 }
 </script>
+
+<!-- ══════════════════════════════════════════════════════
+     CHATBOT WIDGET — si apre dopo 5s sulla home
+     ══════════════════════════════════════════════════════ -->
+<style>
+/* ── Widget container ── */
+#wchat-bubble {
+  position: fixed; bottom: 24px; right: 20px; z-index: 5000;
+  display: none; /* mostrato via JS dopo 5s */
+}
+/* ── Pulsante di apertura/chiusura ── */
+#wchat-toggle {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--sky), #2a5a8c);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 18px rgba(26,58,92,0.38);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-left: auto;
+  position: relative;
+}
+#wchat-toggle:hover { transform: scale(1.07); box-shadow: 0 6px 24px rgba(26,58,92,0.45); }
+#wchat-toggle svg { transition: opacity 0.15s; }
+/* pallino notifica */
+#wchat-dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--terra); border: 2px solid white;
+  animation: wchat-pulse 2s infinite;
+}
+@keyframes wchat-pulse {
+  0%,100% { transform: scale(1); opacity:1; }
+  50%      { transform: scale(1.35); opacity:0.7; }
+}
+/* ── Pannello chat ── */
+#wchat-panel {
+  display: none;
+  flex-direction: column;
+  width: min(330px, 92vw);
+  background: var(--white);
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  overflow: hidden;
+  animation: wchat-fadeUp 0.22s ease both;
+  max-height: 80vh;
+}
+#wchat-panel.open { display: flex; }
+@keyframes wchat-fadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+/* header */
+.wchat-header {
+  background: linear-gradient(135deg, var(--sky), #2a5a8c);
+  padding: 14px 16px 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.wchat-header-avatar {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.wchat-header-info { flex: 1; }
+.wchat-header-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 600;
+  color: white; line-height: 1.1;
+}
+.wchat-header-name em { color: #D4A017; font-style: italic; }
+.wchat-header-sub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px; font-weight: 500;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.5px;
+  margin-top: 1px;
+}
+.wchat-close {
+  width: 26px; height: 26px; border-radius: 7px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: transparent; color: white;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; transition: background 0.15s;
+  flex-shrink: 0;
+}
+.wchat-close:hover { background: rgba(255,255,255,0.15); }
+/* corpo messaggi */
+.wchat-body {
+  padding: 16px 14px 12px;
+  display: flex; flex-direction: column; gap: 10px;
+  overflow-y: auto; flex: 1;
+}
+/* bolla AI */
+.wchat-msg-ai {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px 16px 16px 16px;
+  padding: 10px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; line-height: 1.6;
+  color: var(--ink);
+  max-width: 88%;
+}
+/* bolla utente */
+.wchat-msg-user {
+  align-self: flex-end;
+  background: var(--sky);
+  color: white;
+  border-radius: 16px 16px 4px 16px;
+  padding: 9px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; line-height: 1.5;
+  max-width: 88%;
+}
+/* suggerimenti */
+.wchat-suggestions {
+  display: flex; flex-direction: column; gap: 7px;
+  margin-top: 4px;
+}
+.wchat-sugg {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 400;
+  color: var(--ink-mid);
+  transition: all 0.16s;
+  text-align: left;
+}
+.wchat-sugg:hover {
+  border-color: var(--sky);
+  color: var(--sky);
+  background: rgba(26,58,92,0.04);
+  transform: translateX(2px);
+}
+.wchat-sugg .wchat-sugg-icon {
+  font-size: 16px; flex-shrink: 0;
+}
+/* typing */
+.wchat-typing {
+  display: flex; align-items: center; gap: 4px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px 16px 16px 16px;
+  width: fit-content;
+}
+.wchat-typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink-soft);
+  animation: wchat-dot 1.2s infinite;
+}
+.wchat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.wchat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes wchat-dot {
+  0%,80%,100% { transform: scale(0.6); opacity:0.4; }
+  40%          { transform: scale(1);   opacity:1; }
+}
+/* input area */
+.wchat-input-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.wchat-input {
+  flex: 1; border: 1.5px solid var(--border);
+  border-radius: 22px; padding: 8px 14px;
+  font-family: 'Outfit', sans-serif; font-size: 13px;
+  color: var(--ink); background: var(--bg);
+  outline: none; transition: border-color 0.15s;
+}
+.wchat-input:focus { border-color: var(--sky); background: var(--white); }
+.wchat-input::placeholder { color: var(--ink-soft); }
+.wchat-send {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--sky); border: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: opacity 0.15s;
+}
+.wchat-send:hover { opacity: 0.85; }
+/* dark mode */
+body.dark #wchat-panel { background: var(--bg-card); }
+body.dark .wchat-msg-ai { background: var(--bg); }
+body.dark .wchat-sugg { background: var(--bg-card); }
+body.dark .wchat-input { background: var(--bg); color: var(--ink); }
+body.dark .wchat-input:focus { background: var(--bg-card); }
+/* mobile */
+@media (max-width: 480px) {
+  #wchat-bubble { bottom: 16px; right: 14px; }
+}
+</style>
+
+<!-- HTML widget -->
+<div id="wchat-bubble">
+  <div id="wchat-panel">
+    <div class="wchat-header">
+      <div class="wchat-header-avatar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="wchat-header-info">
+        <div class="wchat-header-name">Modica<em>AI</em></div>
+        <div class="wchat-header-sub">Assistente locale · online</div>
+      </div>
+      <button class="wchat-close" onclick="wchatClose()" aria-label="Chiudi">✕</button>
+    </div>
+    <div class="wchat-body" id="wchatBody">
+      <div class="wchat-msg-ai">
+        Ciao! 👋 Sono ModicaAI, il tuo assistente per Modica e il Val di Noto.<br>
+        <strong style="color:var(--sky)">Come posso aiutarti?</strong>
+      </div>
+      <div class="wchat-suggestions" id="wchatSugg">
+        <button class="wchat-sugg" onclick="wchatSugg('Che tempo fa a Modica?')">
+          <span class="wchat-sugg-icon">🌤️</span> Controlla il meteo
+        </button>
+        <button class="wchat-sugg" onclick="wchatSugg('Com\'è il mare a Marina di Modica?')">
+          <span class="wchat-sugg-icon">🌊</span> Mare a Marina
+        </button>
+        <button class="wchat-sugg" onclick="wchatSugg('Cosa vedere a Modica?')">
+          <span class="wchat-sugg-icon">🏛️</span> Scopri Modica
+        </button>
+        <button class="wchat-sugg" onclick="wchatFocusInput()">
+          <span class="wchat-sugg-icon">💬</span> Chiedi in chat
+        </button>
+      </div>
+    </div>
+    <div class="wchat-input-row">
+      <input
+        class="wchat-input"
+        id="wchatInput"
+        type="text"
+        placeholder="Scrivi un messaggio..."
+        autocomplete="off"
+        onkeydown="if(event.key==='Enter')wchatInvia()"
+      >
+      <button class="wchat-send" onclick="wchatInvia()" aria-label="Invia">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+      </button>
+    </div>
+  </div>
+  <button id="wchat-toggle" onclick="wchatToggle()" aria-label="Apri chat">
+    <div id="wchat-dot"></div>
+    <svg id="wchat-icon-chat" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <svg id="wchat-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
+<script>
+(function(){
+  // ── Stato ──────────────────────────────────────────────────────────
+  let _wcOpen = false;
+  let _wcConversazione = []; // storico messaggi widget
+
+  // ── Mostra il widget dopo 5 secondi ───────────────────────────────
+  setTimeout(function(){
+    document.getElementById('wchat-bubble').style.display = 'block';
+  }, 5000);
+
+  // ── Apri / chiudi ─────────────────────────────────────────────────
+  window.wchatToggle = function() {
+    _wcOpen ? wchatClose() : wchatOpen();
+  };
+  window.wchatOpen = function() {
+    _wcOpen = true;
+    document.getElementById('wchat-panel').classList.add('open');
+    document.getElementById('wchat-icon-chat').style.display  = 'none';
+    document.getElementById('wchat-icon-close').style.display = '';
+    document.getElementById('wchat-dot').style.display = 'none';
+  };
+  window.wchatClose = function() {
+    _wcOpen = false;
+    document.getElementById('wchat-panel').classList.remove('open');
+    document.getElementById('wchat-icon-chat').style.display  = '';
+    document.getElementById('wchat-icon-close').style.display = 'none';
+  };
+
+  // ── Click su suggerimento ─────────────────────────────────────────
+  window.wchatSugg = function(domanda) {
+    // Nasconde i suggerimenti
+    const sugg = document.getElementById('wchatSugg');
+    if (sugg) sugg.style.display = 'none';
+    _wcInvia(domanda);
+  };
+
+  // ── Focus sull'input (bottone "Chiedi in chat") ───────────────────
+  window.wchatFocusInput = function() {
+    const sugg = document.getElementById('wchatSugg');
+    if (sugg) sugg.style.display = 'none';
+    setTimeout(function(){ document.getElementById('wchatInput').focus(); }, 80);
+  };
+
+  // ── Invia dal campo input ─────────────────────────────────────────
+  window.wchatInvia = function() {
+    const inp = document.getElementById('wchatInput');
+    const testo = inp.value.trim();
+    if (!testo) return;
+    inp.value = '';
+    const sugg = document.getElementById('wchatSugg');
+    if (sugg) sugg.style.display = 'none';
+    _wcInvia(testo);
+  };
+
+  // ── Core: aggiunge msg utente + chiama backend ────────────────────
+  async function _wcInvia(domanda) {
+    _wcAddMsg('user', domanda);
+    _wcConversazione.push({ role: 'user', content: domanda });
+
+    // Typing indicator
+    const typId = 'wct' + Date.now();
+    _wcAddRaw(`<div class="wchat-typing" id="${typId}"><span></span><span></span><span></span></div>`);
+    _wcScroll();
+
+    try {
+      const res = await fetch(API_URL + '/ask-stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          domanda: domanda,
+          session_id: (typeof SESSION_ID !== 'undefined' ? SESSION_ID : 'wchat'),
+          cronologia: _wcConversazione.slice(0, -1),
+          lang: (typeof lang !== 'undefined' ? lang : 'it')
+        })
+      });
+
+      if (!res.ok || !res.body) throw new Error('stream error');
+
+      // Rimuove typing, crea bolla risposta
+      const typEl = document.getElementById(typId);
+      if (typEl) typEl.remove();
+      const bubbleId = 'wcb' + Date.now();
+      _wcAddRaw(`<div class="wchat-msg-ai" id="${bubbleId}"></div>`);
+      _wcScroll();
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '', fullText = '';
+      const bubble = document.getElementById(bubbleId);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          try {
+            const evt = JSON.parse(line.slice(6));
+            if (evt.type === 'token' && bubble) {
+              fullText += evt.text;
+              bubble.innerHTML = _wcMarkdown(fullText);
+              _wcScroll();
+            }
+          } catch(e) {}
+        }
+      }
+
+      _wcConversazione.push({ role: 'assistant', content: fullText });
+
+    } catch(e) {
+      const typEl = document.getElementById(typId);
+      if (typEl) typEl.remove();
+      _wcAddMsg('ai', '⚠️ Ops, errore di rete. Riprova tra poco.');
+    }
+  }
+
+  // ── Helper: aggiunge bolla user o ai ─────────────────────────────
+  function _wcAddMsg(tipo, testo) {
+    const cls = tipo === 'user' ? 'wchat-msg-user' : 'wchat-msg-ai';
+    _wcAddRaw(`<div class="${cls}">${tipo === 'ai' ? _wcMarkdown(testo) : _wcEscape(testo)}</div>`);
+    _wcScroll();
+  }
+
+  function _wcAddRaw(html) {
+    const body = document.getElementById('wchatBody');
+    if (!body) return;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    body.appendChild(tmp.firstChild);
+  }
+
+  function _wcScroll() {
+    const body = document.getElementById('wchatBody');
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+
+  // Markdown minimo: **bold**, *italic*, \n→<br>
+  function _wcMarkdown(t) {
+    return t
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .replace(/\n/g,'<br>');
+  }
+
+  function _wcEscape(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+})();
+</script>
+<!-- ══════════════════════════════════════════════════════ -->
+  
 </body>
