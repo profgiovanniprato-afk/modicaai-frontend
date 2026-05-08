@@ -80,13 +80,18 @@
 <meta name="ICBM" content="36.8604, 14.7742">
 
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ"></script>
+<!-- Google Analytics — caricato solo dopo consenso cookie -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6KDD1Z4WMZ');
+  (function(){
+    if (localStorage.getItem('modicaai_consent') === 'accepted') {
+      var s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-6KDD1Z4WMZ';
+      document.head.appendChild(s);
+      s.onload = function(){ gtag('js', new Date()); gtag('config', 'G-6KDD1Z4WMZ', {'anonymize_ip': true}); };
+    }
+  })();
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1136,7 +1141,7 @@
     <a href="/modica.html" class="snb-link">Modica</a>
     <a href="/val-di-noto.html" class="snb-link">Val di Noto</a>
     <a href="/news.html" class="snb-link">News</a>
-        <a href="/mission.html" class="snb-link">Mission</a>
+    <a href="/mission.html" class="snb-link">Mission</a>
     <div class="snb-dropdown">
       <button class="snb-dropdown-btn  snb-dropdown-btn--active">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
       <div class="snb-dropdown-menu">
