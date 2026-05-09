@@ -947,7 +947,126 @@ body.dark .traffic-zona-card{background:rgba(255,255,255,0.04);}
       <a href="/gioco.html" class="hc-footer-link">Giochi</a>
     </div>
   </div>
-  <div class="hc-footer-bottom">
+    <!-- RETE AI SICILIA -->
+  <div class="hc-footer-rete">
+    <div class="hc-footer-rete-title">Rete AI Sicilia</div>
+    <div class="hc-footer-rete-nodes">
+      <a href="https://www.modicaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-live" title="ModicaAI">
+        <span class="hc-rete-dot"></span>
+        <span class="hc-rete-name">ModicaAI</span>
+        <span class="hc-rete-badge">Live</span>
+      </a>
+      <a href="https://www.ragusaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-ragusa" title="RagusaAI">
+        <span class="hc-rete-dot"></span>
+        <span class="hc-rete-name">RagusaAI</span>
+        <span class="hc-rete-badge">Coming soon</span>
+      </a>
+      <a href="https://www.siracusaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-siracusa" title="SiracusaAI">
+        <span class="hc-rete-dot"></span>
+        <span class="hc-rete-name">SiracusaAI</span>
+        <span class="hc-rete-badge">Coming soon</span>
+      </a>
+      <a href="https://www.cataniaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-catania" title="CataniaAI">
+        <span class="hc-rete-dot"></span>
+        <span class="hc-rete-name">CataniaAI</span>
+        <span class="hc-rete-badge">Coming soon</span>
+      </a>
+      <a href="https://www.siciliaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-sicilia" title="SiciliaAI">
+        <span class="hc-rete-dot"></span>
+        <span class="hc-rete-name">SiciliaAI.it</span>
+        <span class="hc-rete-badge">In arrivo</span>
+      </a>
+      <a href="https://www.siciliaai.com" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-sicilia" title="SiciliaAI.com">
+        <span class="hc-rete-dot"></span>
+        <span class="hc-rete-name">SiciliaAI.com</span>
+        <span class="hc-rete-badge">In arrivo</span>
+      </a>
+    </div>
+  </div>
+  <!-- CSS RETE AI SICILIA (inline per portabilità) -->
+  <style>
+  .hc-footer-rete {
+    border-top: 1px solid rgba(201,168,76,0.18);
+    padding: 28px 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .hc-footer-rete-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.55);
+  }
+  .hc-footer-rete-nodes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .hc-rete-node {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.04);
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  .hc-rete-node:hover { background: rgba(255,255,255,0.08); text-decoration: none; }
+  .hc-rete-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .hc-rete-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+  }
+  .hc-rete-badge {
+    font-family: 'Outfit', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 8px;
+  }
+  /* ModicaAI — Blu barocco #1A3A5C */
+  .hc-rete-live .hc-rete-dot   { background: #4A9EDB; box-shadow: 0 0 6px rgba(74,158,219,0.7); }
+  .hc-rete-live .hc-rete-badge { background: rgba(74,158,219,0.18); color: #4A9EDB; }
+  .hc-rete-live { border-color: rgba(74,158,219,0.35); }
+  /* RagusaAI — Oro barocco #B8860B */
+  .hc-rete-ragusa .hc-rete-dot   { background: #C9A84C; }
+  .hc-rete-ragusa .hc-rete-badge { background: rgba(201,168,76,0.15); color: #C9A84C; }
+  .hc-rete-ragusa { border-color: rgba(201,168,76,0.25); }
+  /* SiracusaAI — Blu mare #1A5C7A */
+  .hc-rete-siracusa .hc-rete-dot   { background: #3A9EC4; }
+  .hc-rete-siracusa .hc-rete-badge { background: rgba(58,158,196,0.15); color: #3A9EC4; }
+  .hc-rete-siracusa { border-color: rgba(58,158,196,0.25); }
+  /* CataniaAI — Rosso lava #C1440E */
+  .hc-rete-catania .hc-rete-dot   { background: #D4603A; }
+  .hc-rete-catania .hc-rete-badge { background: rgba(212,96,58,0.15); color: #D4603A; }
+  .hc-rete-catania { border-color: rgba(212,96,58,0.25); }
+  /* SiciliaAI — Oro siciliano */
+  .hc-rete-sicilia .hc-rete-dot   { background: rgba(201,168,76,0.45); }
+  .hc-rete-sicilia .hc-rete-badge { background: rgba(201,168,76,0.10); color: rgba(201,168,76,0.60); }
+  .hc-rete-sicilia { border-color: rgba(201,168,76,0.15); opacity: 0.7; }
+  @media (max-width: 600px) {
+    .hc-footer-rete { padding: 22px 16px 20px; }
+    .hc-rete-node   { padding: 6px 11px; }
+    .hc-rete-name   { font-size: 11px; }
+  }
+  </style>
+  <!-- /RETE AI SICILIA -->
+<div class="hc-footer-bottom">
     <span>© 2026 ModicaAI · Modica, Sicilia</span>
     <div class="hc-footer-bottom-links">
       <a href="/contatti.html">Contatti</a>
