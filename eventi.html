@@ -977,8 +977,6 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     z-index: 600;
     backdrop-filter: blur(12px);
-    max-height: 70vh;
-    overflow-y: auto;
   }
   .snb-dropdown:hover .snb-dropdown-menu { display: block; }
   .snb-dropdown-menu a {
@@ -1206,14 +1204,6 @@
   </script>
   <!-- GetYourGuide Analytics -->
   <script async defer src="https://widget.getyourguide.com/dist/pa.umd.production.min.js" data-gyg-partner-id="DMX89IP"></script>
-
-  <!-- hreflang multilingua -->
-  <link rel="alternate" hreflang="x-default" href="https://www.modicaai.it/eventi.html" />
-  <link rel="alternate" hreflang="it" href="https://www.modicaai.it/eventi.html" />
-  <link rel="alternate" hreflang="en" href="https://www.modicaai.it/eventi-en.html" />
-  <link rel="alternate" hreflang="de" href="https://www.modicaai.it/eventi-de.html" />
-  <link rel="alternate" hreflang="fr" href="https://www.modicaai.it/eventi-fr.html" />
-  <link rel="alternate" hreflang="es" href="https://www.modicaai.it/eventi-es.html" />
 </head>
 <body>
 
@@ -1231,7 +1221,6 @@
       <div class="snb-dropdown-menu">
         <a href="/cioccolato.html">Cioccolato IGP</a>
         <a href="/cosa-vedere.html">Cosa vedere</a>
-        <a href="/tour-guidati-modica.html" style="color:#D4A017;font-weight:600;">🗺️ Tour guidati</a>
         <a href="/come-arrivare.html">Come arrivare</a>
         <a href="/gastronomia.html">Gastronomia</a>
         <div class="snb-drop-sep"></div>
@@ -1591,6 +1580,18 @@
     <div class="info-card"><div class="info-card-title">🎭 Apr — Giu</div><p>Teatro Garibaldi — Stagione prosa e musica (Fresu, Molinari, Bellini, Massini)</p></div>
     <div class="info-card"><div class="info-card-title">🎄 Dicembre</div><p>Presepi viventi, mercatini, Concerto di Capodanno al Garibaldi</p></div>
     <div class="highlight"><strong>Nota:</strong> Le date degli eventi estivi e di ChocoModica possono subire variazioni. Chiedi a ModicaAI per conferme e programmi aggiornati.</div>
+  </div>
+
+  <div class="seo-section">
+    <h2><span class="sec-icon">🗺️</span> Tour Guidati a Modica</h2>
+    <p>Visitare Modica durante un evento è un'esperienza ancora più intensa con una guida esperta al tuo fianco. I tour guidati ti permettono di scoprire il centro storico barocco, i segreti del cioccolato IGP, i luoghi del commissario Montalbano e le chiese patrimonio UNESCO con occhi diversi — capendo cosa si cela dietro ogni facciata, ogni vicolo, ogni tradizione.</p>
+    <div class="info-card">
+      <div class="info-card-title">🏛️ Cosa puoi scoprire con un tour guidato</div>
+      <p>Dal Duomo di San Giorgio alle cantine storiche del cioccolato, dai quartieri di Modica Alta alle viste mozzafiato sul barocco ibleo — ogni tour è un modo per portare a casa qualcosa in più di una fotografia. Disponibili tour a piedi, in e-bike, esperienze gastronomiche e visite tematiche dedicate a eventi specifici come ChocoModica.</p>
+    </div>
+    <a href="/tour-guidati-modica.html" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--sky),#2a5a8c);color:#fff;text-decoration:none;padding:12px 26px;border-radius:24px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;margin-top:16px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+      Scopri tutti i tour guidati →
+    </a>
   </div>
 
   <div class="cta-box">
@@ -2143,47 +2144,5 @@ caricaTraffco();
   </div>
 </footer>
 
-
-<script>
-/* ── Switcher lingua — generato automaticamente ── */
-(function() {
-  var _langMap = { "it": "/eventi.html", "en": "/eventi-en.html", "de": "/eventi-de.html", "fr": "/eventi-fr.html", "es": "/eventi-es.html" };
-  function _navigateLang(lang) {
-    var target = _langMap[lang];
-    if (target && window.location.pathname !== target) {
-      window.location.href = target;
-    }
-  }
-  /* Override setLang per le pagine SEO */
-  var _origSetLang = window.setLang;
-  window.setLang = function(btn, lang) {
-    if (_origSetLang) _origSetLang(btn, lang);
-    _navigateLang(lang);
-  };
-  window.setLangMobile = function(lang, flag, code) {
-    var mf = document.getElementById('langMobileFlag'); if(mf) mf.textContent = flag;
-    var mc = document.getElementById('langMobileCode'); if(mc) mc.textContent = code;
-    var dd = document.getElementById('langDropdown'); if(dd) dd.classList.remove('open');
-    _navigateLang(lang);
-  };
-  /* Evidenzia il bottone della lingua corrente al caricamento */
-  document.addEventListener('DOMContentLoaded', function() {
-    var currentLang = 'en';
-    var path = window.location.pathname;
-    Object.keys(_langMap).forEach(function(lang) {
-      if (_langMap[lang] === path) currentLang = lang;
-    });
-    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
-    var active = document.querySelector('.lang-btn[onclick*="\'' + currentLang + '\'"]');
-    if (active) active.classList.add('active');
-    var drop = document.getElementById('drop-' + currentLang);
-    if (drop) drop.classList.add('active');
-    var flags = {it:'🇮🇹',en:'🇬🇧',de:'🇩🇪',fr:'🇫🇷',es:'🇪🇸'};
-    var codes = {it:'IT',en:'EN',de:'DE',fr:'FR',es:'ES'};
-    var mf = document.getElementById('langMobileFlag'); if(mf && flags[currentLang]) mf.textContent = flags[currentLang];
-    var mc = document.getElementById('langMobileCode'); if(mc && codes[currentLang]) mc.textContent = codes[currentLang];
-  });
-})();
-</script>
 </body>
 </html>
