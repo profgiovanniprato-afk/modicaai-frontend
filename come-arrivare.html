@@ -990,8 +990,6 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     z-index: 600;
     backdrop-filter: blur(12px);
-    max-height: 70vh;
-    overflow-y: auto;
   }
   .snb-dropdown:hover .snb-dropdown-menu { display: block; }
   .snb-dropdown-menu a {
@@ -1139,13 +1137,13 @@
 <nav class="site-nav-bar" role="navigation" aria-label="Navigazione principale">
   <a href="/" class="snb-logo">Modica<span>AI</span></a>
   <div class="snb-links">
-    <a href="/" class="snb-link">Home</a>
+    <a href="/" class="snb-link active">Home</a>
     <a href="/modica.html" class="snb-link">Modica</a>
     <a href="/val-di-noto.html" class="snb-link">Val di Noto</a>
     <a href="/news.html" class="snb-link">News</a>
     <a href="/mission.html" class="snb-link">Mission</a>
     <div class="snb-dropdown">
-      <button class="snb-dropdown-btn  snb-dropdown-btn--active">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <button class="snb-dropdown-btn">Guide<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
       <div class="snb-dropdown-menu">
         <a href="/cioccolato.html">Cioccolato IGP</a>
         <a href="/cosa-vedere.html">Cosa vedere</a>
@@ -1310,7 +1308,8 @@
     <p style="font-size:15px;color:rgba(255,255,255,0.65);max-width:540px;margin:0 auto;line-height:1.6;font-weight:300;">Da Catania aeroporto in meno di due ore, con autobus diretto a sette euro. Da Ragusa in venti minuti. Tutte le opzioni, con prezzi reali.</p>
   </div>
 
-  <div style="max-width:780px;margin:0 auto;padding:36px 24px 20px;font-family:'Outfit',sans-serif;">
+  <div class="seo-content">
+<div style="max-width:780px;margin:0 auto;padding:36px 24px 20px;font-family:'Outfit',sans-serif;">
     <div class="pg-breadcrumb"><a href="/">Home</a> &rsaquo; Come Arrivare a Modica — Aereo, Auto, Autobus</div>
 
     <div class="pg-section">
@@ -1492,6 +1491,7 @@
       </svg>
     </button>
   </div>
+</div>
 </div>
 <!-- ── CTA BLU ── -->
 <style>
