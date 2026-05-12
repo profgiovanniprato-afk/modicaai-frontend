@@ -1170,6 +1170,14 @@
 </style>
 <!-- GetYourGuide Analytics -->
 <script async defer src="https://widget.getyourguide.com/dist/pa.umd.production.min.js" data-gyg-partner-id="DMX89IP"></script>
+
+  <!-- hreflang multilingua -->
+  <link rel="alternate" hreflang="x-default" href="https://www.modicaai.it/chocomodica.html" />
+  <link rel="alternate" hreflang="it" href="https://www.modicaai.it/chocomodica.html" />
+  <link rel="alternate" hreflang="en" href="https://www.modicaai.it/chocomodica-en.html" />
+  <link rel="alternate" hreflang="de" href="https://www.modicaai.it/chocomodica-de.html" />
+  <link rel="alternate" hreflang="fr" href="https://www.modicaai.it/chocomodica-fr.html" />
+  <link rel="alternate" hreflang="es" href="https://www.modicaai.it/chocomodica-es.html" />
 </head>
 <body>
 
@@ -2093,6 +2101,48 @@ caricaNotizie();
 caricaCarburantiFuel();
 caricaTraffco();
 (function(){if(_rmLoad())rmToggle();})();
+</script>
+
+<script>
+/* ── Switcher lingua — generato automaticamente ── */
+(function() {
+  var _langMap = { "it": "/chocomodica.html", "en": "/chocomodica-en.html", "de": "/chocomodica-de.html", "fr": "/chocomodica-fr.html", "es": "/chocomodica-es.html" };
+  function _navigateLang(lang) {
+    var target = _langMap[lang];
+    if (target && window.location.pathname !== target) {
+      window.location.href = target;
+    }
+  }
+  /* Override setLang per le pagine SEO */
+  var _origSetLang = window.setLang;
+  window.setLang = function(btn, lang) {
+    if (_origSetLang) _origSetLang(btn, lang);
+    _navigateLang(lang);
+  };
+  window.setLangMobile = function(lang, flag, code) {
+    var mf = document.getElementById('langMobileFlag'); if(mf) mf.textContent = flag;
+    var mc = document.getElementById('langMobileCode'); if(mc) mc.textContent = code;
+    var dd = document.getElementById('langDropdown'); if(dd) dd.classList.remove('open');
+    _navigateLang(lang);
+  };
+  /* Evidenzia il bottone della lingua corrente al caricamento */
+  document.addEventListener('DOMContentLoaded', function() {
+    var currentLang = 'en';
+    var path = window.location.pathname;
+    Object.keys(_langMap).forEach(function(lang) {
+      if (_langMap[lang] === path) currentLang = lang;
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+    var active = document.querySelector('.lang-btn[onclick*="\'' + currentLang + '\'"]');
+    if (active) active.classList.add('active');
+    var drop = document.getElementById('drop-' + currentLang);
+    if (drop) drop.classList.add('active');
+    var flags = {it:'🇮🇹',en:'🇬🇧',de:'🇩🇪',fr:'🇫🇷',es:'🇪🇸'};
+    var codes = {it:'IT',en:'EN',de:'DE',fr:'FR',es:'ES'};
+    var mf = document.getElementById('langMobileFlag'); if(mf && flags[currentLang]) mf.textContent = flags[currentLang];
+    var mc = document.getElementById('langMobileCode'); if(mc && codes[currentLang]) mc.textContent = codes[currentLang];
+  });
+})();
 </script>
 </body>
 </html>

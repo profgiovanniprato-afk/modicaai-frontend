@@ -18,19 +18,19 @@
 <link href="https://modicaai-api.onrender.com" rel="preconnect"/>
 <link href="https://www.modicaai.it/eventi.html" hreflang="it" rel="alternate">
 <link href="https://www.modicaai.it/eventi.html" hreflang="x-default" rel="alternate">
-<title>Modica Events 2026: Summer, Festivals &amp; ChocoModica</title>
-<meta content="Discover Modica's 2026 events: summer concerts, food festivals, ChocoModica, San Pietro, and more. Updated calendar with dates, times, &amp; programs." name="description"/>
+<title>Modica Events 2026: Festivals, Parties | ModicaAI</title>
+<meta content="Modica Events 2026: ChocoModica, patron festivals, concerts, local fairs. Full calendar with dates and details. Updated live." name="description"/>
 <meta content="article" property="og:type"/>
 <meta content="https://www.modicaai.it/eventi-en.html" property="og:url"/>
-<meta content="Modica Events Summer 2026: Festivals, Concerts &amp; ChocoModica" property="og:title"/>
-<meta content="All Modica events in 2026: summer concerts, food festivals, ChocoModica, San Pietro, and more. Updated calendar with dates, times, and programs." property="og:description"/>
+<meta content="Modica Events 2026: Festivals, Parties | ModicaAI" property="og:title"/>
+<meta content="Modica Events 2026: ChocoModica, patron festivals, concerts, local fairs. Full calendar with dates and details. Updated live." property="og:description"/>
 <meta content="https://www.modicaai.it/icon-512.png" property="og:image"/>
-<meta content="it_IT" property="og:locale"/>
+<meta content="en_GB" property="og:locale"/>
 <meta content="2026-04-08" property="og:updated_time"/>
 <meta content="ModicaAI" property="og:site_name"/>
 <meta content="summary_large_image" name="twitter:card"/>
-<meta content="Eventi Modica Estate 2026: Sagre, Concerti e ChocoModica | ModicaAI" name="twitter:title"/>
-<meta content="Tutti gli eventi a Modica nel 2026: concerti estivi, sagre, ChocoModica, Festa di San Pietro e molto altro. Calendario aggiornato con date, orari e programmi." name="twitter:description"/>
+<meta content="Eventi a Modica 2026: Sagre, Feste e Manifestazioni in Tempo Reale | ModicaAI" name="twitter:title"/>
+<meta content="Eventi a Modica 2026 aggiornati in tempo reale: ChocoModica, feste patronali, concerti, sagre. Calendario completo con date e dettagli." name="twitter:description"/>
 <meta content="https://www.modicaai.it/icon-512.png" name="twitter:image"/>
 <link href="https://www.modicaai.it/eventi-en.html" rel="canonical">
 <script type="application/ld+json">
@@ -976,6 +976,8 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     z-index: 600;
     backdrop-filter: blur(12px);
+    max-height: 70vh;
+    overflow-y: auto;
   }
   .snb-dropdown:hover .snb-dropdown-menu { display: block; }
   .snb-dropdown-menu a {
@@ -1217,14 +1219,16 @@
 <a class="snb-logo" href="/">Modica<span>AI</span></a>
 <div class="snb-links">
 <a class="snb-link active" href="/">Home</a>
+<a class="snb-link" href="/modica.html">Modica</a>
+<a class="snb-link" href="/val-di-noto.html">Val di Noto</a>
 <a class="snb-link" href="/news.html">News</a>
-<a class="snb-link" href="/gioco.html">Giochi</a>
 <a class="snb-link" href="/mission.html">Mission</a>
 <div class="snb-dropdown">
 <button class="snb-dropdown-btn">Guide<svg fill="none" height="9" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24" width="9"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
 <div class="snb-dropdown-menu">
 <a href="/cioccolato.html">Cioccolato IGP</a>
 <a href="/cosa-vedere.html">Cosa vedere</a>
+<a href="/tour-guidati-modica.html" style="color:#D4A017;font-weight:600;">🗺️ Tour guidati</a>
 <a href="/come-arrivare.html">Come arrivare</a>
 <a href="/gastronomia.html">Gastronomia</a>
 <div class="snb-drop-sep"></div>
@@ -1384,10 +1388,10 @@
 </div>
 </div>
 <div class="seo-content">
-<div class="seo-eyebrow">Events and Festivals · Modica, Sicily</div>
+<div class="seo-eyebrow">Events &amp; Festivals · Modica, Sicily</div>
 <h1 class="seo-title">Events <em>Modica</em> 2026</h1>
 <div class="seo-divider"></div>
-<p class="seo-intro">Modica is a vibrant city year-round. From patron saint festivals that draw tens of thousands of people to summer concerts in Marina di Modica, and the renowned ChocoModica in the autumn. Here is the calendar of main events for 2026.</p>
+<p class="seo-intro">Modica is a vibrant city year-round. From patron saint festivals that draw tens of thousands of people to summer concerts in Marina di Modica, and the renowned ChocoModica in autumn. Here is the calendar of major events for 2026.</p>
 <!-- Foto editoriale eventi -->
 <div style="margin:0 -24px 36px;position:relative;border-radius:16px;overflow:hidden;height:320px;">
 <img alt="Corso Umberto I of Modica at night during an event — market stalls, lanterns, and the illuminated San Pietro Cathedral" loading="lazy" src="/gallery/modica-eventi-2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block;"/>
@@ -1397,7 +1401,7 @@
 <p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#fff;margin:4px 0 0;line-height:1.2;">The city transforms during events</p>
 </div>
 </div>
-<!-- ═══ LIVE Events Section (dynamic loading from /eventi-aggregated) ═══ -->
+<!-- ═══ LIVE EVENTS Section (dynamic loading from /eventi-aggregated) ═══ -->
 <div class="ev-live-wrap" id="evLiveWrap">
 <div class="ev-live-header">
 <div class="ev-live-title"><div class="ev-pulse"></div> Scheduled Events</div>
@@ -1412,97 +1416,108 @@
 <div class="info-card">
 <div class="info-card-title">📅 Sunday, April 5, 2026</div>
 <div class="info-card-meta"><span>📍 Corso Umberto I, Piazza Monumento</span><span>🕐 Noon kiss at precisely midday</span></div>
-<p>The most attended festival in Modica. Two processions depart from the church of Santa Maria di Betlem carrying the simulacra of the Risen Christ and the Madonna (covered by a black veil). At noon, the two statues meet in Piazza Monumento: the Madonna drops her veil, opens her arms, and embraces her Son. This is the traditional "vasata" (kiss), accompanied by white doves flying and the music of the Belluardo-Risadelli Band. The ritual is repeated in Piazza San Giorgio and at the entrance of Santa Maria di Betlem.</p>
+<p>Modica's most attended festival. Two processions depart from the Church of Santa Maria di Betlem carrying the simulacra of the Risen Christ and the Madonna (covered by a black veil). At noon, the two statues meet in Piazza Monumento: the Madonna drops her veil, opens her arms, and embraces her Son. This is the traditional "vasata" (kiss), accompanied by white doves flying and the music of the Banda Belluardo-Risadelli. The ritual is repeated in Piazza San Giorgio and at the entrance to Santa Maria di Betlem.</p>
 </div>
-<p>In 2026, the tenth anniversary of the evening procession (established in 2016) will also be celebrated. The 7:00 PM Mass will be presided over by the Bishop of Noto, followed by the nocturnal procession towards the Sanctuary of the Madonna delle Grazie. On Itria Tuesday (April 7th), the festivities continue with cavatelli banquets and the "Sotto 90" game.</p>
+<p>In 2026, the tenth anniversary of the evening procession (established in 2016) will also be celebrated. The 7:00 PM Mass will be presided over by the Bishop of Noto, followed by the night procession towards the Sanctuary of the Madonna delle Grazie. The "Martedì dell'Itria" (Tuesday, April 7) extends the festivities with cavatelli banquets and the "Sotto 90" game.</p>
 </div>
 <div class="seo-section">
-<h2><span class="sec-icon">🐉</span> Feast of San Giorgio — Patron Saint</h2>
+<h2><span class="sec-icon">🐉</span> Feast of Saint George — Patron Saint</h2>
 <div class="info-card">
 <div class="info-card-title">📅 Weekend of April 26, 2026</div>
 <div class="info-card-meta"><span>📍 Duomo di San Giorgio, Modica Alta</span><span>🎆 Fireworks and illuminations</span></div>
-<p>San Giorgio has been the patron saint of Modica since 1063, when Count Roger defeated the Muslims at Cerami after the saint appeared to him in a dream. On Sunday afternoon, the simulacrum — a knight slaying a dragon — emerges from the Duomo amidst fireworks and colored flyers. The Sangiorgiari carry the statue on their shoulders at a brisk pace, simulating the horse's gallop. In the evening, the statue returns to the church with traditional laps around the naves.</p>
+<p>Saint George has been the patron saint of Modica since 1063, when Count Roger defeated the Muslims at Cerami after the saint appeared to him in a dream. On Sunday afternoon, the simulacrum — a knight slaying a dragon — exits the Duomo amidst fireworks and colorful flyers. The "Sangiorgiari" carry the statue on their shoulders at a brisk pace, simulating the horse's gallop. In the evening, the statue is returned to the church with traditional circuits through the naves.</p>
 </div>
 <p>On Saturday morning, 23 cannon shots announce the start of the celebrations. The day before, children carry a smaller replica of the simulacrum in procession through the streets of Modica Alta.</p>
 </div>
 <div class="seo-section">
-<h2><span class="sec-icon">🔥</span> Feast of San Pietro — Co-Patron Saint</h2>
+<h2><span class="sec-icon">🙏</span> Feast of Our Lady of Graces — Patron Saint of Modica</h2>
+<div class="info-card">
+<div class="info-card-title">📅 Third Sunday of May — May 17, 2026</div>
+<div class="info-card-meta"><span>📍 Santuario della Madonna delle Grazie, Modica</span><span>🕕 First Mass: 6:00 AM</span></div>
+<p>The feast of Our Lady of Graces is one of the most heartfelt in Modica — a celebration where the spiritual dimension prevails over the folkloric. Festivities begin as early as April 30 and reach their peak on the third Sunday of May.</p>
+<p>At dawn, barefoot devotees — known as the <em>Scausi</em> (the barefoot ones) — begin a long pilgrimage to the Sanctuary for the first Mass at 6:00 AM, among a large crowd that gathers despite the unusual hour. The pilgrimage only concludes late at night, upon the procession's return.</p>
+<p>The procession of the simulacrum travels along Via Mercè, Corso Umberto, Vittorio Veneto, and Viale Medaglie d'Oro, returning to the Sanctuary to the sound of fireworks offered by the Municipality. Balconies are illuminated and adorned with flowers to welcome the Madonna's passage. Upon returning to the church, the simulacrum is moved back and forth three times on the large parvis.</p>
+<p><strong>Origins:</strong> The devotion dates back to the miraculous event of May 4, 1615, when an slate tablet depicting the Madonna and Child was found intact — it had been burning incessantly for three days in a thorn bush without being consumed. The Sanctuary was built where the precious tablet is still venerated today.</p>
+</div>
+</div>
+<div class="seo-section">
+<h2><span class="sec-icon">🔥</span> Feast of Saint Peter — Co-Patron Saint</h2>
 <div class="info-card">
 <div class="info-card-title">📅 June 29, 2026</div>
 <div class="info-card-meta"><span>📍 Duomo di San Pietro, Corso Umberto I</span><span>🎪 San Pietro Fair (last 3 days of June)</span></div>
-<p>On June 29th, the evening procession of the simulacrum of San Pietro — a work by Palermo-born Benedetto Civiletti (1893), depicting the miracle of healing the paralytic — passes through the historic center illuminated by thousands of torches. The impressive size of the statue requires the spontaneous effort of dozens of faithful.</p>
+<p>On June 29, the evening procession of the simulacrum of Saint Peter — a work by Palermo's Benedetto Civiletti (1893), depicting the miracle of healing the paralytic — winds through the historic center illuminated by thousands of torches. The imposing statue requires the voluntary effort of dozens of devotees.</p>
 </div>
-<p>The San Pietro Fair is the most anticipated aspect: for the last three days of June, stalls invade the historic center, with Viale Medaglie d'Oro transformed into a river of people. Local crafts, street food, colors, and traditions.</p>
+<p>The San Pietro Fair is the most anticipated aspect: for the last three days of June, stalls flood the historic center, with Viale Medaglie d'Oro transformed into a river of people. Local crafts, street food, colors, and traditions.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🤘</span> Modica Rock Fest — May 1, 2026</h2>
 <div class="info-card">
 <div class="info-card-title">📅 May 1, 2026 — 12:00 PM → Midnight</div>
 <div class="info-card-meta"><span>📍 Rock Modica, historic center</span><span>🎟️ Free entry</span></div>
-<p>On May 1st, Modica turns up the volume with <strong>#ModicaRockFest 2026</strong>: 12 non-stop hours of live music, DJ sets, burlesque, bikers' games, street food, and beer. Emerging bands and established groups alternate on stage — VöRA, Trincee d'Asfalto, Mobslay, Shut The Radio, Dodicesima Nota, Frijda, and others. Entry is completely free.</p>
+<p>On May 1, Modica turns up the volume with the <strong>#ModicaRockFest 2026</strong>: 12 non-stop hours of live music, DJ sets, burlesque, bikers' games, street food, and beer. Emerging bands and established groups alternate on stage — VöRA, Trincee d'Asfalto, Mobslay, Shut The Radio, Dodicesima Nota, Frijda, and others. Admission is completely free.</p>
 </div>
 </div>
 <div class="seo-section">
-<h2><span class="sec-icon">🌅</span> Modican Summer</h2>
+<h2><span class="sec-icon">🌅</span> Modica Summer</h2>
 <div class="info-card">
 <div class="info-card-title">📅 July — August 2026</div>
-<div class="info-card-meta"><span>📍 Marina di Modica, historic center</span><span>🎵 Concerts, theater, open-air cinema</span></div>
-<p>Every summer, Modica offers a rich calendar of events between Marina di Modica and the historic center: concerts at the Auditorium Mediterraneo, theatrical performances, open-air cinema, musical evenings in the piazza, night walks through the alleys ("Lune d'Oriente"), foam parties on the beach, and the Tarantarneo (Festival of the Taranta).</p>
+<div class="info-card-meta"><span>📍 Marina di Modica, Historic center</span><span>🎵 Concerts, theater, open-air cinema</span></div>
+<p>Every summer, Modica offers a rich calendar of events in Marina di Modica and the historic center: concerts at the Auditorium Mediterraneo, theater performances, open-air cinema, musical evenings in the squares, night walks through the alleys ("Lune d'Oriente"), foam parties on the beach, and the Tarantarneo (Festival of Taranta).</p>
 </div>
 <div class="highlight"><strong>Summer 2026 program to be updated.</strong> The complete calendar will be published by the Fondazione Teatro Garibaldi and the Municipality of Modica between late May and early June. Ask ModicaAI for real-time updates.</div>
-<p>The Madonna delle Grazie is celebrated on the third Sunday of May with a pilgrimage to the sanctuary. On Ferragosto (August 15th), there are special events in Marina di Modica.</p>
+<p>Our Lady of Graces is celebrated on the third Sunday of May with a pilgrimage to the sanctuary. On Ferragosto (August 15), special events are held in Marina di Modica.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🍫</span> ChocoModica — Chocolate Festival</h2>
 <div class="info-card">
 <div class="info-card-title">📅 October 30 — November 1, 2026</div>
 <div class="info-card-meta"><span>📍 Historic center of Modica</span><span>🎟️ Free entry</span></div>
-<p>The event dedicated to Modica PGI chocolate transforms the historic center into a stage of flavors: food stands, tastings, workshops for adults and children, conferences on the history of chocolate, shows, and entertainment. The historic palaces and baroque squares provide the backdrop for the most delicious event of the Sicilian autumn.</p>
+<p>The festival dedicated to Modica IGP chocolate transforms the historic center into a stage of flavors: food stands, tastings, workshops for adults and children, conferences on the history of chocolate, shows, and entertainment. The historic buildings and Baroque squares provide the backdrop for the most delicious event of the Sicilian autumn.</p>
 </div>
-<p>Modica PGI chocolate is processed cold according to the Aztec recipe, with sugar crystals that give it its characteristic grittiness. Traditional flavors — cinnamon, vanilla, chili pepper, citrus, carob — are joined each year by new experiments from local chocolatiers.</p>
+<p>Modica IGP chocolate is processed cold according to the Aztec recipe, with sugar crystals that give it its characteristic grittiness. The traditional flavors — cinnamon, vanilla, chili pepper, citrus, carob — are joined each year by new experiments from local chocolatiers.</p>
 </div>
 <div class="seo-section">
-<h2><span class="sec-icon">🎭</span> Teatro Garibaldi — 2025/2026 Season</h2>
+<h2><span class="sec-icon">🎭</span> Garibaldi Theater — 2025/2026 Season</h2>
 <div class="info-card">
 <div class="info-card-title">📅 April — June 2026</div>
 <div class="info-card-meta"><span>📍 Teatro Garibaldi, Corso Umberto I 207</span><span>🎟️ Tickets on ciaotickets.com</span></div>
-<p>The Teatro Garibaldi, an 19th-century gem in the heart of Modica with the famous Piero Guccione roundel on the ceiling, hosts a season full of appointments. The 2025/2026 drama-music program continues until June with performances in double shows.</p>
+<p>The Garibaldi Theater, an 18th-century gem in the heart of Modica with Piero Guccione's famous roundel on the ceiling, hosts a season rich in events. The 2025/2026 drama and music program continues until June with performances in double shows.</p>
 </div>
-<h3>Upcoming confirmed performances</h3>
+<h3>Upcoming confirmed events</h3>
 <div class="info-card">
 <div class="info-card-title">🎺 April 12 — Paolo Fresu &amp; Rino Cirinnà</div>
 <div class="info-card-meta"><span>🕐 6:30 PM</span><span>🎵 "Sketches of Islands"</span></div>
-<p>Sardinian trumpeter Paolo Fresu and Rino Cirinnà present a sonic journey through the Mediterranean islands, a tribute to Miles Davis's "Sketches of Spain." A project born from Insulæ Lab that transforms the theater into a sound map.</p>
+<p>Sardinian trumpeter Paolo Fresu and Rino Cirinnà present a sound journey through the Mediterranean islands, a tribute to Miles Davis's "Sketches of Spain." A project born from Insulæ Lab that transforms the theater into a sound map.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎤 April 19 — Simona Molinari &amp; Tony Canto</div>
 <div class="info-card-meta"><span>🕐 6:30 PM</span><span>🎵 Voice and guitar</span></div>
-<p>Simona Molinari, one of the most refined voices in the Italian jazz scene, in concert with Tony Canto. An un-subscribed performance.</p>
+<p>Simona Molinari, one of the most refined voices in Italian jazz, in concert with Tony Canto. An event outside the subscription.</p>
 </div>
 <div class="info-card">
-<div class="info-card-title">🎼 May 10 — Orchestra del Teatro Bellini di Catania</div>
+<div class="info-card-title">🎼 May 10 — Orchestra of the Bellini Theater of Catania</div>
 <div class="info-card-meta"><span>🕐 6:30 PM</span><span>🎵 Symphonic concert</span></div>
-<p>The Orchestra of the Teatro Massimo Bellini of Catania travels to Modica for a symphonic concert. A prestigious event in the musical season.</p>
+<p>The Orchestra of the Teatro Massimo Bellini of Catania visits Modica for a symphonic concert. A highly prestigious event in the music season.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎭 May 12-13 — "Gente di facili costumi"</div>
 <div class="info-card-meta"><span>🕐 9:00 PM</span><span>🎭 by Nino Marino and Nino Manfredi</span></div>
-<p>A brilliant comedy in double shows, part of the drama season that has brought titles like "Perfetti sconosciuti," Molière's "The Miser," and "Moby Dick" to Modica.</p>
+<p>A brilliant comedy in double shows, part of the drama season that brought titles like "Perfetti sconosciuti," Molière's "L'Avaro," and "Moby Dick" to Modica.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎭 May 23-24 — "L'interpretazione dei sogni"</div>
 <div class="info-card-meta"><span>🕐 9:00 PM</span><span>🎭 by Stefano Massini</span></div>
-<p>Stefano Massini, author of the award-winning "Lehman Trilogy," brings his latest work to Modica. Double shows.</p>
+<p>Stefano Massini, author of the award-winning "Lehman Trilogy," brings his latest work to Modica. Double show.</p>
 </div>
 <div class="info-card">
-<div class="info-card-title">🎼 June 14 — Orchestra del Teatro Bellini di Catania</div>
+<div class="info-card-title">🎼 June 14 — Orchestra of the Bellini Theater of Catania</div>
 <div class="info-card-meta"><span>🕐 6:30 PM</span><span>🎵 Second symphonic concert</span></div>
-<p>The second performance with the Orchestra del Bellini, concluding the 2025/2026 musical season.</p>
+<p>A second concert with the Orchestra del Bellini, closing the 2025/2026 music season.</p>
 </div>
 <p>Info and tickets: <strong>fondazioneteatrogaribaldi.it</strong> — theater box office — <strong>ciaotickets.com</strong>. Prices: stalls and central boxes €27, side boxes €22, gallery €17.</p>
 </div>
 <div class="seo-section">
-<h2><span class="sec-icon">🎪</span> Local Festivals and Minor Feasts</h2>
+<h2><span class="sec-icon">🎪</span> Local Festivals and Fairs</h2>
 <div class="info-card">
 <div class="info-card-title">🙏 Madonna delle Grazie</div>
 <div class="info-card-meta"><span>📅 Third Sunday of May</span><span>📍 Sanctuary of Madonna delle Grazie</span></div>
@@ -1511,30 +1526,30 @@
 <div class="info-card">
 <div class="info-card-title">🏖️ Ferragosto in Marina di Modica</div>
 <div class="info-card-meta"><span>📅 August 15</span><span>📍 Marina di Modica</span></div>
-<p>Fireworks on the beach, concerts, street food, and a party in Piazza Mediterraneo. The most attended summer event in the seaside fraction.</p>
+<p>Fireworks on the beach, concerts, street food, and a party in Piazza Mediterraneo. The most attended summer event in the seaside district.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎄 Christmas and Living Nativity Scenes</div>
 <div class="info-card-meta"><span>📅 December 2026</span><span>📍 Historic center</span></div>
-<p>Christmas markets along Corso Umberto I, living nativity scenes in the historic districts of Modica Alta, Christmas concerts, and New Year's Eve at the Teatro Garibaldi (traditional sell-out). Gospel Show on December 25th.</p>
+<p>Christmas markets along Corso Umberto I, living nativity scenes in the historic districts of Modica Alta, Christmas concerts, and New Year's Eve at the Garibaldi Theater (traditional sell-out). Gospel Show on December 25.</p>
 </div>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">📌</span> Sources and Updates</h2>
-<p>The events on this page are gathered from verified official sources: Fondazione Teatro Garibaldi (<strong>fondazioneteatrogaribaldi.it</strong>), Municipality of Modica, enjoysicilia.it, and official Facebook pages of the organizers. Dates may be subject to change — always ask ModicaAI for confirmation for events in the coming days.</p>
-<p>Follow updates on: <strong>CosafareaModica</strong> (Facebook — the events portal for Modica, Marina di Modica, Frigintini, and Maganuco) and <strong>Modica Summer Fest</strong> (Facebook) for the summer program.</p>
+<p>The events on this page are collected from verified official sources: Fondazione Teatro Garibaldi (<strong>fondazioneteatrogaribaldi.it</strong>), Municipality of Modica, enjoysicilia.it, and official Facebook pages of the organizers. Dates are subject to change — always ask for confirmation from ModicaAI for events in the coming days.</p>
+<p>Follow updates on: <strong>CosafareaModica</strong> (Facebook — the event portal for Modica, Marina di Modica, Frigintini, and Maganuco) and <strong>Modica Summer Fest</strong> (Facebook) for the summer program.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">📋</span> Summary Calendar 2026</h2>
 <div class="info-card"><div class="info-card-title">🐣 April 5</div><p>Madonna Vasa Vasa — Easter Sunday</p></div>
-<div class="info-card"><div class="info-card-title">🐉 April 26</div><p>Feast of San Giorgio — Patron Saint of Modica</p></div>
+<div class="info-card"><div class="info-card-title">🐉 April 26</div><p>Feast of Saint George — Patron Saint of Modica</p></div>
 <div class="info-card"><div class="info-card-title">🤘 May 1</div><p>Modica Rock Fest — 12h of live music, free entry</p></div>
-<div class="info-card"><div class="info-card-title">🙏 May (3rd Sunday)</div><p>Feast of the Madonna delle Grazie</p></div>
-<div class="info-card"><div class="info-card-title">🔥 June 29</div><p>Feast of San Pietro + Fair (June 27-29)</p></div>
-<div class="info-card"><div class="info-card-title">🎵 July-August</div><p>Modican Summer — program to be updated</p></div>
-<div class="info-card"><div class="info-card-title">🍫 Oct 30 — Nov 1</div><p>ChocoModica — PGI Chocolate Festival</p></div>
-<div class="info-card"><div class="info-card-title">🎭 Apr — Jun</div><p>Teatro Garibaldi — Drama and music season (Fresu, Molinari, Bellini, Massini)</p></div>
-<div class="info-card"><div class="info-card-title">🎄 December</div><p>Living nativity scenes, markets, New Year's Concert at the Garibaldi</p></div>
+<div class="info-card"><div class="info-card-title">🙏 May (3rd Sunday)</div><p>Feast of Our Lady of Graces</p></div>
+<div class="info-card"><div class="info-card-title">🔥 June 29</div><p>Feast of Saint Peter + Fair (June 27-29)</p></div>
+<div class="info-card"><div class="info-card-title">🎵 July-August</div><p>Modica Summer — program under update</p></div>
+<div class="info-card"><div class="info-card-title">🍫 Oct 30 — Nov 1</div><p>ChocoModica — IGP Chocolate Festival</p></div>
+<div class="info-card"><div class="info-card-title">🎭 Apr — Jun</div><p>Garibaldi Theater — Drama and music season (Fresu, Molinari, Bellini, Massini)</p></div>
+<div class="info-card"><div class="info-card-title">🎄 December</div><p>Living Nativity scenes, markets, New Year's Concert at the Garibaldi Theater</p></div>
 <div class="highlight"><strong>Note:</strong> Dates for summer events and ChocoModica may vary. Ask ModicaAI for confirmations and updated programs.</div>
 </div>
 <div class="cta-box">
@@ -1951,44 +1966,44 @@ caricaTraffco();
 <a class="hc-footer-link" href="/gioco.html">Giochi</a>
 </div>
 </div>
-  <!-- RETE AI SICILIA -->
-  <div class="hc-footer-rete">
-    <div class="hc-footer-rete-title">Rete AI Sicilia</div>
-    <div class="hc-footer-rete-nodes">
-      <a href="https://www.modicaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-live" title="ModicaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">ModicaAI</span>
-        <span class="hc-rete-badge">Live</span>
-      </a>
-      <a href="https://www.ragusaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-ragusa" title="RagusaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">RagusaAI</span>
-        <span class="hc-rete-badge">Coming soon</span>
-      </a>
-      <a href="https://www.siracusaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-siracusa" title="SiracusaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">SiracusaAI</span>
-        <span class="hc-rete-badge">Coming soon</span>
-      </a>
-      <a href="https://www.cataniaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-catania" title="CataniaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">CataniaAI</span>
-        <span class="hc-rete-badge">Coming soon</span>
-      </a>
-      <a href="https://www.siciliaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-sicilia" title="SiciliaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">SiciliaAI.it</span>
-        <span class="hc-rete-badge">In arrivo</span>
-      </a>
-      <a href="https://www.siciliaai.com" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-sicilia" title="SiciliaAI.com">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">SiciliaAI.com</span>
-        <span class="hc-rete-badge">In arrivo</span>
-      </a>
-    </div>
-  </div>
-  <!-- CSS RETE AI SICILIA (inline per portabilità) -->
-  <style>
+<!-- RETE AI SICILIA -->
+<div class="hc-footer-rete">
+<div class="hc-footer-rete-title">Rete AI Sicilia</div>
+<div class="hc-footer-rete-nodes">
+<a class="hc-rete-node hc-rete-live" href="https://www.modicaai.it" rel="noopener" target="_blank" title="ModicaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">ModicaAI</span>
+<span class="hc-rete-badge">Live</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-ragusa" href="https://www.ragusaai.it" rel="noopener" target="_blank" title="RagusaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">RagusaAI</span>
+<span class="hc-rete-badge">Coming soon</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-siracusa" href="https://www.siracusaai.it" rel="noopener" target="_blank" title="SiracusaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">SiracusaAI</span>
+<span class="hc-rete-badge">Coming soon</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-catania" href="https://www.cataniaai.it" rel="noopener" target="_blank" title="CataniaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">CataniaAI</span>
+<span class="hc-rete-badge">Coming soon</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-sicilia" href="https://www.siciliaai.it" rel="noopener" target="_blank" title="SiciliaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">SiciliaAI.it</span>
+<span class="hc-rete-badge">In arrivo</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-sicilia" href="https://www.siciliaai.com" rel="noopener" target="_blank" title="SiciliaAI.com">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">SiciliaAI.com</span>
+<span class="hc-rete-badge">In arrivo</span>
+</a>
+</div>
+</div>
+<!-- CSS RETE AI SICILIA (inline per portabilità) -->
+<style>
   .hc-footer-rete {
     border-top: 1px solid rgba(201,168,76,0.18);
     padding: 28px 40px 24px;
@@ -2069,7 +2084,7 @@ caricaTraffco();
     .hc-rete-name   { font-size: 11px; }
   }
   </style>
-  <!-- /RETE AI SICILIA -->
+<!-- /RETE AI SICILIA -->
 <div class="hc-footer-bottom">
 <span>© 2026 ModicaAI · Modica, Sicilia</span>
 <div class="hc-footer-bottom-links">
@@ -2080,5 +2095,47 @@ caricaTraffco();
 </div>
 </div>
 </footer>
+
+<script>
+/* ── Switcher lingua — generato automaticamente ── */
+(function() {
+  var _langMap = { "it": "/eventi.html", "en": "/eventi-en.html", "de": "/eventi-de.html", "fr": "/eventi-fr.html", "es": "/eventi-es.html" };
+  function _navigateLang(lang) {
+    var target = _langMap[lang];
+    if (target && window.location.pathname !== target) {
+      window.location.href = target;
+    }
+  }
+  /* Override setLang per le pagine SEO */
+  var _origSetLang = window.setLang;
+  window.setLang = function(btn, lang) {
+    if (_origSetLang) _origSetLang(btn, lang);
+    _navigateLang(lang);
+  };
+  window.setLangMobile = function(lang, flag, code) {
+    var mf = document.getElementById('langMobileFlag'); if(mf) mf.textContent = flag;
+    var mc = document.getElementById('langMobileCode'); if(mc) mc.textContent = code;
+    var dd = document.getElementById('langDropdown'); if(dd) dd.classList.remove('open');
+    _navigateLang(lang);
+  };
+  /* Evidenzia il bottone della lingua corrente al caricamento */
+  document.addEventListener('DOMContentLoaded', function() {
+    var currentLang = 'en';
+    var path = window.location.pathname;
+    Object.keys(_langMap).forEach(function(lang) {
+      if (_langMap[lang] === path) currentLang = lang;
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+    var active = document.querySelector('.lang-btn[onclick*="\'' + currentLang + '\'"]');
+    if (active) active.classList.add('active');
+    var drop = document.getElementById('drop-' + currentLang);
+    if (drop) drop.classList.add('active');
+    var flags = {it:'🇮🇹',en:'🇬🇧',de:'🇩🇪',fr:'🇫🇷',es:'🇪🇸'};
+    var codes = {it:'IT',en:'EN',de:'DE',fr:'FR',es:'ES'};
+    var mf = document.getElementById('langMobileFlag'); if(mf && flags[currentLang]) mf.textContent = flags[currentLang];
+    var mc = document.getElementById('langMobileCode'); if(mc && codes[currentLang]) mc.textContent = codes[currentLang];
+  });
+})();
+</script>
 </body>
 </html>

@@ -18,19 +18,19 @@
 <link href="https://modicaai-api.onrender.com" rel="preconnect"/>
 <link href="https://www.modicaai.it/eventi.html" hreflang="it" rel="alternate">
 <link href="https://www.modicaai.it/eventi.html" hreflang="x-default" rel="alternate">
-<title>Modica Events 2026: Sommer, Feste, ChocoModica</title>
-<meta content="Alle Events in Modica 2026: Sommerkonzerte, lokale Feste, ChocoModica, San Pietro &amp; mehr. Aktueller Kalender mit Terminen &amp; Programmen." name="description"/>
+<title>Modica Events 2026: Festivals &amp; More</title>
+<meta content="Aktuelle Events in Modica 2026: ChocoModica, Patronatsfeste, Konzerte, Festivals. Vollständiger Kalender mit Daten und Details." name="description"/>
 <meta content="article" property="og:type"/>
 <meta content="https://www.modicaai.it/eventi-de.html" property="og:url"/>
-<meta content="Modica Events Sommer 2026: Feste, Konzerte, ChocoModica | ModicaAI" property="og:title"/>
-<meta content="Alle Events in Modica 2026: Sommerkonzerte, lokale Feste, ChocoModica, San Pietro &amp; mehr. Aktueller Kalender mit Terminen &amp; Programmen." property="og:description"/>
+<meta content="Modica Events 2026: Festivals &amp; More" property="og:title"/>
+<meta content="Aktuelle Events in Modica 2026: ChocoModica, Patronatsfeste, Konzerte, Festivals. Vollständiger Kalender mit Daten und Details." property="og:description"/>
 <meta content="https://www.modicaai.it/icon-512.png" property="og:image"/>
-<meta content="it_IT" property="og:locale"/>
+<meta content="de_DE" property="og:locale"/>
 <meta content="2026-04-08" property="og:updated_time"/>
 <meta content="ModicaAI" property="og:site_name"/>
 <meta content="summary_large_image" name="twitter:card"/>
-<meta content="Eventi Modica Estate 2026: Sagre, Concerti e ChocoModica | ModicaAI" name="twitter:title"/>
-<meta content="Tutti gli eventi a Modica nel 2026: concerti estivi, sagre, ChocoModica, Festa di San Pietro e molto altro. Calendario aggiornato con date, orari e programmi." name="twitter:description"/>
+<meta content="Eventi a Modica 2026: Sagre, Feste e Manifestazioni in Tempo Reale | ModicaAI" name="twitter:title"/>
+<meta content="Eventi a Modica 2026 aggiornati in tempo reale: ChocoModica, feste patronali, concerti, sagre. Calendario completo con date e dettagli." name="twitter:description"/>
 <meta content="https://www.modicaai.it/icon-512.png" name="twitter:image"/>
 <link href="https://www.modicaai.it/eventi-de.html" rel="canonical">
 <script type="application/ld+json">
@@ -976,6 +976,8 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     z-index: 600;
     backdrop-filter: blur(12px);
+    max-height: 70vh;
+    overflow-y: auto;
   }
   .snb-dropdown:hover .snb-dropdown-menu { display: block; }
   .snb-dropdown-menu a {
@@ -1217,14 +1219,16 @@
 <a class="snb-logo" href="/">Modica<span>AI</span></a>
 <div class="snb-links">
 <a class="snb-link active" href="/">Home</a>
+<a class="snb-link" href="/modica.html">Modica</a>
+<a class="snb-link" href="/val-di-noto.html">Val di Noto</a>
 <a class="snb-link" href="/news.html">News</a>
-<a class="snb-link" href="/gioco.html">Giochi</a>
 <a class="snb-link" href="/mission.html">Mission</a>
 <div class="snb-dropdown">
 <button class="snb-dropdown-btn">Guide<svg fill="none" height="9" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24" width="9"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
 <div class="snb-dropdown-menu">
 <a href="/cioccolato.html">Cioccolato IGP</a>
 <a href="/cosa-vedere.html">Cosa vedere</a>
+<a href="/tour-guidati-modica.html" style="color:#D4A017;font-weight:600;">🗺️ Tour guidati</a>
 <a href="/come-arrivare.html">Come arrivare</a>
 <a href="/gastronomia.html">Gastronomia</a>
 <div class="snb-drop-sep"></div>
@@ -1387,7 +1391,7 @@
 <div class="seo-eyebrow">Veranstaltungen und Feste · Modica, Sizilien</div>
 <h1 class="seo-title">Veranstaltungen <em>Modica</em> 2026</h1>
 <div class="seo-divider"></div>
-<p class="seo-intro">Modica ist das ganze Jahr über eine lebendige Stadt. Von den Patronatsfesten, die Zehntausende von Menschen anziehen, über Sommerkonzerte in Marina di Modica bis hin zum berühmten ChocoModica im Herbst. Hier ist der Kalender der wichtigsten Veranstaltungen im Jahr 2026.</p>
+<p class="seo-intro">Modica ist das ganze Jahr über eine lebendige Stadt. Von Patronatsfesten, die Zehntausende von Menschen anziehen, über Sommerkonzerte in Marina di Modica bis hin zum berühmten ChocoModica im Herbst. Hier ist der Kalender der wichtigsten Veranstaltungen im Jahr 2026.</p>
 <!-- Foto editoriale eventi -->
 <div style="margin:0 -24px 36px;position:relative;border-radius:16px;overflow:hidden;height:320px;">
 <img alt="Corso Umberto I von Modica bei Nacht während einer Veranstaltung — Markt, Laternen und die beleuchtete Kathedrale San Pietro" loading="lazy" src="/gallery/modica-eventi-2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block;"/>
@@ -1400,73 +1404,84 @@
 <!-- ═══ Sezione eventi LIVE (caricamento dinamico da /eventi-aggregated) ═══ -->
 <div class="ev-live-wrap" id="evLiveWrap">
 <div class="ev-live-header">
-<div class="ev-live-title"><div class="ev-pulse"></div> Anstehende Veranstaltungen</div>
+<div class="ev-live-title"><div class="ev-pulse"></div> Bevorstehende Veranstaltungen</div>
 <div class="ev-live-meta" id="evLiveMeta"></div>
 </div>
 <div class="ev-live-grid" id="evLiveGrid">
-<div class="ev-loading"><span class="ev-spinner"></span> Lädt Veranstaltungen...</div>
+<div class="ev-loading"><span class="ev-spinner"></span> Veranstaltungen werden geladen...</div>
 </div>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🐣</span> Ostern — Madonna Vasa Vasa</h2>
 <div class="info-card">
 <div class="info-card-title">📅 Sonntag, 5. April 2026</div>
-<div class="info-card-meta"><span>📍 Corso Umberto I, Piazza Monumento</span><span>🕐 Mittagskuss genau um zwölf Uhr mittags</span></div>
-<p>Das meistbesuchte Fest von Modica. Zwei Prozessionen ziehen von der Kirche Santa Maria di Betlem aus und bringen die Bilder des Auferstandenen Christus und der Madonna (bedeckt mit einem schwarzen Schleier). Um zwölf Uhr mittags treffen sich die beiden Statuen auf der Piazza Monumento: die Madonna lässt den Schleier fallen, breitet die Arme aus und umarmt ihren Sohn. Dies ist der traditionelle "vasata" (Kuss), begleitet von fliegenden weißen Tauben und der Musik der Band Belluardo-Risadelli. Das Ritual wiederholt sich auf der Piazza San Giorgio und am Eingang von Santa Maria di Betlem.</p>
+<div class="info-card-meta"><span>📍 Corso Umberto I, Piazza Monumento</span><span>🕐 Mittagskuss auf die Minute genau</span></div>
+<p>Das am besten besuchte Fest von Modica. Zwei Prozessionen starten von der Kirche Santa Maria di Betlem und bringen die Abbilder des auferstandenen Christus und der Muttergottes (mit schwarzem Schleier bedeckt). Um Punkt Mittag treffen sich die beiden Statuen auf der Piazza Monumento: Die Muttergottes lässt ihren Schleier fallen, breitet die Arme aus und umarmt ihren Sohn. Dies ist der traditionelle "vasata" (Kuss), begleitet von weißen Tauben und den Klängen der Banda Belluardo-Risadelli. Das Ritual wiederholt sich auf der Piazza San Pietro und am Eingang von Santa Maria di Betlem.</p>
 </div>
-<p>Im Jahr 2026 wird auch das zehnjährige Jubiläum der Abendprozession (eingeführt 2016) gefeiert. Die Messe um 19:00 Uhr wird vom Bischof von Noto geleitet, gefolgt von der nächtlichen Prozession zum Heiligtum der Madonna delle Grazie. Am Dienstag dell'Itria (7. April) dauern die Feierlichkeiten mit Gerichten aus Cavatelli und dem Spiel Sotto 90 an.</p>
+<p>Im Jahr 2026 wird auch das zehnjährige Jubiläum der Abendprozession (eingeführt 2016) gefeiert. Die Messe um 19:00 Uhr wird vom Bischof von Noto geleitet, gefolgt von der nächtlichen Prozession zum Heiligtum der Madonna delle Grazie. Der Dienstag der Itria (7. April) verlängert die Feierlichkeiten mit Cavelletti-Bänken und dem Spiel Sotto 90.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🐉</span> Fest des Heiligen Georg — Schutzpatron</h2>
 <div class="info-card">
 <div class="info-card-title">📅 Wochenende des 26. April 2026</div>
 <div class="info-card-meta"><span>📍 Dom San Giorgio, Modica Alta</span><span>🎆 Feuerwerk und Lichterketten</span></div>
-<p>San Giorgio ist seit 1063 Schutzpatron von Modica, als Graf Roger die Muslime in Cerami besiegte, nachdem der Heilige ihm im Traum erschienen war. Am Sonntagnachmittag zieht das Bildnis – ein Ritter, der einen Drachen tötet – unter Feuerwerk und bunten Flugblättern aus dem Dom. Die "Sangiorgiari" tragen die Statue im schnellen Lauf auf ihren Schultern, was den Galopp des Pferdes simuliert. Am Abend kehrt die Statue mit den traditionellen Umrundungen der Kirchenschiffe in die Kirche zurück.</p>
+<p>San Giorgio ist seit 1063 Schutzpatron von Modica, als Graf Roger die Muslime in Cerami besiegte, nachdem der Heilige ihm im Traum erschienen war. Am Sonntagnachmittag verlässt das Abbild — ein Ritter, der einen Drachen tötet — den Dom inmitten von Feuerwerk und bunten Flugblättern. Die Sangiorgiari tragen die Statue zu Fuß und in schnellem Tempo, was den Galopp des Pferdes simuliert. Am Abend kehrt sie mit den traditionellen Umrundungen der Kirchenschiffe in die Kirche zurück.</p>
 </div>
-<p>Am Samstagmorgen kündigen 23 Kanonenschüsse den Beginn der Feierlichkeiten an. Am Vortag tragen Kinder eine verkleinerte Nachbildung des Bildnisses durch die Straßen von Modica Alta.</p>
+<p>Am Samstagmorgen kündigen 23 Kanonenschüsse den Beginn der Feierlichkeiten an. Am Vortag tragen die Kinder eine kleinere Nachbildung des Abbilds durch die Straßen von Modica Alta in einer Prozession.</p>
+</div>
+<div class="seo-section">
+<h2><span class="sec-icon">🙏</span> Fest der Madonna delle Grazie — Schutzpatronin von Modica</h2>
+<div class="info-card">
+<div class="info-card-title">📅 Dritter Sonntag im Mai — 17. Mai 2026</div>
+<div class="info-card-meta"><span>📍 Heiligtum der Madonna delle Grazie, Modica</span><span>🕕 Erste Messe: 6:00 Uhr</span></div>
+<p>Das Fest der Madonna delle Grazie gehört zu den tief empfundensten in Modica — eine Feier, bei der die spirituelle Dimension die folkloristische überwiegt. Die Feierlichkeiten beginnen bereits am 30. April und erreichen ihren Höhepunkt am dritten Sonntag im Mai.</p>
+<p>Im Morgengrauen beginnen die Gläubigen barfuß — die sogenannten *Scausi* (die Barfüßigen) — eine lange Wallfahrt zum Heiligtum zur ersten Messe um 6:00 Uhr, inmitten einer großen Menge, die trotz der ungewöhnlichen Stunde eilt. Die Wallfahrt endet erst in der Nacht, bei der Rückkehr der Prozession.</p>
+<p>Die Prozession des Abbilds führt durch die Via Mercè, den Corso Umberto, die Vittorio Veneto und den Viale Medaglie d'Oro, um zum Heiligtum zurückzukehren und von einem Feuerwerk der Gemeinde begrüßt zu werden. Die Balkone sind beleuchtet und mit Blumen geschmückt, um den Durchgang der Madonna zu empfangen. Bei der Rückkehr in die Kirche wird das Abbild dreimal auf dem großen Vorplatz vor und zurück bewegt.</p>
+<p><strong>Ursprünge:</strong> Der Kult hat seine Wurzeln in dem wundersamen Ereignis vom 4. Mai 1615, als eine Schiefertafel mit dem Abbild der Muttergottes mit dem Kind unversehrt gefunden wurde — sie hatte drei Tage lang ununterbrochen in einem Dornenbusch gebrannt, ohne zu verbrennen. Dort, wo die kostbare Tafel noch heute verehrt wird, wurde das Heiligtum erbaut.</p>
+</div>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🔥</span> Fest des Heiligen Petrus — Mitpatron</h2>
 <div class="info-card">
 <div class="info-card-title">📅 29. Juni 2026</div>
-<div class="info-card-meta"><span>📍 Dom San Pietro, Corso Umberto I</span><span>🎪 Messe von San Pietro (letzte 3 Tage im Juni)</span></div>
-<p>Am 29. Juni durchquert die Abendprozession des Bildnisses von San Pietro – ein Werk des Palermoers Benedetto Civiletti (1893), das das Wunder der Heilung des Gelähmten darstellt – das historische Zentrum, das von Tausenden von Fackeln beleuchtet wird. Die Erhabenheit der Statue erfordert den spontanen Einsatz von Dutzenden von Gläubigen.</p>
+<div class="info-card-meta"><span>📍 Dom San Pietro, Corso Umberto I</span><span>🎪 Messe des Heiligen Petrus (letzte 3 Tage im Juni)</span></div>
+<p>Am 29. Juni durchquert die Abendprozession des Abbilds des Heiligen Petrus — ein Werk von Benedetto Civiletti aus Palermo (1893), das das Wunder der Heilung des Gelähmten darstellt — das historische Zentrum, beleuchtet von Tausenden von Fackeln. Die imposante Statue erfordert den freiwilligen Einsatz von Dutzenden von Gläubigen.</p>
 </div>
-<p>Die Messe von San Pietro ist der am meisten erwartete Aspekt: In den letzten drei Junitagen überschwemmen die Stände das historische Zentrum, und die Viale Medaglie d'Oro verwandelt sich in einen Menschenstrom. Lokales Handwerk, Streetfood, Farben und Traditionen.</p>
+<p>Die Messe des Heiligen Petrus ist der am meisten erwartete Aspekt: In den letzten drei Tagen des Juni überschwemmen Stände das historische Zentrum, wobei der Viale Medaglie d'Oro zu einem Strom von Menschen wird. Lokales Handwerk, Street Food, Farben und Traditionen.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🤘</span> Modica Rock Fest — 1. Mai 2026</h2>
 <div class="info-card">
 <div class="info-card-title">📅 1. Mai 2026 — 12:00 → Mitternacht</div>
 <div class="info-card-meta"><span>📍 Rock Modica, historisches Zentrum</span><span>🎟️ Freier Eintritt</span></div>
-<p>Am 1. Mai dreht Modica mit dem <strong>#ModicaRockFest 2026</strong> auf: 12 Stunden Non-Stop Live-Musik, DJ-Sets, Burlesque, Biker-Spiele, Streetfood und Bier. Auf der Bühne wechseln sich aufstrebende Bands und etablierte Gruppen ab – VöRA, Trincee d'Asfalto, Mobslay, Shut The Radio, Dodicesima Nota, Frijda und andere. Der Eintritt ist komplett kostenlos.</p>
+<p>Am 1. Mai dreht Modica die Lautstärke auf mit dem <strong>#ModicaRockFest 2026</strong>: 12 Stunden non-stop Live-Musik, DJ-Sets, Burlesque, Biker-Spiele, Street Food und Bier. Auf der Bühne wechseln sich aufstrebende Bands und etablierte Gruppen ab — VöRA, Trincee d'Asfalto, Mobslay, Shut The Radio, Dodicesima Nota, Frijda und andere. Der Eintritt ist komplett kostenlos.</p>
 </div>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🌅</span> Sommer in Modica</h2>
 <div class="info-card">
 <div class="info-card-title">📅 Juli — August 2026</div>
-<div class="info-card-meta"><span>📍 Marina di Modica, historisches Zentrum</span><span>🎵 Konzerte, Theater, Open-Air-Kino</span></div>
-<p>Jeden Sommer bietet Modica einen reichhaltigen Veranstaltungskalender zwischen Marina di Modica und dem historischen Zentrum: Konzerte im Auditorium Mediterraneo, Theateraufführungen, Open-Air-Kino, musikalische Abende auf dem Platz, Nachtwanderungen durch die Gassen ("Lune d'Oriente"), Schaumpartys am Strand und das Tarantarneo (Fest der Taranta).</p>
+<div class="info-card-meta"><span>📍 Marina di Modica, historisches Zentrum</span><span>🎵 Konzerte, Theater, Freiluftkino</span></div>
+<p>Jeden Sommer bietet Modica einen vollen Veranstaltungskalender zwischen Marina di Modica und dem historischen Zentrum: Konzerte im Auditorium Mediterraneo, Theatershows, Freiluftkino, Musikabende auf dem Platz, Nachtspaziergänge durch die Gassen ("Lune d'Oriente"), Schaumpartys am Strand und das Tarantarneo (Fest der Taranta).</p>
 </div>
-<div class="highlight"><strong>Sommerprogramm 2026 wird aktualisiert.</strong> Der vollständige Kalender wird von der Fondazione Teatro Garibaldi und der Gemeinde Modica zwischen Ende Mai und Anfang Juni veröffentlicht. Fragen Sie ModicaAI nach Echtzeit-Updates.</div>
-<p>Die Madonna delle Grazie wird am dritten Sonntag im Mai mit einer Wallfahrt zum Heiligtum gefeiert. Am Ferragosto (15. August) gibt es spezielle Veranstaltungen in Marina di Modica.</p>
+<div class="highlight"><strong>Sommerprogramm 2026 wird aktualisiert.</strong> Der vollständige Kalender wird von der Fondazione Teatro Garibaldi und der Stadtverwaltung von Modica zwischen Ende Mai und Anfang Juni veröffentlicht. Fragen Sie ModicaAI nach Echtzeit-Updates.</div>
+<p>Die Madonna delle Grazie wird am dritten Sonntag im Mai mit einer Wallfahrt zum Heiligtum gefeiert. An Ferragosto (15. August) finden in Marina di Modica Sonderveranstaltungen statt.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🍫</span> ChocoModica — Schokoladenfestival</h2>
 <div class="info-card">
 <div class="info-card-title">📅 30. Oktober — 1. November 2026</div>
 <div class="info-card-meta"><span>📍 Historisches Zentrum von Modica</span><span>🎟️ Freier Eintritt</span></div>
-<p>Das Fest der Modica IGP Schokolade verwandelt das historische Zentrum in eine Bühne der Aromen: gastronomische Stände, Verkostungen, Workshops für Erwachsene und Kinder, Konferenzen zur Geschichte der Schokolade, Shows und Unterhaltung. Die historischen Paläste und barocken Plätze bilden die Kulisse für das süßeste Herbstereignis Siziliens.</p>
+<p>Die Veranstaltung, die der Modica IGP Schokolade gewidmet ist, verwandelt das historische Zentrum in eine Bühne der Aromen: Gastronomiestände, Verkostungen, Workshops für Erwachsene und Kinder, Konferenzen über die Geschichte der Schokolade, Shows und Unterhaltung. Historische Gebäude und barocke Plätze bilden die Kulisse für das leckerste Ereignis des sizilianischen Herbstes.</p>
 </div>
-<p>Die Modica IGP Schokolade wird nach aztekischer Rezeptur kalt verarbeitet, mit Zuckerkristallen, die ihr die charakteristische körnige Textur verleihen. Zu den traditionellen Geschmacksrichtungen – Zimt, Vanille, Chili, Zitrusfrüchte, Johannisbrot – gesellen sich jedes Jahr neue Experimente lokaler Chocolatiers.</p>
+<p>Die Modica IGP Schokolade wird nach aztekischer Rezeptur kalt verarbeitet, mit Zuckerkristallen, die ihr die charakteristische Körnigkeit verleihen. Zu den traditionellen Geschmacksrichtungen — Zimt, Vanille, Chili, Zitrusfrüchte, Johannisbrot — gesellen sich jedes Jahr neue Experimente lokaler Chocolatiers.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">🎭</span> Teatro Garibaldi — Saison 2025/2026</h2>
 <div class="info-card">
 <div class="info-card-title">📅 April — Juni 2026</div>
 <div class="info-card-meta"><span>📍 Teatro Garibaldi, Corso Umberto I 207</span><span>🎟️ Tickets auf ciaotickets.com</span></div>
-<p>Das Teatro Garibaldi, ein Juwel des 19. Jahrhunderts im Herzen von Modica mit dem berühmten Kreis von Piero Guccione an der Decke, beherbergt eine Saison voller Termine. Der Spielplan für Prosa und Musik 2025/2026 läuft bis Juni mit Vorstellungen in doppelter Aufführung.</p>
+<p>Das Teatro Garibaldi, ein Juwel des 19. Jahrhunderts im Herzen von Modica mit dem berühmten Rundbild von Piero Guccione an der Decke, beherbergt eine ereignisreiche Saison. Der Spielplan für Drama und Musik 2025/2026 läuft bis Juni mit Shows in Doppelvorstellungen.</p>
 </div>
 <h3>Bevorstehende bestätigte Termine</h3>
 <div class="info-card">
@@ -1477,41 +1492,41 @@
 <div class="info-card">
 <div class="info-card-title">🎤 19. April — Simona Molinari &amp; Tony Canto</div>
 <div class="info-card-meta"><span>🕐 18:30 Uhr</span><span>🎵 Stimme und Gitarre</span></div>
-<p>Simona Molinari, eine der raffiniertesten Stimmen der italienischen Jazzszene, im Konzert mit Tony Canto. Ein Termin außerhalb des Abonnements.</p>
+<p>Simona Molinari, eine der raffiniertesten Stimmen der italienischen Jazzszene, im Konzert mit Tony Canto. Eine Vorstellung außerhalb des Abonnements.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎼 10. Mai — Orchester des Teatro Bellini von Catania</div>
-<div class="info-card-meta"><span>🕐 18:30 Uhr</span><span>🎵 Sinfoniekonzert</span></div>
-<p>Das Orchester des Teatro Massimo Bellini von Catania zu Gast in Modica für ein Sinfoniekonzert. Ein prestigeträchtiger Termin in der Musiksaison.</p>
+<div class="info-card-meta"><span>🕐 18:30 Uhr</span><span>🎵 Symphoniekonzert</span></div>
+<p>Das Orchester des Teatro Massimo Bellini von Catania gastiert in Modica für ein Symphoniekonzert. Ein prestigeträchtiges Ereignis in der Musik-Saison.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎭 12.-13. Mai — "Gente di facili costumi"</div>
 <div class="info-card-meta"><span>🕐 21:00 Uhr</span><span>🎭 von Nino Marino und Nino Manfredi</span></div>
-<p>Eine brillante Komödie in doppelter Aufführung, Teil der Theatersaison, die Titel wie "Perfetti sconosciuti", "L'Avaro" von Molière und "Moby Dick" nach Modica brachte.</p>
+<p>Eine brillante Komödie in Doppelvorstellung, Teil der Schauspielsaison, die Titel wie "Perfetti sconosciuti", Molières "Der Geizige" und "Moby Dick" nach Modica brachte.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎭 23.-24. Mai — "L'interpretazione dei sogni"</div>
 <div class="info-card-meta"><span>🕐 21:00 Uhr</span><span>🎭 von Stefano Massini</span></div>
-<p>Stefano Massini, Autor der preisgekrönten "Lehman Trilogy", bringt sein neuestes Werk nach Modica. Doppelte Aufführung.</p>
+<p>Stefano Massini, Autor der preisgekrönten "Lehman Trilogy", bringt sein neuestes Werk nach Modica. Doppelvorstellung.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎼 14. Juni — Orchester des Teatro Bellini von Catania</div>
-<div class="info-card-meta"><span>🕐 18:30 Uhr</span><span>🎵 Zweites Sinfoniekonzert</span></div>
-<p>Zweites Konzert mit dem Orchester Bellini, zum Abschluss der Musiksaison 2025/2026.</p>
+<div class="info-card-meta"><span>🕐 18:30 Uhr</span><span>🎵 Zweites Symphoniekonzert</span></div>
+<p>Zweites Konzert mit dem Orchester Bellini, zum Abschluss der Musik-Saison 2025/2026.</p>
 </div>
-<p>Infos und Tickets: <strong>fondazioneteatrogaribaldi.it</strong> — Theaterkasse — <strong>ciaotickets.com</strong>. Preise: Parkett und zentrale Logen €27, seitliche Logen €22, Galerie €17.</p>
+<p>Infos und Tickets: <strong>fondazioneteatrogaribaldi.it</strong> — Theaterkasse — <strong>ciaotickets.com</strong>. Preise: Parkett und zentrale Logen €27, seitliche Logen €22, Empore €17.</p>
 </div>
 <div class="seo-section">
-<h2><span class="sec-icon">🎪</span> Feste und kleinere Veranstaltungen</h2>
+<h2><span class="sec-icon">🎪</span> Kleinere Feste und Sagra</h2>
 <div class="info-card">
 <div class="info-card-title">🙏 Madonna delle Grazie</div>
 <div class="info-card-meta"><span>📅 Dritter Sonntag im Mai</span><span>📍 Heiligtum Madonna delle Grazie</span></div>
-<p>Wallfahrt zum Heiligtum und religiöses Fest mit Prozession. Eine der tief empfundenen Verehrungen der Gemeinschaft von Modica.</p>
+<p>Wallfahrt zum Heiligtum und religiöses Fest mit Prozession. Eine der tiefst empfundenen Verehrungen der Gemeinde von Modica.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🏖️ Ferragosto in Marina di Modica</div>
 <div class="info-card-meta"><span>📅 15. August</span><span>📍 Marina di Modica</span></div>
-<p>Feuerwerk am Strand, Konzerte, Streetfood und Fest auf der Piazza Mediterraneo. Das meistbesuchte Sommerfest des Küstenorts.</p>
+<p>Feuerwerk am Strand, Konzerte, Street Food und Fest auf der Piazza Mediterraneo. Das am besten besuchte Sommerfest des Küstenorts.</p>
 </div>
 <div class="info-card">
 <div class="info-card-title">🎄 Weihnachten und lebende Krippen</div>
@@ -1521,25 +1536,25 @@
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">📌</span> Quellen und Updates</h2>
-<p>Die Veranstaltungen auf dieser Seite werden aus verifizierten offiziellen Quellen gesammelt: Fondazione Teatro Garibaldi (<strong>fondazioneteatrogaribaldi.it</strong>), Gemeinde Modica, enjoysicilia.it und offizielle Facebook-Seiten der Organisatoren. Die Daten können sich ändern – fragen Sie immer ModicaAI um Bestätigung für Veranstaltungen in den nächsten Tagen.</p>
-<p>Folgen Sie den Updates auf: <strong>CosafareaModica</strong> (Facebook – das Veranstaltungsportal von Modica, Marina di Modica, Frigintini und Maganuco) und <strong>Modica Summer Fest</strong> (Facebook) für das Sommerprogramm.</p>
+<p>Die Veranstaltungen auf dieser Seite werden aus verifizierten offiziellen Quellen gesammelt: Fondazione Teatro Garibaldi (<strong>fondazioneteatrogaribaldi.it</strong>), Comune di Modica, enjoysicilia.it und offizielle Facebook-Seiten der Organisatoren. Die Termine können sich ändern — fragen Sie immer ModicaAI zur Bestätigung für Veranstaltungen in den nächsten Tagen.</p>
+<p>Folgen Sie den Updates auf: <strong>CosafareaModica</strong> (Facebook — das Veranstaltungsportal von Modica, Marina di Modica, Frigintini und Maganuco) und <strong>Modica Summer Fest</strong> (Facebook) für das Sommerprogramm.</p>
 </div>
 <div class="seo-section">
 <h2><span class="sec-icon">📋</span> Zusammenfassender Kalender 2026</h2>
 <div class="info-card"><div class="info-card-title">🐣 5. April</div><p>Madonna Vasa Vasa — Ostersonntag</p></div>
 <div class="info-card"><div class="info-card-title">🐉 26. April</div><p>Fest des Heiligen Georg — Schutzpatron von Modica</p></div>
-<div class="info-card"><div class="info-card-title">🤘 1. Mai</div><p>Modica Rock Fest — 12h Live-Musik, freier Eintritt</p></div>
+<div class="info-card"><div class="info-card-title">🤘 1. Mai</div><p>Modica Rock Fest — 12 Stunden Live-Musik, freier Eintritt</p></div>
 <div class="info-card"><div class="info-card-title">🙏 Mai (3. Sonntag)</div><p>Fest der Madonna delle Grazie</p></div>
 <div class="info-card"><div class="info-card-title">🔥 29. Juni</div><p>Fest des Heiligen Petrus + Messe (27.-29. Juni)</p></div>
-<div class="info-card"><div class="info-card-title">🎵 Juli-August</div><p>Sommer in Modica – Programm wird aktualisiert</p></div>
-<div class="info-card"><div class="info-card-title">🍫 30. Okt – 1. Nov</div><p>ChocoModica – Festival der IGP-Schokolade</p></div>
-<div class="info-card"><div class="info-card-title">🎭 Apr – Jun</div><p>Teatro Garibaldi – Schauspiel- und Musiksaison (Fresu, Molinari, Bellini, Massini)</p></div>
-<div class="info-card"><div class="info-card-title">🎄 Dezember</div><p>Lebende Krippen, Märkte, Silvesterkonzert im Garibaldi</p></div>
+<div class="info-card"><div class="info-card-title">🎵 Juli-August</div><p>Sommer in Modica — Programm wird aktualisiert</p></div>
+<div class="info-card"><div class="info-card-title">🍫 30. Okt — 1. Nov</div><p>ChocoModica — IGP Schokoladenfestival</p></div>
+<div class="info-card"><div class="info-card-title">🎭 April — Juni</div><p>Teatro Garibaldi — Schauspiel- und Musik-Saison (Fresu, Molinari, Bellini, Massini)</p></div>
+<div class="info-card"><div class="info-card-title">🎄 Dezember</div><p>Lebende Krippen, Weihnachtsmärkte, Silvesterkonzert im Garibaldi</p></div>
 <div class="highlight"><strong>Hinweis:</strong> Die Daten der Sommerveranstaltungen und von ChocoModica können sich ändern. Fragen Sie ModicaAI nach Bestätigungen und aktualisierten Programmen.</div>
 </div>
 <div class="cta-box">
 <h3>Fragen Sie ModicaAI</h3>
-<p>Möchten Sie wissen, ob heute oder in den nächsten Tagen eine Veranstaltung stattfindet? Fragen Sie direkt den KI-Assistenten.</p>
+<p>Möchten Sie wissen, ob heute oder in den nächsten Tagen eine Veranstaltung stattfindet? Fragen Sie einfach den KI-Assistenten.</p>
 <a class="cta-btn" href="/">ModicaAI öffnen →</a>
 </div>
 </div>
@@ -1951,44 +1966,44 @@ caricaTraffco();
 <a class="hc-footer-link" href="/gioco.html">Giochi</a>
 </div>
 </div>
-  <!-- RETE AI SICILIA -->
-  <div class="hc-footer-rete">
-    <div class="hc-footer-rete-title">Rete AI Sicilia</div>
-    <div class="hc-footer-rete-nodes">
-      <a href="https://www.modicaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-live" title="ModicaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">ModicaAI</span>
-        <span class="hc-rete-badge">Live</span>
-      </a>
-      <a href="https://www.ragusaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-ragusa" title="RagusaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">RagusaAI</span>
-        <span class="hc-rete-badge">Coming soon</span>
-      </a>
-      <a href="https://www.siracusaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-siracusa" title="SiracusaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">SiracusaAI</span>
-        <span class="hc-rete-badge">Coming soon</span>
-      </a>
-      <a href="https://www.cataniaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-catania" title="CataniaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">CataniaAI</span>
-        <span class="hc-rete-badge">Coming soon</span>
-      </a>
-      <a href="https://www.siciliaai.it" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-sicilia" title="SiciliaAI">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">SiciliaAI.it</span>
-        <span class="hc-rete-badge">In arrivo</span>
-      </a>
-      <a href="https://www.siciliaai.com" target="_blank" rel="noopener" class="hc-rete-node hc-rete-soon hc-rete-sicilia" title="SiciliaAI.com">
-        <span class="hc-rete-dot"></span>
-        <span class="hc-rete-name">SiciliaAI.com</span>
-        <span class="hc-rete-badge">In arrivo</span>
-      </a>
-    </div>
-  </div>
-  <!-- CSS RETE AI SICILIA (inline per portabilità) -->
-  <style>
+<!-- RETE AI SICILIA -->
+<div class="hc-footer-rete">
+<div class="hc-footer-rete-title">Rete AI Sicilia</div>
+<div class="hc-footer-rete-nodes">
+<a class="hc-rete-node hc-rete-live" href="https://www.modicaai.it" rel="noopener" target="_blank" title="ModicaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">ModicaAI</span>
+<span class="hc-rete-badge">Live</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-ragusa" href="https://www.ragusaai.it" rel="noopener" target="_blank" title="RagusaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">RagusaAI</span>
+<span class="hc-rete-badge">Coming soon</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-siracusa" href="https://www.siracusaai.it" rel="noopener" target="_blank" title="SiracusaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">SiracusaAI</span>
+<span class="hc-rete-badge">Coming soon</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-catania" href="https://www.cataniaai.it" rel="noopener" target="_blank" title="CataniaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">CataniaAI</span>
+<span class="hc-rete-badge">Coming soon</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-sicilia" href="https://www.siciliaai.it" rel="noopener" target="_blank" title="SiciliaAI">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">SiciliaAI.it</span>
+<span class="hc-rete-badge">In arrivo</span>
+</a>
+<a class="hc-rete-node hc-rete-soon hc-rete-sicilia" href="https://www.siciliaai.com" rel="noopener" target="_blank" title="SiciliaAI.com">
+<span class="hc-rete-dot"></span>
+<span class="hc-rete-name">SiciliaAI.com</span>
+<span class="hc-rete-badge">In arrivo</span>
+</a>
+</div>
+</div>
+<!-- CSS RETE AI SICILIA (inline per portabilità) -->
+<style>
   .hc-footer-rete {
     border-top: 1px solid rgba(201,168,76,0.18);
     padding: 28px 40px 24px;
@@ -2069,7 +2084,7 @@ caricaTraffco();
     .hc-rete-name   { font-size: 11px; }
   }
   </style>
-  <!-- /RETE AI SICILIA -->
+<!-- /RETE AI SICILIA -->
 <div class="hc-footer-bottom">
 <span>© 2026 ModicaAI · Modica, Sicilia</span>
 <div class="hc-footer-bottom-links">
@@ -2080,5 +2095,47 @@ caricaTraffco();
 </div>
 </div>
 </footer>
+
+<script>
+/* ── Switcher lingua — generato automaticamente ── */
+(function() {
+  var _langMap = { "it": "/eventi.html", "en": "/eventi-en.html", "de": "/eventi-de.html", "fr": "/eventi-fr.html", "es": "/eventi-es.html" };
+  function _navigateLang(lang) {
+    var target = _langMap[lang];
+    if (target && window.location.pathname !== target) {
+      window.location.href = target;
+    }
+  }
+  /* Override setLang per le pagine SEO */
+  var _origSetLang = window.setLang;
+  window.setLang = function(btn, lang) {
+    if (_origSetLang) _origSetLang(btn, lang);
+    _navigateLang(lang);
+  };
+  window.setLangMobile = function(lang, flag, code) {
+    var mf = document.getElementById('langMobileFlag'); if(mf) mf.textContent = flag;
+    var mc = document.getElementById('langMobileCode'); if(mc) mc.textContent = code;
+    var dd = document.getElementById('langDropdown'); if(dd) dd.classList.remove('open');
+    _navigateLang(lang);
+  };
+  /* Evidenzia il bottone della lingua corrente al caricamento */
+  document.addEventListener('DOMContentLoaded', function() {
+    var currentLang = 'en';
+    var path = window.location.pathname;
+    Object.keys(_langMap).forEach(function(lang) {
+      if (_langMap[lang] === path) currentLang = lang;
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+    var active = document.querySelector('.lang-btn[onclick*="\'' + currentLang + '\'"]');
+    if (active) active.classList.add('active');
+    var drop = document.getElementById('drop-' + currentLang);
+    if (drop) drop.classList.add('active');
+    var flags = {it:'🇮🇹',en:'🇬🇧',de:'🇩🇪',fr:'🇫🇷',es:'🇪🇸'};
+    var codes = {it:'IT',en:'EN',de:'DE',fr:'FR',es:'ES'};
+    var mf = document.getElementById('langMobileFlag'); if(mf && flags[currentLang]) mf.textContent = flags[currentLang];
+    var mc = document.getElementById('langMobileCode'); if(mc && codes[currentLang]) mc.textContent = codes[currentLang];
+  });
+})();
+</script>
 </body>
 </html>
