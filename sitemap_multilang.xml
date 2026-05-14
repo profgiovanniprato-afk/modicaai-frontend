@@ -698,4 +698,91 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica.html</loc>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.modicaai.it/weekend-modica-en.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.modicaai.it/weekend-modica-de.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.modicaai.it/weekend-modica-fr.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.modicaai.it/weekend-modica-es.html" />
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-en.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-de.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-fr.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-es.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni.html</loc>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.modicaai.it/modica-in-due-giorni-en.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.modicaai.it/modica-in-due-giorni-de.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.modicaai.it/modica-in-due-giorni-fr.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.modicaai.it/modica-in-due-giorni-es.html" />
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-en.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-de.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-fr.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-es.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica.html</loc>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.modicaai.it/passeggiate-modica-en.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.modicaai.it/passeggiate-modica-de.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.modicaai.it/passeggiate-modica-fr.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.modicaai.it/passeggiate-modica-es.html" />
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-en.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-de.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-fr.html</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-es.html</loc>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>
