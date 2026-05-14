@@ -57,7 +57,7 @@
    "description":"I migliori tour guidati a Modica 2026: visite al barocco, laboratori del cioccolato, escursioni a Ragusa e Scicli. Prenota online con guida esperta.",
    "author":{"@type":"Organization","name":"ModicaAI"},
    "publisher":{"@type":"Organization","name":"ModicaAI","logo":{"@type":"ImageObject","url":"https://www.modicaai.it/icon-512.png"}},
-   "datePublished":"2026-05-11","dateModified":"2026-05-11","inLanguage":"it"},
+   "datePublished":"2026-05-11","dateModified":"2026-05-14","inLanguage":"it"},
   {"@type":"BreadcrumbList","itemListElement":[
     {"@type":"ListItem","position":1,"name":"ModicaAI","item":"https://www.modicaai.it/"},
     {"@type":"ListItem","position":2,"name":"Tour Guidati Modica","item":"https://www.modicaai.it/tour-guidati-modica.html"}
@@ -67,7 +67,8 @@
     {"@type":"Question","name":"Quali sono i tour più popolari a Modica?","acceptedAnswer":{"@type":"Answer","text":"I tour più richiesti a Modica sono: il walking tour del centro storico barocco con guida, il laboratorio 'chocolatier for a day' per imparare a fare il cioccolato IGP, e le escursioni di un giorno verso Ragusa Ibla, Scicli e Noto."}},
     {"@type":"Question","name":"Si può visitare Modica senza guida?","acceptedAnswer":{"@type":"Answer","text":"Sì, Modica è facilmente esplorabile da soli grazie a Corso Umberto I e alla segnaletica turistica. Tuttavia una guida aggiunge valore su storia barocca, quartiere ebraico e dettagli architettonici difficili da trovare autonomamente."}},
     {"@type":"Question","name":"Quanto dura un tour guidato a Modica?","acceptedAnswer":{"@type":"Answer","text":"I walking tour di Modica durano in genere 2 ore. I laboratori del cioccolato durano 1,5-2 ore. Le escursioni verso Ragusa, Scicli e Noto sono tour di giornata intera (7-8 ore)."}},
-    {"@type":"Question","name":"I tour guidati a Modica sono disponibili in inglese?","acceptedAnswer":{"@type":"Answer","text":"Sì, la maggior parte dei tour a Modica è disponibile in inglese, tedesco, francese e spagnolo. Alcuni operatori offrono anche tour in italiano per gruppi locali."}}
+    {"@type":"Question","name":"I tour guidati a Modica sono disponibili in inglese?","acceptedAnswer":{"@type":"Answer","text":"Sì, la maggior parte dei tour a Modica è disponibile in inglese, tedesco, francese e spagnolo. Alcuni operatori offrono anche tour in italiano per gruppi locali."}},
+    {"@type":"Question","name":"È possibile fare un tour privato in italiano con un locale?","acceptedAnswer":{"@type":"Answer","text":"Sì. ModicaAI offre un tour privato esclusivo in italiano con un abitante di Modica, per massimo 3 persone. Durata 3 ore, €35 a persona, trasporto in auto incluso. Si prenota via email a infomodicaai@gmail.com."}}
   ]}
 ]}
 </script>
@@ -340,6 +341,20 @@
   .cta-btn { display:inline-block; background:var(--gold); color:#fff; padding:10px 28px; border-radius:24px; font-size:14px; font-weight:600; text-decoration:none; transition:all 0.18s; }
   .cta-btn:hover { background:var(--gold-lt); transform:translateY(-1px); }
   .seo-page .site-footer { position:relative; }
+  .exp-grid { display:grid; grid-template-columns:1fr; gap:16px; margin:20px 0 28px; }
+  @media(min-width:560px){ .exp-grid { grid-template-columns:1fr 1fr; } }
+  .exp-card { background:var(--white); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; transition:box-shadow 0.2s,transform 0.2s; }
+  .exp-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+  .exp-card-body { padding:16px 18px; flex:1; display:flex; flex-direction:column; gap:8px; }
+  .exp-card-tag { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); }
+  .exp-card-title { font-size:15px; font-weight:700; color:var(--ink); line-height:1.3; }
+  .exp-card-desc { font-size:13px; line-height:1.6; color:var(--ink-mid); flex:1; }
+  .exp-card-meta { display:flex; align-items:center; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  .exp-card-footer { padding:12px 18px; border-top:1px solid var(--border); }
+  .exp-card-btn { display:block; width:100%; text-align:center; background:var(--sky); color:#fff; font-family:'Outfit',sans-serif; font-size:13px; font-weight:600; padding:10px 16px; border-radius:10px; text-decoration:none; transition:background 0.18s; }
+  .exp-card-btn:hover { background:var(--gold); }
+  .gyg-section { margin:20px 0 28px; padding:20px; background:var(--white); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow-sm); }
+  .gyg-section-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px; }
   @media(max-width:640px) { .seo-content { padding:105px 16px 60px; } .seo-title { font-size:30px; } .seo-section h2 { font-size:22px; } }
   @media(min-width:641px) and (max-width:1024px) { .seo-content { padding:195px 20px 60px; } }
 
@@ -418,12 +433,6 @@
         <a href="/modica-con-bambini.html">Modica con bambini</a>
         <a href="/trasporti.html">🚌 Trasporti</a>
         <a href="/chocomodica.html">🍫 ChocoModica 2026</a>
-        <div class="snb-drop-sep"></div>
-        <a href="/cosa-fare-a-modica.html" style="color:#D4A017;font-weight:600;">✨ Cosa fare</a>
-        <a href="/tour-guidati-modica.html">Tour guidati</a>
-        <a href="/weekend-modica.html">Weekend a Modica</a>
-        <a href="/modica-in-due-giorni.html">Modica in 2 giorni</a>
-        <a href="/passeggiate-modica.html">Passeggiate</a>
       </div>
     </div>
     <a href="/mappa.html" class="snb-link">Mappa</a>
@@ -555,37 +564,72 @@
   <div class="seo-section">
     <h2><span class="sec-icon">🚶</span> Walking Tour di Modica</h2>
     <p>Il modo migliore per scoprire Modica è a piedi, salendo da Modica Bassa verso Modica Alta lungo vicoli, scalinate e piazze barocche. Un walking tour con guida dura in genere <strong>2 ore</strong> e copre i punti essenziali: la Cattedrale di San Giorgio, il Castello dei Conti, la Chiesa di San Pietro con la sua scalinata, il quartiere ebraico di via Grimaldi e naturalmente Corso Umberto I.</p>
-    <p>Modica è una città verticale, costruita su due canyon scavati dai torrenti Modicano e Janni Mauro. Camminare con una guida significa capire questa doppia anima — Modica Alta con le chiese nobiliari e i palazzi baronali, Modica Bassa con i negozi di cioccolato, i bar storici come Bonajuto (fondato nel 1880, il più antico di Sicilia) e il fermento del Corso Umberto I.</p>
-
-    <h3>Cosa vedere durante un walking tour</h3>
-    <p><strong>Cattedrale di San Giorgio</strong> — capolavoro del barocco ibleo, 250 scalini che portano alla facciata con campanile a tre ordini. La guida racconta la storia del terremoto del 1693 che distrusse la città originale e la ricostruzione che ne fece un gioiello UNESCO.</p>
-    <p><strong>Quartiere Ebraico</strong> — via Grimaldi e le strade limitrofe conservano la memoria della comunità ebraica espulsa nel 1492. Pozzi rituali, iscrizioni in ebraico e architetture domestiche che nessuna guida cartacea racconta come un abitante del posto.</p>
-    <p><strong>Chiesa di San Pietro</strong> — la scalinata con le dodici statue degli apostoli è una delle più fotografate di Sicilia. Di notte, illuminata, è semplicemente spettacolare.</p>
-    <p><strong>Castello dei Conti</strong> — dalla rocca normanna si domina tutta la città con una vista a 360° sui tetti barocchi e sulle vallate circostanti.</p>
-
+    <p>Modica è una città verticale, costruita su due canyon scavati dai torrenti. Camminare con una guida significa capire questa doppia anima — Modica Alta con le chiese nobiliari e i palazzi baronali, Modica Bassa con i negozi di cioccolato, i bar storici e il fermento del Corso Umberto I.</p>
     <div class="highlight"><strong>Consiglio:</strong> i tour privati partono generalmente dall'ingresso della Cattedrale di San Giorgio in Modica Alta. Arriva con 10 minuti di anticipo — il panorama dalla scalinata vale già da solo il viaggio.</div>
-
-    <!-- GYG widget: Modica private tour walking -->
-    <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="3" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="414661,751567,656341"></div>
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🚶 Walking tour · Privato</div>
+          <div class="exp-card-title">Tour Privato del Centro Storico</div>
+          <div class="exp-card-desc">Guida dedicata solo a te. San Giorgio, il quartiere ebraico, i mascheroni barocchi e i dettagli che le guide cartacee non raccontano.</div>
+          <div class="exp-card-meta"><span>⏱ ~2 ore</span><span>👤 Privato</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.getyourguide.it/comune-di-modica-l116017/modica-private-walking-tour-t414661/?partner_id=DMX89IP&utm_medium=online_publisher&cmp=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🚶 Walking tour · Gruppo</div>
+          <div class="exp-card-title">Walking Tour di Modica in Gruppo</div>
+          <div class="exp-card-desc">Il classico walking tour in piccolo gruppo: Modica Alta, Corso Umberto I, storia barocca e cioccolato. Guida multilingua inclusa.</div>
+          <div class="exp-card-meta"><span>⏱ ~2 ore</span><span>👥 Piccoli gruppi</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.getyourguide.it/comune-di-modica-l116017/modica-walking-tour-t751567/?partner_id=DMX89IP&utm_medium=online_publisher&cmp=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+    </div>
+    <div class="gyg-section">
+      <div class="gyg-section-label">Altri walking tour disponibili</div>
+      <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="3" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="414661,751567,656341"></div>
+    </div>
   </div>
 
   <!-- ── Tour cioccolato ── -->
   <div class="seo-section">
     <h2><span class="sec-icon">🍫</span> Laboratori del Cioccolato IGP</h2>
     <p>Il cioccolato di Modica è prodotto con un metodo azteco a freddo, senza grassi aggiunti, con solo cacao e zucchero. Il risultato è una tavoletta dalla texture granulosa e dal sapore intenso, protetta dal marchio IGP dal 2018. I laboratori guidati ti permettono di <strong>preparare il cioccolato con le tue mani</strong>, capire il processo e naturalmente assaggiare il prodotto finito.</p>
-    <p>Tra i tour più richiesti c'è il <em>Chocolatier for a Day</em>, un'esperienza hands-on di circa 1,5 ore in un laboratorio storico. Adatto a famiglie con bambini e a chi vuole portare a casa un'esperienza autentica oltre alle solite tavolette.</p>
-
-    <h3>Come funziona un laboratorio del cioccolato</h3>
-    <p>Il maître chocolatier spiega innanzitutto la storia: il cioccolato arriva a Modica dalla Spagna nel '600, a sua volta importato dagli Aztechi del Messico. Il processo originale prevede di lavorare il cacao a bassa temperatura — mai sopra i 40°C — per preservare gli antiossidanti e il sapore puro del cacao. Niente burro di cacao, niente latte, niente lecitina. Solo pasta di cacao e zucchero grezzo.</p>
-    <p>Durante il laboratorio si lavora direttamente con le mani sul piano di pietra lavica, si aggiungono le spezie (cannella, peperoncino, vaniglia, sale di Trapani) e si cola nelle forme. La tavoletta che prepari è tua da portare a casa.</p>
-
-    <h3>Dove comprare il cioccolato di Modica</h3>
-    <p>I negozi storici sul Corso Umberto I sono la destinazione principale: <strong>Antica Dolceria Bonajuto</strong> (il più antico, dal 1880), <strong>Sabadì</strong>, <strong>Rizza</strong> e <strong>CioccoModica</strong>. Per acquisti consapevoli, cerca il marchio IGP sulla confezione — garanzia che il prodotto è lavorato secondo il disciplinare originale.</p>
-
-    <div class="highlight"><strong>Da sapere:</strong> i laboratori si riempiono in alta stagione (luglio-settembre) e durante ChocoModica (ottobre). Prenota con almeno 2-3 giorni di anticipo.</div>
-
-    <!-- GYG widget: cioccolato modica -->
-    <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="3" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="745265,281577,414661"></div>
+    <p>L'esperienza più richiesta è il laboratorio <em>Chocolatier for a Day</em>: circa 1,5 ore in un laboratorio storico, adatto a famiglie con bambini e a chi vuole portare a casa qualcosa di autentico oltre alle solite tavolette.</p>
+    <div class="highlight"><strong>Da sapere:</strong> i laboratori si riempiono in alta stagione (luglio–settembre) e durante ChocoModica (ottobre). Prenota con almeno 2–3 giorni di anticipo.</div>
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🍫 Laboratorio · Piccoli gruppi</div>
+          <div class="exp-card-title">Lezione di Cioccolato a Modica</div>
+          <div class="exp-card-desc">Impara il metodo azteco IGP a freddo. Dalla fava di cacao alla tavoletta finita — con degustazione inclusa e tavoletta da portare a casa.</div>
+          <div class="exp-card-meta"><span>⏱ ~2 ore</span><span>👥 Piccoli gruppi</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.viator.com/tours/Sicily/Chocolate-lesson-in-Modica-for-small-groups/d205-428221P1?pid=P00301110&mcid=42383&medium=link&campaign=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🍫 Esperienza · Hands-on</div>
+          <div class="exp-card-title">Chocolatier per un Giorno</div>
+          <div class="exp-card-desc">Percorso completo in laboratorio storico: storia azteca, lavorazione a freddo, aggiunta spezie. Adatto a famiglie con bambini.</div>
+          <div class="exp-card-meta"><span>⏱ 1,5–2 ore</span><span>✅ Adatto a famiglie</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.getyourguide.it/comune-di-modica-l116017/modica-lezione-di-cioccolato-per-piccoli-gruppi-t428221/?partner_id=DMX89IP&utm_medium=online_publisher&cmp=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+    </div>
+    <div class="gyg-section">
+      <div class="gyg-section-label">Altri laboratori del cioccolato</div>
+      <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="3" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="745265,281577,414661"></div>
+    </div>
   </div>
 
   <div class="cta-box">
@@ -596,30 +640,81 @@
 
   <!-- ── Escursioni giornata ── -->
   <div class="seo-section">
-    <h2><span class="sec-icon">🚌</span> Escursioni di un Giorno dal Barocco</h2>
+    <h2><span class="sec-icon">🚌</span> Escursioni di un Giorno nel Barocco</h2>
     <p>Modica è il punto di partenza perfetto per esplorare il <strong>Triangolo Barocco</strong> della Sicilia sud-orientale. In un'unica giornata puoi visitare Ragusa Ibla, Scicli (set del Commissario Montalbano) e Noto — tre città UNESCO, tre caratteri completamente diversi.</p>
 
     <h3>Ragusa, Modica e Scicli</h3>
-    <p>Il tour classico del barocco ibleo combina Modica, Ragusa Ibla e Scicli in 7-8 ore. La guida spiega le differenze architettoniche tra le tre città, tutte ricostruite dopo il terremoto del 1693 ma con personalità distinte: Ragusa Ibla austera e aristocratica, Modica verticale e labirintica, Scicli cinematografica e popolare. Il tour include trasporto, ingressi e guida multilingua.</p>
+    <p>Il tour classico del barocco ibleo combina le tre città in 7–8 ore. La guida spiega le differenze architettoniche tra Ragusa Ibla austera e aristocratica, Modica verticale e labirintica, Scicli cinematografica e popolare. Trasporto, ingressi e guida multilingua inclusi.</p>
 
     <h3>Noto, Modica e Ragusa da Catania</h3>
-    <p>Per chi arriva da Catania o dall'aeroporto di Fontanarossa, il day trip verso Noto-Modica-Ragusa è il modo più efficiente per vedere il meglio della Sicilia barocca in un giorno solo. Include trasporto, guida e tempo libero per lo shopping e il cioccolato.</p>
+    <p>Per chi arriva da Catania o dall'aeroporto di Fontanarossa, il day trip verso Noto–Modica–Ragusa è il modo più efficiente per vedere il meglio della Sicilia barocca in un solo giorno. Include trasporto, guida e tempo libero per lo shopping e il cioccolato.</p>
 
-    <h3>Scicli e i luoghi del Commissario Montalbano</h3>
-    <p>Scicli è a soli 20 minuti da Modica ed è uno dei set più iconici della serie RAI. Il Municipio di Scicli ha fatto da Commissariato di Vigàta, via Francesco Mormino Penna è la via principale della fiction, e diversi palazzi nobiliari sono stati location di episodi memorabili. Un tour tematico Montalbano parte spesso da Modica includendo anche Ragusa Ibla e Punta Secca (casa del commissario sul mare).</p>
+    <h3>Scicli e i Luoghi del Commissario Montalbano</h3>
+    <p>Scicli è a soli 20 minuti da Modica ed è uno dei set più iconici della serie RAI. Il Municipio ha fatto da Commissariato di Vigàta, e diversi palazzi nobiliari sono stati location di episodi memorabili. Un tour tematico Montalbano parte spesso da Modica includendo anche Ragusa Ibla e Punta Secca.</p>
 
-    <!-- GYG widget: day trip barocco sicilia -->
-    <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="4" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="633918,98892,751567,1169076"></div>
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🏛️ Day tour · Da Catania</div>
+          <div class="exp-card-title">Noto, Modica e Ragusa: Tour Barocco</div>
+          <div class="exp-card-desc">Giornata intera nel cuore del barocco siciliano UNESCO. Tre città in un giorno, guida multilingua e trasporto inclusi da Catania.</div>
+          <div class="exp-card-meta"><span>⏱ Giornata intera</span><span>🚌 Trasporto incluso</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.viator.com/tours/Catania/Baroque-shades-of-Sicily-Noto-Modica-and-Ragusa-day-tour/d22664-73656P9?pid=P00301110&mcid=42383&medium=link&campaign=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🏛️ Tour privato · Flessibile</div>
+          <div class="exp-card-title">Ragusa, Modica e Noto: Tour Privato</div>
+          <div class="exp-card-desc">Tour privato con guida dedicata. Itinerario personalizzabile, tempi liberi, soste gastronomiche su richiesta.</div>
+          <div class="exp-card-meta"><span>⏱ Giornata intera</span><span>👤 Solo per te</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.viator.com/tours/Syracuse/Ragusa-Modica-Noto-private-baroque-tour/d22435-218384P2?pid=P00301110&mcid=42383&medium=link&campaign=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+    </div>
+    <div class="gyg-section">
+      <div class="gyg-section-label">Altre escursioni barocche disponibili</div>
+      <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="4" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="633918,98892,751567,1169076"></div>
+    </div>
   </div>
 
   <!-- ── Esperienze gastronomiche ── -->
   <div class="seo-section">
     <h2><span class="sec-icon">🍷</span> Esperienze Gastronomiche</h2>
     <p>Modica e la Provincia di Ragusa sono uno dei territori enogastronomici più ricchi di Sicilia: vino Cerasuolo di Vittoria DOCG, olio extravergine, carrubo, formaggi pecorini e naturalmente il cioccolato. Alcune esperienze guidate combinano visita culturale e degustazione in cantina o in masseria.</p>
-    <p>Per chi ama il vino, il <em>Winery Tour and Wine Tasting</em> nella Provincia di Ragusa (ID GYG: 1115970) è una delle esperienze più apprezzate della zona — vigneti, cantina e degustazione guidata abbinata a prodotti tipici locali.</p>
-
-    <!-- GYG widget: wine food modica ragusa -->
-    <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="3" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="1115970,274367,426714"></div>
+    <p>Per chi ama il vino, un winery tour nella Provincia di Ragusa è tra le esperienze più apprezzate della zona — vigneti, cantina e degustazione guidata abbinata a prodotti tipici locali, spesso in contesti rurali lontani dal turismo di massa.</p>
+    <div class="exp-grid">
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🍷 Degustazione · Cantina</div>
+          <div class="exp-card-title">Winery Tour e Degustazione Vini</div>
+          <div class="exp-card-desc">Vigneti, cantina e degustazione guidata di Cerasuolo di Vittoria DOCG abbinata a prodotti tipici locali. Uno dei tour più apprezzati del ragusano.</div>
+          <div class="exp-card-meta"><span>⏱ 2–3 ore</span><span>🥂 Degustazione inclusa</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.getyourguide.it/ragusa-l54073/winery-tour-e-degustazione-vini-t1115970/?partner_id=DMX89IP&utm_medium=online_publisher&cmp=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">🛒 Mercato · Cena privata</div>
+          <div class="exp-card-title">Tour del Mercato e Cena da una Cesarina</div>
+          <div class="exp-card-desc">Mattina al mercato locale seguita da pranzo o cena preparato da una cuoca modicana nella sua casa. Immersione autentica nella gastronomia iblea.</div>
+          <div class="exp-card-meta"><span>⏱ 3–4 ore</span><span>👥 Piccoli gruppi</span></div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="https://www.viator.com/tours/Ragusa/Small-Group-Market-tour-and-Dining-Experience-at-a-Cesarinas-home-in-Modica/d26225-68460P1318?pid=P00301110&mcid=42383&medium=link&campaign=ModicaAI" target="_blank" rel="noopener sponsored" class="exp-card-btn">Controlla disponibilità →</a>
+        </div>
+      </div>
+    </div>
+    <div class="gyg-section">
+      <div class="gyg-section-label">Altre esperienze gastronomiche</div>
+      <div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="it-IT" data-gyg-widget="activities" data-gyg-number-of-items="3" data-gyg-partner-id="DMX89IP" data-gyg-tour-ids="1115970,274367,426714"></div>
+    </div>
   </div>
 
   <!-- ── Tabella riassuntiva ── -->
@@ -631,22 +726,18 @@
       <div class="info-card-title">🚶 Walking Tour Modica (privato)</div>
       <p><strong>Durata:</strong> ~2 ore · <strong>Prezzo:</strong> €20–45 pp · <strong>Ideale per:</strong> coppie, prime visite, appassionati di architettura. Copre San Giorgio, San Pietro, quartiere ebraico e Corso Umberto I.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🍫 Laboratorio Cioccolato IGP</div>
       <p><strong>Durata:</strong> 1,5–2 ore · <strong>Prezzo:</strong> €25–40 pp · <strong>Ideale per:</strong> famiglie, curiosi, amanti del food. Si impara il processo azteco a freddo e si prepara una tavoletta personalizzata.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🏛️ Day Trip Barocco (Ragusa + Scicli + Noto)</div>
       <p><strong>Durata:</strong> 7–8 ore · <strong>Prezzo:</strong> €45–70 pp · <strong>Ideale per:</strong> turisti in transito, chi ha pochi giorni in Sicilia. Trasporto incluso, guida multilingua, massima efficienza.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🍷 Degustazione Vino in Cantina</div>
       <p><strong>Durata:</strong> 2–3 ore · <strong>Prezzo:</strong> €35–55 pp · <strong>Ideale per:</strong> appassionati di vino, coppie. Cerasuolo di Vittoria DOCG + prodotti tipici in masseria o cantina storica.</p>
     </div>
-
     <div class="warning"><strong>Nota prezzi:</strong> le tariffe sopra indicate sono orientative per il 2026. Il prezzo finale dipende dalla dimensione del gruppo, dalla lingua della guida e dall'operatore. Verifica sempre il prezzo aggiornato al momento della prenotazione.</div>
   </div>
 
@@ -654,41 +745,37 @@
   <div class="seo-section">
     <h2><span class="sec-icon">💡</span> Come Scegliere il Tour Giusto</h2>
     <p>La scelta dipende da quanto tempo hai e da cosa ti interessa di più. Ecco uno schema semplice:</p>
-    <p><strong>Hai 2-3 ore a Modica?</strong> Scegli un walking tour privato del centro storico. È il modo più efficiente per capire la città e non perderti i dettagli architettonici barocchi che altrimenti sfuggono.</p>
+    <p><strong>Hai 2–3 ore a Modica?</strong> Scegli un walking tour privato del centro storico. È il modo più efficiente per capire la città e non perderti i dettagli architettonici barocchi che altrimenti sfuggono.</p>
     <p><strong>Sei con bambini?</strong> Il laboratorio del cioccolato è l'esperienza più coinvolgente per i più piccoli — interattiva, gustosa e con qualcosa da portare a casa.</p>
-    <p><strong>Sei in Sicilia per 1-2 giorni e vuoi vedere più posti?</strong> I day trip verso Ragusa-Scicli-Noto sono la soluzione: tutto organizzato, trasporto incluso, nessun problema di parcheggio o orari bus.</p>
+    <p><strong>Sei in Sicilia per 1–2 giorni e vuoi vedere più posti?</strong> I day trip verso Ragusa–Scicli–Noto sono la soluzione: tutto organizzato, trasporto incluso, nessun problema di parcheggio o orari bus.</p>
     <p><strong>Ami il vino e l'enogastronomia?</strong> Le degustazioni in cantina nella Provincia di Ragusa sono tra le più autentiche dell'isola, spesso in contesti rurali lontani dal turismo di massa.</p>
   </div>
 
-  <!-- ── Tour privato con Giovanni ── -->
+  <!-- ── Tour privato con un modicano ── -->
   <div class="seo-section">
     <h2><span class="sec-icon">🤝</span> Tour Privato con un Modicano DOC</h2>
     <p>Vuoi scoprire Modica lontano dai percorsi turistici standard? ModicaAI offre un <strong>tour privato esclusivo</strong> per piccoli gruppi — massimo 3 persone — con un abitante del posto che conosce la città come le sue tasche. Niente microfono, niente pullman, niente fretta: solo Modica vera, raccontata da chi ci vive.</p>
     <p>In <strong>3 ore</strong> in auto e a piedi scoprirai scorci nascosti che non trovi su nessuna guida: il quartiere ebraico con i suoi pozzi rituali, i palazzi nobiliari che i turisti di solito non vedono, i vicoli silenziosi di Modica Alta lontani dal Corso, i posti dove i modicani fanno colazione la domenica mattina e i dettagli architettonici barocchi — mascheroni, mensole, lesene — che solo un occhio locale sa raccontare davvero.</p>
 
-    <div class="info-card">
-      <div class="info-card-title">📍 Tour Privato Modica — Dettagli</div>
-      <p>
-        <strong>Durata:</strong> 3 ore<br>
-        <strong>Gruppo:</strong> massimo 3 persone<br>
-        <strong>Prezzo:</strong> €25 a persona<br>
-        <strong>Lingua:</strong> italiano<br>
-        <strong>Trasporto:</strong> incluso (auto privata)<br>
-        <strong>Partenza:</strong> concordata in base alle tue esigenze<br>
-        <strong>Prenotazione:</strong> via email con almeno 24 ore di anticipo
-      </p>
+    <div class="exp-grid">
+      <div class="exp-card" style="grid-column: 1 / -1; max-width: 520px;">
+        <div class="exp-card-body">
+          <div class="exp-card-tag">⭐ Esclusiva ModicaAI · Solo su prenotazione</div>
+          <div class="exp-card-title">A spasso per Modica con un modicano</div>
+          <div class="exp-card-desc">Tre ore in auto privata con un modicano doc. Modica Alta, i vicoli nascosti, le chiese dimenticate, il bar dove si fa colazione come i locali. Max 3 persone — nessun gruppo, nessun microfono, nessuna fretta.</div>
+          <div class="exp-card-meta">
+            <span>⏱ 3 ore</span>
+            <span>👥 Max 3 persone</span>
+            <span>💶 €35 a persona</span>
+          </div>
+        </div>
+        <div class="exp-card-footer">
+          <a href="mailto:infomodicaai@gmail.com?subject=Richiesta%20Tour%20Privato%20Modica&body=Ciao%2C%20vorrei%20richiedere%20un%20tour%20privato%20a%20Modica.%0A%0AData%20preferita%3A%20%0ANumero%20partecipanti%3A%20%0AInteressi%20particolari%3A%20%0ANote%3A%20" class="exp-card-btn" style="background:linear-gradient(135deg,var(--gold),var(--terra));">Prenota via email →</a>
+        </div>
+      </div>
     </div>
 
-    <h3>Cosa include il tour</h3>
-    <p>Il percorso non è fisso — si adatta a chi sei e a cosa ti interessa. Se ami l'architettura ci soffermiamo sui palazzi e sulle chiese; se sei appassionato di gastronomia ti porto nelle botteghe artigiane fuori dal circuito turistico; se hai bambini scegliamo i percorsi più accessibili e coinvolgenti. Il tour parte sempre da un caffè insieme — il modo migliore per capire Modica è iniziare come un modicano.</p>
-
-    <div class="highlight"><strong>Solo per italiani:</strong> questo tour è pensato per chi vuole vivere Modica come un locale, con conversazione autentica in italiano. Perfetto per chi è già stato a Modica e vuole andare oltre le tappe classiche, o per chi vuole una prima visita fuori dai circuiti di massa.</div>
-
-    <p>Per prenotare scrivi a <a href="mailto:infomodicaai@gmail.com" style="color:var(--sky);font-weight:600;">infomodicaai@gmail.com</a> indicando la data, il numero di partecipanti e qualsiasi preferenza o interesse particolare. Risposta garantita entro 24 ore.</p>
-
-    <div style="text-align:center;margin-top:28px;">
-      <a href="mailto:infomodicaai@gmail.com?subject=Richiesta%20Tour%20Privato%20Modica&body=Ciao%2C%20vorrei%20richiedere%20un%20tour%20privato%20a%20Modica.%0A%0AData%20preferita%3A%20%0ANumero%20partecipanti%3A%20%0AInteressi%20particolari%3A%20%0ANote%3A%20" class="cta-btn" style="background:var(--terra);display:inline-block;padding:14px 28px;border-radius:10px;color:#fff;font-weight:600;text-decoration:none;">✉️ Richiedi il tuo tour privato →</a>
-    </div>
+    <div class="highlight"><strong>Solo per italiani:</strong> questo tour è pensato per chi vuole vivere Modica come un locale, con conversazione autentica in italiano. Il percorso non è fisso — si adatta a chi sei e a cosa ti interessa di più. Risposta garantita entro 24 ore.</div>
   </div>
 
   <!-- ── FAQ ── -->
@@ -711,7 +798,7 @@
     <p>La maggior parte dei walking tour parte dall'ingresso della Cattedrale di San Giorgio in Modica Alta, raggiungibile a piedi da Corso Umberto I salendo la scalinata. Per i day trip con pullman, il punto di raccolta è spesso indicato nella conferma di prenotazione.</p>
 
     <h3>È possibile fare un tour privato in italiano con un locale?</h3>
-    <p>Sì — ModicaAI offre un tour privato esclusivo in italiano con un abitante di Modica, per gruppi di massimo 3 persone. Durata 3 ore, €25 a persona, trasporto in auto incluso. Per prenotare scrivi a <a href="mailto:infomodicaai@gmail.com" style="color:var(--sky);">infomodicaai@gmail.com</a>.</p>
+    <p>Sì — ModicaAI offre un tour privato esclusivo in italiano con un abitante di Modica, per gruppi di massimo 3 persone. Durata 3 ore, €35 a persona, trasporto in auto incluso. Il percorso si adatta ai tuoi interessi. Per prenotare scrivi a <a href="mailto:infomodicaai@gmail.com">infomodicaai@gmail.com</a> indicando data, numero di partecipanti e qualsiasi preferenza. Risposta garantita entro 24 ore.</p>
   </div>
 
   <div class="cta-box">
@@ -721,7 +808,6 @@
   </div>
 
 </div>
-
 
 <!-- ════════════════════════════════════════════════════════════
      PRE-FOOTER CTA BLU — FISSO, non modificare
