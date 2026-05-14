@@ -1618,6 +1618,7 @@
   body.dark .hc-treno-section--alt .hc-treno-content-col { background: var(--bg); }
   .hc-treno-section--alt .hc-treno-content-col { background: #FAFAF8; }
   @media (max-width: 900px) {
+    .hc-treno-inner--reverse { grid-template-columns: 1fr; }
     .hc-treno-inner--reverse .hc-treno-img-col { order: 0; }
     .hc-treno-inner--reverse .hc-treno-content-col { order: 0; border-right: none; border-top: 1px solid #EBEBEB; }
   }
@@ -2632,7 +2633,7 @@
 <div class="hc-treno-section hc-treno-section--alt">
   <div class="hc-treno-inner hc-treno-inner--reverse">
     <div class="hc-treno-img-col">
-      <img src="/gallery/modica-tour-guidati.jpg"
+      <img src="/gallery/modica-barocco.jpg"
            alt="Tour guidato a Modica — Cattedrale di San Giorgio, barocco siciliano UNESCO"
            loading="lazy">
       <div class="hc-treno-img-overlay"></div>
@@ -2820,6 +2821,13 @@
 <!-- 5b. COSA FARE A MODICA -->
 <div class="hc-treno-section hc-treno-section--alt">
   <div class="hc-treno-inner hc-treno-inner--reverse">
+    <div class="hc-treno-img-col">
+      <img src="/gallery/cosa-fare.jpg"
+           alt="Cosa fare a Modica — esperienze, tour e attività nella città barocca UNESCO"
+           loading="lazy"
+           onerror="this.src='/gallery/modica_panorama.jpg'">
+      <div class="hc-treno-img-overlay"></div>
+    </div>
     <div class="hc-treno-content-col">
       <div class="hc-treno-badge">✨ Esperienze · Tour · Attività</div>
       <div class="hc-treno-eyebrow">La guida completa</div>
@@ -2834,13 +2842,6 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         Scopri tutte le esperienze
       </a>
-    </div>
-    <div class="hc-treno-img-col">
-      <img src="/gallery/cosa-fare.jpg"
-           alt="Cosa fare a Modica — esperienze, tour e attività nella città barocca UNESCO"
-           loading="lazy"
-           onerror="this.src='/gallery/modica_panorama.jpg'">
-      <div class="hc-treno-img-overlay"></div>
     </div>
   </div>
 </div>
