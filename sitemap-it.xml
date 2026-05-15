@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Home -->
-  <url><loc>https://www.modicaai.it/</loc><lastmod>2026-04-30</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.modicaai.it/</loc><lastmod>2026-05-15</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
 
   <!-- Guide principali -->
   <url><loc>https://www.modicaai.it/cioccolato.html</loc><lastmod>2026-04-30</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.modicaai.it/cosa-vedere.html</loc><lastmod>2026-04-30</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.modicaai.it/tour-guidati-modica.html</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.modicaai.it/cosa-fare-a-modica.html</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.modicaai.it/come-arrivare.html</loc><lastmod>2026-04-30</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.modicaai.it/gastronomia.html</loc><lastmod>2026-04-29</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.modicaai.it/storia.html</loc><lastmod>2026-04-08</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -14,9 +15,13 @@
   <url><loc>https://www.modicaai.it/faq.html</loc><lastmod>2026-04-08</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.modicaai.it/guida-pratica.html</loc><lastmod>2026-04-08</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
-  <!-- Nuove pagine SEO -->
+  <!-- Spiagge e mare -->
   <url><loc>https://www.modicaai.it/spiagge.html</loc><lastmod>2026-04-30</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.modicaai.it/marina-di-modica.html</loc><lastmod>2026-04-29</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.modicaai.it/marina-di-modica.html</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.modicaai.it/maganuco.html</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.modicaai.it/modica-bandiera-blu.html</loc><lastmod>2026-05-14</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+
+  <!-- Pagine SEO territorio -->
   <url><loc>https://www.modicaai.it/parcheggi.html</loc><lastmod>2026-04-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.modicaai.it/modica-in-un-giorno.html</loc><lastmod>2026-04-08</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.modicaai.it/modica-o-ragusa.html</loc><lastmod>2026-04-30</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -32,6 +37,12 @@
   <url><loc>https://www.modicaai.it/meteo-modica-quando-andare.html</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.modicaai.it/modica-con-bambini.html</loc><lastmod>2026-04-14</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.modicaai.it/trasporti.html</loc><lastmod>2026-04-30</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.modicaai.it/weekend-modica.html</loc><lastmod>2026-05-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.modicaai.it/modica-in-due-giorni.html</loc><lastmod>2026-05-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.modicaai.it/passeggiate-modica.html</loc><lastmod>2026-05-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Prodotti tipici -->
+  <url><loc>https://www.modicaai.it/prodotti-tipici-siciliani.html</loc><lastmod>2026-05-15</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
 
   <!-- Funzionalità -->
   <url><loc>https://www.modicaai.it/mappa.html</loc><lastmod>2026-04-29</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -41,7 +52,4 @@
   <!-- Istituzionali -->
   <url><loc>https://www.modicaai.it/mission.html</loc><lastmod>2026-04-08</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.modicaai.it/contatti.html</loc><lastmod>2026-04-30</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.modicaai.it/weekend-modica.html</loc><lastmod>2026-05-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.modicaai.it/modica-in-due-giorni.html</loc><lastmod>2026-05-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.modicaai.it/passeggiate-modica.html</loc><lastmod>2026-05-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
