@@ -40,14 +40,14 @@
 <link rel="alternate" hreflang="x-default" href="https://www.modicaai.it/come-arrivare.html" />
 
 <!-- SEO Primary -->
-<title>Come Arrivare a Modica: Bus, Treno e Auto 2026 | ModicaAI</title>
-<meta name="description" content="Come arrivare a Modica: bus da Catania aeroporto in 1h45 a 7€, da Comiso in 30 min. Orari, prezzi e consigli pratici aggiornati 2026.">
+<title>Come Arrivare a Modica da Catania, Comiso e Palermo 2026 | ModicaAI</title>
+<meta name="description" content="Come arrivare a Modica: bus da Catania aeroporto in 1h45 (7€), da Comiso in 30 min (aeroporto più vicino). Treno, auto e traghetto. Orari e prezzi 2026.">
 
 <!-- Open Graph / WhatsApp / Telegram — unico blocco canonico -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.modicaai.it/come-arrivare.html">
-<meta property="og:title" content="Come Arrivare a Modica: Bus, Treno e Auto 2026 | ModicaAI">
-<meta property="og:description" content="Come arrivare a Modica: bus da Catania aeroporto in 1h45 a 7€, da Comiso in 30 min. Orari, prezzi e consigli pratici aggiornati 2026.">
+<meta property="og:title" content="Come Arrivare a Modica da Catania, Comiso e Palermo 2026 | ModicaAI">
+<meta property="og:description" content="Come arrivare a Modica: bus da Catania aeroporto in 1h45 (7€), da Comiso in 30 min. Treno, auto e traghetto. Orari e prezzi 2026.">
 <meta property="og:image" content="https://www.modicaai.it/gallery/modica_panorama.jpg">
 <meta property="og:image:width" content="1920">
 <meta property="og:image:height" content="900">
@@ -58,8 +58,8 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Come Arrivare a Modica: Bus, Treno e Auto 2026 | ModicaAI">
-<meta name="twitter:description" content="Come arrivare a Modica: bus da Catania aeroporto in 1h45 a 7€, da Comiso in 30 min. Orari, prezzi e consigli pratici aggiornati 2026.">
+<meta name="twitter:title" content="Come Arrivare a Modica da Catania, Comiso e Palermo 2026 | ModicaAI">
+<meta name="twitter:description" content="Come arrivare a Modica: bus da Catania aeroporto 1h45 (7€), da Comiso 30 min. Treno, auto e traghetto. Orari 2026.">
 <meta name="twitter:image" content="https://www.modicaai.it/gallery/modica_panorama.jpg">
   <!-- JSON-LD Schema.org -->
   <!-- Canonical univoco -->
@@ -1547,19 +1547,178 @@
   </div>
 </div>
 
+<!--
+  ═══════════════════════════════════════════════════════
+  FOOTER COMPONENT — ModicaAI / Rete AI Sicilia
+  Contiene:
+    1. CSS del footer (hc-footer, colonne, rete AI)
+    2. HTML del footer completo con rete AI Sicilia
+
+  ADATTARE PER OGNI SITO:
+    - Sostituire "ModicaAI" con nome sito
+    - Aggiornare descrizione brand
+    - Aggiornare link social
+    - Aggiornare colonne link (pagine del sito)
+    - Nel nodo "Live" della rete, aggiornare il sito corrente
+    - Aggiornare copyright e link footer-bottom
+  ═══════════════════════════════════════════════════════
+-->
+
+<!-- ═══ CSS FOOTER ═══ -->
+<style>
+.hc-footer {
+  background: #0f1520;
+  padding: 56px 32px 0;
+  position: relative;
+}
+.hc-footer-top {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+}
+@media (max-width: 900px) { .hc-footer-top { grid-template-columns: 1fr 1fr; gap: 28px; } }
+@media (max-width: 540px) { .hc-footer-top { grid-template-columns: 1fr; gap: 24px; } .hc-footer { padding: 40px 20px 0; } }
+
+.hc-footer-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 600;
+  color: #fff; margin-bottom: 10px;
+}
+.hc-footer-brand-name span { color: #D4A017; }
+.hc-footer-brand-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; line-height: 1.65;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 18px;
+}
+.hc-footer-socials { display: flex; gap: 10px; }
+.hc-footer-social {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.55);
+  transition: all 0.18s;
+  text-decoration: none;
+}
+.hc-footer-social:hover { background: rgba(184,134,11,0.2); border-color: rgba(184,134,11,0.4); color: #D4A017; }
+.hc-footer-col-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(201,168,76,0.6);
+  margin-bottom: 14px;
+}
+.hc-footer-link {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  margin-bottom: 9px;
+  transition: color 0.15s;
+}
+.hc-footer-link:hover { color: #fff; }
+
+/* ── Rete AI Sicilia ── */
+.hc-footer-rete {
+  border-top: 1px solid rgba(201,168,76,0.18);
+  padding: 28px 40px 24px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px;
+}
+.hc-footer-rete-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 1.8px; text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+}
+.hc-footer-rete-nodes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.hc-rete-node {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.hc-rete-node:hover { background: rgba(255,255,255,0.08); }
+.hc-rete-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.hc-rete-name { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.75); }
+.hc-rete-badge { font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 2px 7px; border-radius: 8px; }
+/* Colori per nodo: ModicaAI */
+.hc-rete-live .hc-rete-dot   { background: #4A9EDB; box-shadow: 0 0 6px rgba(74,158,219,0.7); }
+.hc-rete-live .hc-rete-badge { background: rgba(74,158,219,0.18); color: #4A9EDB; }
+.hc-rete-live { border-color: rgba(74,158,219,0.35); }
+/* RagusaAI */
+.hc-rete-ragusa .hc-rete-dot   { background: #C9A84C; }
+.hc-rete-ragusa .hc-rete-badge { background: rgba(201,168,76,0.15); color: #C9A84C; }
+.hc-rete-ragusa { border-color: rgba(201,168,76,0.25); }
+/* SiracusaAI */
+.hc-rete-siracusa .hc-rete-dot   { background: #3A9EC4; }
+.hc-rete-siracusa .hc-rete-badge { background: rgba(58,158,196,0.15); color: #3A9EC4; }
+.hc-rete-siracusa { border-color: rgba(58,158,196,0.25); }
+/* CataniaAI */
+.hc-rete-catania .hc-rete-dot   { background: #D4603A; }
+.hc-rete-catania .hc-rete-badge { background: rgba(212,96,58,0.15); color: #D4603A; }
+.hc-rete-catania { border-color: rgba(212,96,58,0.25); }
+/* SiciliaAI */
+.hc-rete-sicilia .hc-rete-dot   { background: rgba(201,168,76,0.45); }
+.hc-rete-sicilia .hc-rete-badge { background: rgba(201,168,76,0.10); color: rgba(201,168,76,0.60); }
+.hc-rete-sicilia { border-color: rgba(201,168,76,0.15); opacity: 0.7; }
+
+/* ── Footer bottom ── */
+.hc-footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 24px; flex-wrap: wrap; gap: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px; color: rgba(255,255,255,0.25);
+}
+.hc-footer-bottom-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.hc-footer-bottom-links a { color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.15s; }
+.hc-footer-bottom-links a:hover { color: #C9A84C; }
+
+@media (max-width: 600px) {
+  .hc-footer-rete   { padding: 22px 16px 20px; }
+  .hc-rete-node     { padding: 6px 11px; }
+  .hc-rete-name     { font-size: 11px; }
+  .hc-footer-bottom { flex-direction: column; text-align: center; padding: 16px 0 20px; }
+}
+</style>
+
+<!-- ═══ HTML FOOTER ═══ -->
+<!-- ADATTARE: aggiornare nome brand, link colonne, copyright -->
 <footer class="hc-footer">
   <div class="hc-footer-top">
     <div class="hc-footer-brand">
+      <!-- ADATTARE: nome e descrizione -->
       <div class="hc-footer-brand-name">Modica<span>AI</span></div>
       <p class="hc-footer-brand-desc">L'assistente AI gratuito per Modica, Sicilia. Meteo, farmacie, carburanti e notizie in tempo reale — senza registrazione, 24/7.</p>
       <div class="hc-footer-socials">
-        <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" class="hc-footer-social" title="Facebook"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-        <a href="https://www.instagram.com/modicaai.it" target="_blank" rel="noopener" class="hc-footer-social" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+        <!-- ADATTARE: link social -->
+        <a href="https://www.facebook.com/modicaai" target="_blank" rel="noopener" class="hc-footer-social" title="Facebook">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/modicaai.it" target="_blank" rel="noopener" class="hc-footer-social" title="Instagram">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@modicaai" target="_blank" rel="noopener" class="hc-footer-social" title="TikTok">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V7.0a4.85 4.85 0 01-1.01-.31z"/></svg>
+        </a>
       </div>
     </div>
+
+    <!-- ADATTARE: link colonne -->
     <div>
       <div class="hc-footer-col-title">Da vedere</div>
       <a href="/cosa-vedere.html" class="hc-footer-link">Cosa vedere</a>
+      <a href="/cosa-fare-a-modica.html" class="hc-footer-link">Cosa fare</a>
       <a href="/modica-in-un-giorno.html" class="hc-footer-link">Modica in 1 giorno</a>
       <a href="/storia.html" class="hc-footer-link">Storia</a>
       <a href="/quasimodo.html" class="hc-footer-link">Salvatore Quasimodo</a>
@@ -1593,7 +1752,8 @@
       <a href="/gioco.html" class="hc-footer-link">Giochi</a>
     </div>
   </div>
-    <!-- RETE AI SICILIA -->
+
+  <!-- ── RETE AI SICILIA — non modificare struttura, aggiornare solo "Live" ── -->
   <div class="hc-footer-rete">
     <div class="hc-footer-rete-title">Rete AI Sicilia</div>
     <div class="hc-footer-rete-nodes">
@@ -1629,90 +1789,9 @@
       </a>
     </div>
   </div>
-  <!-- CSS RETE AI SICILIA (inline per portabilità) -->
-  <style>
-  .hc-footer-rete {
-    border-top: 1px solid rgba(201,168,76,0.18);
-    padding: 28px 40px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-  }
-  .hc-footer-rete-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: rgba(201,168,76,0.55);
-  }
-  .hc-footer-rete-nodes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  .hc-rete-node {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 14px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.10);
-    background: rgba(255,255,255,0.04);
-    text-decoration: none;
-    transition: border-color 0.2s, background 0.2s;
-    cursor: pointer;
-  }
-  .hc-rete-node:hover { background: rgba(255,255,255,0.08); text-decoration: none; }
-  .hc-rete-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .hc-rete-name {
-    font-family: 'Outfit', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.75);
-  }
-  .hc-rete-badge {
-    font-family: 'Outfit', sans-serif;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 2px 7px;
-    border-radius: 8px;
-  }
-  /* ModicaAI — Blu barocco #1A3A5C */
-  .hc-rete-live .hc-rete-dot   { background: #4A9EDB; box-shadow: 0 0 6px rgba(74,158,219,0.7); }
-  .hc-rete-live .hc-rete-badge { background: rgba(74,158,219,0.18); color: #4A9EDB; }
-  .hc-rete-live { border-color: rgba(74,158,219,0.35); }
-  /* RagusaAI — Oro barocco #B8860B */
-  .hc-rete-ragusa .hc-rete-dot   { background: #C9A84C; }
-  .hc-rete-ragusa .hc-rete-badge { background: rgba(201,168,76,0.15); color: #C9A84C; }
-  .hc-rete-ragusa { border-color: rgba(201,168,76,0.25); }
-  /* SiracusaAI — Blu mare #1A5C7A */
-  .hc-rete-siracusa .hc-rete-dot   { background: #3A9EC4; }
-  .hc-rete-siracusa .hc-rete-badge { background: rgba(58,158,196,0.15); color: #3A9EC4; }
-  .hc-rete-siracusa { border-color: rgba(58,158,196,0.25); }
-  /* CataniaAI — Rosso lava #C1440E */
-  .hc-rete-catania .hc-rete-dot   { background: #D4603A; }
-  .hc-rete-catania .hc-rete-badge { background: rgba(212,96,58,0.15); color: #D4603A; }
-  .hc-rete-catania { border-color: rgba(212,96,58,0.25); }
-  /* SiciliaAI — Oro siciliano */
-  .hc-rete-sicilia .hc-rete-dot   { background: rgba(201,168,76,0.45); }
-  .hc-rete-sicilia .hc-rete-badge { background: rgba(201,168,76,0.10); color: rgba(201,168,76,0.60); }
-  .hc-rete-sicilia { border-color: rgba(201,168,76,0.15); opacity: 0.7; }
-  @media (max-width: 600px) {
-    .hc-footer-rete { padding: 22px 16px 20px; }
-    .hc-rete-node   { padding: 6px 11px; }
-    .hc-rete-name   { font-size: 11px; }
-  }
-  </style>
-  <!-- /RETE AI SICILIA -->
-<div class="hc-footer-bottom">
+
+  <!-- ADATTARE: copyright e link -->
+  <div class="hc-footer-bottom">
     <span>© 2026 ModicaAI · Modica, Sicilia</span>
     <div class="hc-footer-bottom-links">
       <a href="/contatti.html">Contatti</a>
@@ -1722,6 +1801,7 @@
     </div>
   </div>
 </footer>
+
 
 <!-- Modal Contatti Aziende -->
 <div class="modal-overlay" id="modalContatti" onclick="chiudiContatti(event)">
