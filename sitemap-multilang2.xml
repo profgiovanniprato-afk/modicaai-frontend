@@ -3,13 +3,242 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>https://www.modicaai.it/modica.html</loc>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.modicaai.it/modica-en.html" />
+    <loc>https://www.modicaai.it/treno-barocco-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/treno-barocco-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/treno-barocco-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/treno-barocco-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-bandiera-blu-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-bandiera-blu-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-bandiera-blu-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-bandiera-blu-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/cosa-fare-a-modica-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/cosa-fare-a-modica-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/cosa-fare-a-modica-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/cosa-fare-a-modica-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/gastronomia-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/gastronomia-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/gastronomia-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/gastronomia-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-in-due-giorni-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/tour-guidati-modica-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/tour-guidati-modica-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/tour-guidati-modica-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/tour-guidati-modica-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/val-di-noto-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/val-di-noto-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/val-di-noto-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/val-di-noto-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/weekend-modica-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/passeggiate-modica-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://www.modicaai.it/modica-en.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-de.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-fr.html</loc>
+    <lastmod>2026-05-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.modicaai.it/modica-es.html</loc>
+    <lastmod>2026-05-18</lastmod>
     <priority>0.7</priority>
   </url>
 
