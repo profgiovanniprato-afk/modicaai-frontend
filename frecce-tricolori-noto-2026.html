@@ -1325,6 +1325,270 @@ TOUR ED ESPERIENZE PER IL 28 GIUGNO
     <h3>Stai pianificando il viaggio in Sicilia?</h3>
     <p>Chiedi all'AI di ModicaAI — risponde su hotel, ristoranti, trasporti, meteo e tutto quello che ti serve per organizzare la visita nel Val di Noto.</p>
     <a href="/" class="cta-btn">Apri ModicaAI →</a>
+
+<!-- BANNER AISICILY - VERSIONE TRASPARENTE ADATTIVA -->
+<div id="aisicily-banner" style="
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 24px;
+    font-family: inherit;
+">
+    <div id="aisicily-banner-inner" style="
+        background: transparent;
+        border-top: 1px solid rgba(232, 176, 75, 0.2);
+        border-bottom: 1px solid rgba(232, 176, 75, 0.2);
+        border-radius: 0;
+        padding: 32px 40px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    " onmouseover="this.style.borderColor='rgba(232, 176, 75, 0.4)'" onmouseout="this.style.borderColor='rgba(232, 176, 75, 0.2)'">
+        
+        <div style="
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 32px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        ">
+            <!-- Content Side -->
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Badge -->
+                <div style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 5px 12px;
+                    background: rgba(232, 176, 75, 0.1);
+                    border: 1px solid rgba(232, 176, 75, 0.25);
+                    border-radius: 50px;
+                    font-size: 0.65rem;
+                    font-weight: 700;
+                    color: #E8B04B;
+                    text-transform: uppercase;
+                    letter-spacing: 1.2px;
+                    width: fit-content;
+                ">
+                    <span style="
+                        width: 5px;
+                        height: 5px;
+                        background: #10B981;
+                        border-radius: 50%;
+                        animation: pulse-dot 2s ease-in-out infinite;
+                    "></span>
+                    Opportunità Imprenditoriale
+                </div>
+
+                <!-- Title -->
+                <h2 style="
+                    font-size: clamp(1.1rem, 2vw, 1.4rem);
+                    font-weight: 700;
+                    color: var(--banner-title, #F8FAFC);
+                    line-height: 1.3;
+                    margin: 0;
+                    letter-spacing: -0.3px;
+                ">
+                    Vuoi il Tuo <span style="
+                        background: linear-gradient(135deg, #E8B04B 0%, #FCD34D 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                    ">[Città]AI.it</span>?
+                    <span style="color: var(--banner-text, #94A3B8); font-weight: 400; font-size: 0.9em;"> — </span>
+                    Diventa Franchisee AISicily
+                </h2>
+
+                <!-- Description -->
+                <p style="
+                    font-size: 0.85rem;
+                    color: var(--banner-text, #94A3B8);
+                    line-height: 1.5;
+                    margin: 0;
+                    max-width: 550px;
+                ">
+                    Il primo franchising digitale di assistenti AI territoriali in Sicilia. 
+                    Tecnologia chiavi in mano, formazione dedicata e esclusiva territoriale.
+                </p>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="display: flex; align-items: center;">
+                <a href="https://aisicily.it" target="_blank" rel="noopener" style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 14px 28px;
+                    background: linear-gradient(135deg, #E8B04B 0%, #D97706 100%);
+                    color: #0F172A;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    text-decoration: none;
+                    border-radius: 10px;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    white-space: nowrap;
+                    box-shadow: 0 4px 15px rgba(232, 176, 75, 0.25);
+                " onmouseover="
+                    this.style.transform='translateY(-2px)';
+                    this.style.boxShadow='0 6px 25px rgba(232, 176, 75, 0.4)';
+                " onmouseout="
+                    this.style.transform='translateY(0)';
+                    this.style.boxShadow='0 4px 15px rgba(232, 176, 75, 0.25)';
+                ">
+                    Scopri di Più
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Close Button -->
+        <button onclick="closeAisicilyBanner()" aria-label="Chiudi banner" style="
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--banner-close-color, #64748B);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+            padding: 0;
+        " onmouseover="
+            this.style.background='rgba(239, 68, 68, 0.15)';
+            this.style.borderColor='rgba(239, 68, 68, 0.3)';
+            this.style.color='#EF4444';
+        " onmouseout="
+            this.style.background='rgba(255, 255, 255, 0.03)';
+            this.style.borderColor='rgba(255, 255, 255, 0.08)';
+            this.style.color='#64748B';
+        ">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <style>
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* Dark mode (default) */
+        :root {
+            --banner-title: #F8FAFC;
+            --banner-text: #94A3B8;
+            --banner-close-color: #64748B;
+        }
+
+        /* Light mode */
+        [data-theme="light"] #aisicily-banner-inner,
+        .light-theme #aisicily-banner-inner,
+        body:not(.dark-theme) #aisicily-banner-inner {
+            --banner-title: #0F172A;
+            --banner-text: #475569;
+            --banner-close-color: #94A3B8;
+        }
+
+        @media (max-width: 768px) {
+            #aisicily-banner {
+                padding: 0 16px;
+                margin: 30px auto;
+            }
+
+            #aisicily-banner-inner {
+                padding: 24px 20px !important;
+            }
+
+            #aisicily-banner-inner > div {
+                grid-template-columns: 1fr !important;
+                text-align: center;
+                gap: 20px;
+            }
+
+            #aisicily-banner-inner > div > div:first-child {
+                align-items: center;
+            }
+
+            #aisicily-banner-inner > div > div:first-child > div:first-child {
+                margin: 0 auto;
+            }
+
+            #aisicily-banner-inner > div > div:last-child {
+                justify-content: center;
+            }
+        }
+    </style>
+</div>
+
+<script>
+    function closeAisicilyBanner() {
+        const banner = document.getElementById('aisicily-banner');
+        banner.style.transition = 'all 0.4s ease';
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+            banner.style.display = 'none';
+            localStorage.setItem('aisicily_banner_closed', 'true');
+        }, 400);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('aisicily_banner_closed') === 'true') {
+            const banner = document.getElementById('aisicily-banner');
+            if (banner) banner.style.display = 'none';
+        }
+
+        // Detect theme and apply appropriate styles
+        const bannerInner = document.getElementById('aisicily-banner-inner');
+        const isDark = document.body.classList.contains('dark-theme') || 
+                       document.documentElement.getAttribute('data-theme') === 'dark' ||
+                       !document.body.classList.contains('light-theme');
+        
+        if (!isDark) {
+            bannerInner.style.setProperty('--banner-title', '#0F172A');
+            bannerInner.style.setProperty('--banner-text', '#475569');
+            bannerInner.style.setProperty('--banner-close-color', '#94A3B8');
+        }
+    });
+
+    // Listen for theme changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class' || mutation.attributeName === 'data-theme') {
+                const bannerInner = document.getElementById('aisicily-banner-inner');
+                const isDark = document.body.classList.contains('dark-theme') || 
+                               document.documentElement.getAttribute('data-theme') === 'dark' ||
+                               !document.body.classList.contains('light-theme');
+                
+                if (!isDark) {
+                    bannerInner.style.setProperty('--banner-title', '#0F172A');
+                    bannerInner.style.setProperty('--banner-text', '#475569');
+                    bannerInner.style.setProperty('--banner-close-color', '#94A3B8');
+                } else {
+                    bannerInner.style.setProperty('--banner-title', '#F8FAFC');
+                    bannerInner.style.setProperty('--banner-text', '#94A3B8');
+                    bannerInner.style.setProperty('--banner-close-color', '#64748B');
+                }
+            }
+        });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    observer.observe(document.body, { attributes: true });
+</script>
+<!-- END BANNER AISICILY -->
+       
   </div>
 
 </div>
