@@ -1119,6 +1119,36 @@
 
 <!-- mai-ads:script -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5415670506553953" crossorigin="anonymous"></script>
+
+<style>
+/* ── Badge prodotti tipici, pulsante morbido (no lampeggio netto:
+   un blink acceso/spento viola le linee guida WCAG sul contenuto
+   lampeggiante e sembra pubblicità invasiva; il bagliore graduale
+   dà lo stesso richiamo visivo senza i due problemi) ── */
+@keyframes mai-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,134,11,0.55); }
+  50%      { box-shadow: 0 0 0 8px rgba(184,134,11,0); }
+}
+.mai-prod-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 14px 0 20px; padding: 9px 18px;
+  background: linear-gradient(135deg, var(--gold,#B8860B), var(--terra,#A0522D));
+  color: #fff; border-radius: 30px; text-decoration: none;
+  font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 600;
+  letter-spacing: .2px;
+  animation: mai-pulse 2.2s ease-in-out infinite;
+  transition: transform .15s;
+}
+.mai-prod-badge:hover { transform: translateY(-1px); }
+.mai-prod-badge:focus-visible { outline: 2px solid var(--sky,#1A3A5C); outline-offset: 3px; }
+.mai-prod-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #fff;
+  animation: mai-pulse 2.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mai-prod-badge, .mai-prod-badge-dot { animation: none; }
+}
+</style>
 </head>
 <style>
 /* ── PAGE LAYOUT ── */
@@ -1584,7 +1614,10 @@ body.dark .tr-ticket-price { color: var(--gold-lt); }
     <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,15,25,0.72) 0%,rgba(15,30,53,0.65) 50%,rgba(0,0,0,0.55) 100%);z-index:1;"></div>
     <div style="position:relative;z-index:2;text-align:center;padding:70px 24px 60px;">
       <div class="tr-hero-badge">🚌 AST · SAIS · Trenitalia</div>
-      <h1>Bus da <em>Modica</em>: Aeroporto, Marina e dintorni</h1>
+      <h1>Bus da <em>Modica</em>: Aeroporto, Marina e dintorni</h1>
+<!-- mai-prod-badge -->
+<a href="/prodotti-tipici-siciliani.html" class="mai-prod-badge" data-pos="prod-badge"><span class="mai-prod-badge-dot"></span>🛍️ Prodotti tipici — Acquista ora</a>
+
       <p class="tr-hero-sub">Orari bus Modica–Aeroporto Catania, Modica–Marina di Modica, Modica–Pozzallo e bus urbani — chiari, leggibili, senza PDF illeggibili.</p>
     </div>
   </div>
