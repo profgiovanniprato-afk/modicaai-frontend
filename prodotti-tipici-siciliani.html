@@ -348,7 +348,7 @@
      sostituisce da sola — nessuna modifica al codice necessaria. ── */
   .prod-card-img-wrap { position:relative; aspect-ratio:1/1; background:linear-gradient(135deg,#F6F3EE,#EDE7DC); overflow:hidden; }
   .prod-card-img { width:100%; height:100%; object-fit:cover; display:block; }
-  .prod-card-img-fallback { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:52px; }
+  .prod-card-img-fallback { position:absolute; inset:0; display:none; align-items:center; justify-content:center; font-size:52px; }
 
   .prod-card-body { padding:16px 18px; flex:1; display:flex; flex-direction:column; gap:6px; }
   .prod-card-category { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); }
@@ -596,7 +596,7 @@
     <p>Il cioccolato di Modica è prodotto a freddo (sotto i 40°C) senza aggiunta di grassi: solo cacao e zucchero grezzo, secondo la ricetta azteca portata in Sicilia dagli spagnoli nel XVI secolo. IGP dal 2018, è l'unico cioccolato con indicazione geografica protetta in Europa. La texture granulosa e friabile è il suo segno distintivo.</p>
     <div class="prod-grid">
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cioccolato-modica-pistacchio.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🍫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cioccolato-modica-pistacchio.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🍫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Cioccolato IGP · Pistacchio</div>
           <div class="prod-card-name">Cioccolato di Modica IGP al Pistacchio</div>
@@ -611,7 +611,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cioccolato-modica-selezione.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🍫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cioccolato-modica-selezione.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🍫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Cioccolato IGP · Selezione 10 gusti</div>
           <div class="prod-card-name">Cioccolato di Modica IGP — Selezione Luchino</div>
@@ -641,7 +641,7 @@
     <p>Il Cerasuolo di Vittoria è l'unico vino siciliano DOCG. Nasce nell'area iblea tra Ragusa e Vittoria da Nero d'Avola e Frappato: elegante, fresco, con note di ciliegia e spezie dolci. Il rosso simbolo della provincia di Ragusa.</p>
     <div class="prod-grid">
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cerasuolo-vittoria-docg.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🍷</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cerasuolo-vittoria-docg.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🍷</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Vino Rosso · DOCG</div>
           <div class="prod-card-name">Cerasuolo di Vittoria DOCG — Donnafugata Floramundi</div>
@@ -656,7 +656,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cerasuolo-vittoria-riserva.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🍷</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/cerasuolo-vittoria-riserva.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🍷</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Vino Rosso · DOCG Classico</div>
           <div class="prod-card-name">Cerasuolo di Vittoria Classico DOCG — Planeta Dorilli</div>
@@ -686,7 +686,7 @@
     <p>La Sicilia produce alcuni degli oli extravergine più premiati d'Italia, da varietà autoctone diverse a seconda della zona — dalla Tonda Iblea del sud-est alla Nocellara e Biancolilla della Valle del Belice. Una selezione di produttori riconosciuti, ciascuno con la propria identità territoriale.</p>
     <div class="prod-grid">
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/olio-donnafugata-milleanni.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🫒</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/olio-donnafugata-milleanni.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🫒</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Olio EVO · Donnafugata</div>
           <div class="prod-card-name">Olio Extravergine "Milleanni" — Donnafugata</div>
@@ -701,7 +701,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/olio-carpino-dop-iblei.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🫒</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/olio-carpino-dop-iblei.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🫒</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Olio EVO · DOP Monti Iblei · Biologico</div>
           <div class="prod-card-name">Olio Extravergine Carpino — DOP Monti Iblei</div>
@@ -731,7 +731,7 @@
     <p>La tradizione casearia siciliana spazia dal Ragusano DOP — il caciocavallo ibleo per eccellenza, pasta filata da latte di vacca Modicana — a formaggi artigianali di pecora e capra con lavorazioni particolari, come le croste aromatizzate tipiche dell'entroterra.</p>
     <div class="prod-grid">
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/pistacchiotto-siciliano.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🧀</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/pistacchiotto-siciliano.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🧀</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Formaggio · Specialità artigianale</div>
           <div class="prod-card-name">Pistacchiotto Siciliano al Pistacchio</div>
@@ -746,7 +746,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/ragusano-dop-forma-intera.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🧀</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/ragusano-dop-forma-intera.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🧀</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Formaggio · DOP · Forma intera</div>
           <div class="prod-card-name">Ragusano DOP — Forma Intera (12-15 kg)</div>
@@ -777,7 +777,7 @@
 
     <div class="prod-grid">
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/caponata-siciliana.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🥫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/caponata-siciliana.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🥫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Conserva · Siciliana</div>
           <div class="prod-card-name">Caponata Siciliana Artigianale</div>
@@ -792,7 +792,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/caponata-siciliana-selezione.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🥫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/caponata-siciliana-selezione.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🥫</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Conserva · Selezione</div>
           <div class="prod-card-name">Caponata Siciliana — Selezione</div>
@@ -807,7 +807,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/pistacchio-bronte-dop.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🥜</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/pistacchio-bronte-dop.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🥜</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Frutto Secco · DOP</div>
           <div class="prod-card-name">Pistacchio di Bronte DOP</div>
@@ -822,7 +822,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/crema-pistacchio-bronte.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🥜</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/crema-pistacchio-bronte.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🥜</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Crema · DOP</div>
           <div class="prod-card-name">Crema di Pistacchio di Bronte</div>
@@ -837,7 +837,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/miele-zagara.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🍯</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/miele-zagara.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🍯</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Miele · Zagara</div>
           <div class="prod-card-name">Miele di Zagara Siciliano</div>
@@ -852,7 +852,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/miele-millefiori.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🍯</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/miele-millefiori.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🍯</div></div><div class="prod-card-body"><div class="prod-badge">Prodotto Pro</div>
           
           <div class="prod-card-category">Miele · Millefiori</div>
           <div class="prod-card-name">Miele di Millefiori Siciliano</div>
@@ -867,7 +867,7 @@
         </div>
       </div>
 
-      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/mpanatigghi-modica.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback" style="display:flex">🥮</div></div><div class="prod-card-body"><div class="prod-badge">Solo a Modica</div>
+      <div class="prod-card"><div class="prod-card-img-wrap"><img src="/gallery/mpanatigghi-modica.jpg" alt="" loading="lazy" class="prod-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="prod-card-img-fallback">🥮</div></div><div class="prod-card-body"><div class="prod-badge">Solo a Modica</div>
           
           <div class="prod-card-category">Dolce · Tradizione medievale</div>
           <div class="prod-card-name">Mpanatigghi di Modica</div>
