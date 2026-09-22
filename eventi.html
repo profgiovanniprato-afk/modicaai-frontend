@@ -1832,10 +1832,60 @@
 <div class="mai-monetize" data-pos="eventi-choco" data-tipo="affiliazione" style="margin:32px 0;padding:24px 26px;background:#fff;border:1px solid #E5DFD3;border-left:3px solid #003580;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);">
   <div style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8A8A8A;margin-bottom:8px;">Dove dormire</div>
   <h3 style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin:0 0 8px;color:#1A1A1A;">Cerca il tuo alloggio a Modica</h3>
-  <p style="font-family:'Outfit',sans-serif;font-size:14.5px;line-height:1.6;color:#555;margin:0 0 16px;">Confronta subito disponibilità e prezzi su Booking.com per le tue date, tra B&amp;B nel centro storico, case vacanza e agriturismi nei dintorni.</p>
-  <a href="https://www.jdoqocy.com/click-101880439-17323143?url=https%3A%2F%2Fwww.booking.com%2Fsearchresults.it.html%3Fss%3DModica&sid=eventi" target="_blank" rel="noopener sponsored" data-pos="eventi-choco" style="display:inline-block;background:#003580;color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:11px 22px;border-radius:8px;text-decoration:none;">Cerca su Booking.com →</a>
+  <p style="font-family:'Outfit',sans-serif;font-size:14.5px;line-height:1.6;color:#555;margin:0 0 16px;">Scegli le date del tuo soggiorno: ti portiamo direttamente ai risultati veri su Booking.com, tra B&amp;B nel centro storico, case vacanza e agriturismi nei dintorni.</p>
+  <form onsubmit="return maiBookingSearch(event,'eventi')" style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+    <div style="flex:1;min-width:125px;">
+      <label style="display:block;font-family:'Outfit',sans-serif;font-size:11px;color:#8A8A8A;margin-bottom:3px;">Check-in</label>
+      <input type="date" id="mai-checkin-eventi" required style="width:100%;padding:9px 8px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;box-sizing:border-box;">
+    </div>
+    <div style="flex:1;min-width:125px;">
+      <label style="display:block;font-family:'Outfit',sans-serif;font-size:11px;color:#8A8A8A;margin-bottom:3px;">Check-out</label>
+      <input type="date" id="mai-checkout-eventi" required style="width:100%;padding:9px 8px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;box-sizing:border-box;">
+    </div>
+    <div style="width:110px;">
+      <label style="display:block;font-family:'Outfit',sans-serif;font-size:11px;color:#8A8A8A;margin-bottom:3px;">Ospiti</label>
+      <select id="mai-guests-eventi" style="width:100%;padding:9px 8px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;box-sizing:border-box;">
+        <option value="1">1 adulto</option>
+        <option value="2" selected>2 adulti</option>
+        <option value="3">3 adulti</option>
+        <option value="4">4 adulti</option>
+      </select>
+    </div>
+    <button type="submit" style="background:#003580;color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;">Cerca →</button>
+  </form>
   <p style="font-family:'Outfit',sans-serif;font-size:11px;color:#999;margin:14px 0 0;">Prenotazione diretta su Booking.com, cancellazione secondo le condizioni della struttura. ModicaAI riceve una commissione senza costi aggiuntivi per te.</p>
 </div>
+<script>
+if (typeof maiBookingSearch === 'undefined') {
+  var maiBookingSearch = function(ev, sid) {
+    ev.preventDefault();
+    var ci = document.getElementById('mai-checkin-' + sid).value;
+    var co = document.getElementById('mai-checkout-' + sid).value;
+    var guests = document.getElementById('mai-guests-' + sid).value;
+    if (!ci || !co) return false;
+    var dest = 'https://www.booking.com/searchresults.it.html?ss=Modica&checkin=' + ci + '&checkout=' + co + '&group_adults=' + guests + '&no_rooms=1';
+    var finalUrl = 'https://www.jdoqocy.com/click-101880439-17323143?url=' + encodeURIComponent(dest) + '&sid=' + sid;
+    window.open(finalUrl, '_blank', 'noopener');
+    return false;
+  };
+}
+(function(){
+  var ci = document.getElementById('mai-checkin-eventi');
+  var co = document.getElementById('mai-checkout-eventi');
+  function maiInit_eventi(){
+    if(!ci || !co) return;
+    var d1 = new Date(); d1.setDate(d1.getDate()+7);
+    var d2 = new Date(); d2.setDate(d2.getDate()+9);
+    function fmt(d){ return d.toISOString().slice(0,10); }
+    ci.value = fmt(d1); co.value = fmt(d2); ci.min = fmt(new Date());
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maiInit_eventi);
+  } else {
+    maiInit_eventi();
+  }
+})();
+</script>
 
   
 
